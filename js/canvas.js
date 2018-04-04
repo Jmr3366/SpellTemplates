@@ -7,6 +7,7 @@ var p = 10;
 
 var canvas = document.getElementById("canvas");
 var context = canvas.getContext("2d");
+var board = new Board(context);
 
 function getMousePos(canvas, event) {
 	var rect = canvas.getBoundingClientRect();
@@ -16,25 +17,9 @@ function getMousePos(canvas, event) {
 	};
 }
 
-function drawBoard(){
-	for (var x = 0; x <= bw; x += 40) {
-		context.moveTo(0.5 + x + p, p);
-		context.lineTo(0.5 + x + p, bh + p);
-	}
+board.drawBoard(p, p, bw, bh);
 
-
-	for (var x = 0; x <= bh; x += 40) {
-		context.moveTo(p, 0.5 + x + p);
-		context.lineTo(bw + p, 0.5 + x + p);
-	}
-
-	context.strokeStyle = "black";
-	context.stroke();
-
-	canvas.addEventListener('click', function(evt) {
-		var mousePos = getMousePos(canvas, evt);
-		console.log(mousePos); 
-	}, false);
-}
-
-drawBoard();
+canvas.addEventListener('click', function(evt) {
+	var mousePos = getMousePos(canvas, evt);
+	console.log(mousePos); 
+}, false);
