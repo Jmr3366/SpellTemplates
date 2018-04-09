@@ -1,4 +1,4 @@
-function Board(context) {
+function Board(contextGrid, contextTiles) {
 	this.hex_mode = false;
 	this.tile_count = 0;
 	this.tile_set = [];
@@ -12,27 +12,21 @@ function Board(context) {
 		var tile_height = T.BASE_TILE_HEIGHT * this.tile_size_multiplier;
 		var curr_x = base_x;
 		var curr_y = base_y;
+		this.tile_count=0;
 		while(((base_y+height)-curr_y) >= tile_height){
 			var row = [];
 			while((base_x+width-curr_x) >= tile_width) {
-				var tile = new Tile(curr_x, curr_y, this.tile_size_multiplier, context);
+				var tile = new Tile(curr_x, curr_y, this.tile_size_multiplier, contextGrid, contextTiles);
 				tile.drawTile();
 				row.push(tile);
 				curr_x+=tile_width;
+				this.tile_count++;
 			}	
 			remaining_width = width;
 			curr_x = base_x;
 			this.tile_set.push(row);
 			curr_y += tile_height;
 		}
-	}
-
-	this.drawBox = function(position){
-		context.beginPath();
-		context.rect(position.x, position.y, 150, 200);
-		context.fillStyle= "red";
-		context.fill();
-		this.refresh();
 	}
 
 	this.refresh = function(position){

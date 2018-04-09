@@ -5,12 +5,20 @@ var bh = 800;
 // Padding
 var p = 10;
 
-var canvas = document.getElementById("canvas");
-var context = canvas.getContext("2d");
-var board = new Board(context);
+var canvasGrid = document.getElementById("canvasGrid");
+var contextGrid = canvasGrid.getContext("2d");
+var canvasUnits = document.getElementById("canvasUnits");
+var contextUnits = canvasUnits.getContext("2d");
+var canvasTemplate = document.getElementById("canvasTemplate");
+var contextTemplate = canvasTemplate.getContext("2d");
+var canvasTiles = document.getElementById("canvasTiles");
+var contextTiles = canvasTiles.getContext("2d");
 
-function getMousePos(canvas, event) {
-	var rect = canvas.getBoundingClientRect();
+var board = new Board(contextGrid, contextTiles);
+var template = new Template(contextTemplate, canvasTemplate.width, canvasTemplate.height);
+
+function getMousePos(canvasGrid, event) {
+	var rect = canvasGrid.getBoundingClientRect();
 	return {
 		x: event.clientX - rect.left,
 		y: event.clientY - rect.top
@@ -19,9 +27,10 @@ function getMousePos(canvas, event) {
 
 board.drawBoard(p, p, bw, bh);
 
-canvas.addEventListener('click', function(evt) {
-	var mousePos = getMousePos(canvas, evt);
+canvasGrid.addEventListener('click', function(evt) {
+	var mousePos = getMousePos(canvasGrid, evt);
 	console.log(mousePos); 
-	board.drawBox(mousePos);
+	template.clear(mousePos);
+	template.drawBox(mousePos);
 }, false);
 
