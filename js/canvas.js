@@ -22,4 +22,6 @@ board.drawBoard(p, p, bw, bh);
 canvas.addEventListener('click', function(evt) {
 	var mousePos = getMousePos(canvas, evt);
 	console.log(mousePos); 
+	board.drawBox(mousePos);
 }, false);
+
