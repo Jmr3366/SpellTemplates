@@ -27,17 +27,16 @@ function getMousePos(canvasGrid, event) {
 	};
 }
 
-function mousedown(evt) {
+function mousedown_func(evt) {
 	mousedown = true;
 	var mousePos = getMousePos(canvasGrid, evt);
-	console.log(mousedown, mousePos); 
+	//console.log(mousedown, mousePos); 
 	template.clear(mousePos);
 	//template.drawBox(mousePos, board.getTileByCoord(mousePos.x, mousePos.y));
 	template.setOrigin(mousePos, board.getTileByCoord(mousePos.x, mousePos.y));
 }
 
-function mousemove(evt) {
-	console.log(mousedown);
+function mousemove_func(evt) {
 	if(mousedown){
 		var mousePos = getMousePos(canvasGrid, evt);
 		template.setTerminus(mousePos);
@@ -46,12 +45,12 @@ function mousemove(evt) {
 	}
 }
 
-function mouseup(evt) {
+function mouseup_func(evt) {
 	mousedown = false;
 }
 
 board.drawBoard(p, p, bw, bh);
 
-canvasGrid.addEventListener('mousedown', function(evt){firstClick(evt)}, false);
-canvasGrid.addEventListener('mousemove', function(evt){drag(evt)}, false);
-canvasGrid.addEventListener('mouseup', function(evt){endClick(evt)}, false);
+canvasGrid.addEventListener('mousedown', function(evt){mousedown_func(evt)}, false);
+canvasGrid.addEventListener('mousemove', function(evt){mousemove_func(evt)}, false);
+canvasGrid.addEventListener('mouseup', function(evt){mouseup_func(evt)}, false);
