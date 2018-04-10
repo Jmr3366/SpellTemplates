@@ -4,6 +4,8 @@ var bw = 800;
 var bh = 800;
 // Padding
 var p = 10;
+// Mouse currently up or down
+var mousedown = false;
 
 var canvasGrid = document.getElementById("canvasGrid");
 var contextGrid = canvasGrid.getContext("2d");
@@ -25,12 +27,31 @@ function getMousePos(canvasGrid, event) {
 	};
 }
 
+function mousedown(evt) {
+	mousedown = true;
+	var mousePos = getMousePos(canvasGrid, evt);
+	console.log(mousedown, mousePos); 
+	template.clear(mousePos);
+	//template.drawBox(mousePos, board.getTileByCoord(mousePos.x, mousePos.y));
+	template.setOrigin(mousePos, board.getTileByCoord(mousePos.x, mousePos.y));
+}
+
+function mousemove(evt) {
+	console.log(mousedown);
+	if(mousedown){
+		var mousePos = getMousePos(canvasGrid, evt);
+		template.setTerminus(mousePos);
+		template.clear();
+		template.drawLine();
+	}
+}
+
+function mouseup(evt) {
+	mousedown = false;
+}
+
 board.drawBoard(p, p, bw, bh);
 
-canvasGrid.addEventListener('click', function(evt) {
-	var mousePos = getMousePos(canvasGrid, evt);
-	console.log(mousePos); 
-	template.clear(mousePos);
-	template.drawBox(mousePos);
-}, false);
-
+canvasGrid.addEventListener('mousedown', function(evt){firstClick(evt)}, false);
+canvasGrid.addEventListener('mousemove', function(evt){drag(evt)}, false);
+canvasGrid.addEventListener('mouseup', function(evt){endClick(evt)}, false);
