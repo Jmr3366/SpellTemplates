@@ -1,5 +1,7 @@
 function Template(context, canvas_width, canvas_height) {
 	this.size_multiplier = 1;
+	this.origin = {x:null, y:null};
+	this.originTile = null;
 
 	this.drawBox = function(position){
 		context.beginPath();
