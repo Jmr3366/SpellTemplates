@@ -39,7 +39,7 @@ function mousedown_func(evt) {
 function mousemove_func(evt) {
 	if(mousedown){
 		var mousePos = getMousePos(canvasGrid, evt);
-		template.setTerminus(mousePos);
+		template.setVector(mousePos,200);
 		template.clear();
 		template.drawLine();
 	}
