@@ -34,16 +34,14 @@ function Template(context, canvas_width, canvas_height) {
 
 	this.setVector = function(position, length=200){
 		//set terminus based on origin, 2nd position and length
-		var delta_x = (this.origin.x - position.x);
-		var delta_y = (this.origin.y - position.y);
+		var delta_x = (position.x - this.origin.x);
+		var delta_y = (position.y - this.origin.y);
 		var slope = delta_y/delta_x;
-		var x_direction = (delta_x < 0) ? -1 : 1;
-		var y_direction = (delta_y < 0) ? -1 : 1;
 		if(delta_y == 0){slope=0;} // If straight horizontal, slope is 0
-		if(delta_x == 0){this.terminus = {x:this.origin.x, y:this.origin.y-(length*y_direction)};return;} //If straight vertical, run length vertical
+		if(delta_x == 0){this.terminus = {x:this.origin.x, y:this.origin.y+(length*Math.sign(delta_y))};return;} //If straight vertical, run length vertical
 		var slope_length = Math.sqrt(1+(slope*slope));
 		var multiplier = length / slope_length;
-		this.terminus = {x:this.origin.x-(multiplier*x_direction), y:this.origin.y-(multiplier*slope*x_direction)};
+		this.terminus = {x:this.origin.x+(multiplier*Math.sign(delta_x)), y:this.origin.y+(multiplier*slope*Math.sign(delta_x))};
 	}
 
 	this.clear = function(){
