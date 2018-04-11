@@ -23,6 +23,23 @@ function Template(context, canvas_width, canvas_height) {
 		context.stroke();
 	}
 
+	this.drawCone = function(){
+		//Draw line from origin to terminus
+		//add cross line running at opposite slope through terminus for same length
+		var delta_x = (this.terminus.x - this.origin.x);
+		var delta_y = (this.terminus.y - this.origin.y);
+		context.beginPath();
+		context.moveTo(this.origin.x, this.origin.y);
+		context.lineTo(this.terminus.x, this.terminus.y);
+		context.lineTo(this.terminus.x - delta_y/2, this.terminus.y + delta_x/2);
+		context.lineTo(this.origin.x, this.origin.y);
+		context.lineTo(this.terminus.x + delta_y/2, this.terminus.y - delta_x/2);
+		context.lineTo(this.terminus.x, this.terminus.y);
+		context.lineWidth=2;
+		context.strokeStyle = "red";
+		context.stroke();
+	}
+
 	this.setOrigin = function(position, tile){
 		this.origin = {x:position.x, y:position.y};
 		this.originTile = tile;

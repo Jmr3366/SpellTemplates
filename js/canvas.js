@@ -41,7 +41,7 @@ function mousemove_func(evt) {
 		var mousePos = getMousePos(canvasGrid, evt);
 		template.setVector(mousePos,200);
 		template.clear();
-		template.drawLine();
+		template.drawCone();
 	}
 }
 
