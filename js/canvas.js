@@ -30,7 +30,7 @@ function getMousePos(canvasGrid, event) {
 function mousedown_func(evt) {
 	mousedown = true;
 	var mousePos = getMousePos(canvasGrid, evt);
-	console.log(mousedown, mousePos); 
+	//console.log(mousedown, mousePos); 
 	template.clear();
 	//template.drawBox(mousePos, board.getTileByCoord(mousePos.x, mousePos.y));
 	template.setOrigin(mousePos, board.getTileByCoord(mousePos.x, mousePos.y));
