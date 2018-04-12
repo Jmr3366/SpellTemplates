@@ -91,6 +91,7 @@ function getMousePos(canvasGrid, event) {
 }
 
 function mousedown_func(evt) {
+	evt.preventDefault();
 	mousedown = true;
 	var mousePos = getMousePos(canvasGrid, evt);
 	//console.log(mousedown, mousePos); 
@@ -101,6 +102,7 @@ function mousedown_func(evt) {
 }
 
 function mousemove_func(evt) {
+	evt.preventDefault();
 	if(mousedown){
 		var mousePos = getMousePos(canvasGrid, evt);
 		template.setVector(mousePos,200);
@@ -111,11 +113,13 @@ function mousemove_func(evt) {
 }
 
 function mouseup_func(evt) {
+	evt.preventDefault();
 	mousedown = false;
 	board.showCoverageCone(template.getConeVerts());
 }
 
 function dblclick_func(evt) {
+	evt.preventDefault();
 	var mousePos = getMousePos(canvasGrid, evt);
 	if(template.originLocked){
 		template.unlockOrigin();
