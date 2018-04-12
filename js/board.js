@@ -43,6 +43,15 @@ function Board(contextGrid, contextTiles) {
 		return this.tile_set[y][x];
 	}
 
+	this.showCoverageCone = function(verts){
+		for(i = 0; i < this.tile_set.length; i++){
+			for (var j = 0; j < this.tile_set[i].length; j++) {
+				this.tile_set[i][j].calculateHitCone(verts);
+				if(this.tile_set[i][j].isHit){this.tile_set[i][j].fillTile("orange");}
+			}
+		}
+	}
+
 	this.refresh = function(position){
 		for(i = 0; i < this.tile_set.length; i++){
 			for (var j = 0; j < this.tile_set[i].length; j++) {

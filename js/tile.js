@@ -4,7 +4,7 @@ function Tile(x, y, size_mul, contextGrid, contextTile){
 	this.height = 0;
 	this.has_entity = false;
 	this.has_caster = false;
-	this.covered = false;
+	this.isHit = false;
 	this.BASE_TILE_WIDTH = 40;
 	this.BASE_TILE_HEIGHT = 40;
 	this.tile_width = this.BASE_TILE_WIDTH * size_mul;
@@ -29,6 +29,29 @@ function Tile(x, y, size_mul, contextGrid, contextTile){
 		contextTile.rect(x+1, y+1, this.tile_width-1, this.tile_height-1);
 		contextTile.fillStyle= fillStyle;
 		contextTile.fill();
+	}
+
+	this.clearTile = function(){
+		contextTile.clearRect(x+1, y+1, this.tile_width-1, this.tile_height-1);
+	}
+
+	this.calculateHitCone = function(verts){
+		//Verts are Origin, RightSide(from O), LeftSide(From O), Terminus
+		var max_coord = {x:Math.max(verts[0].x, verts[1].x, verts[2].x), y:Math.max(verts[0].y, verts[1].y, verts[2].y)};
+		var min_coord = {x:Math.min(verts[0].x, verts[1].x, verts[2].x), y:Math.min(verts[0].y, verts[1].y, verts[2].y)};
+		if(this.tile_corners[2].x < min_coord.x || this.tile_corners[2].y < min_coord.y){
+			//The highest x/y of the square is before the lowest x/y of the template, cannot be touched
+			this.fillTile("green");
+			this.isHit = false;
+			return;
+		}
+		if(this.tile_corners[0].x > max_coord.x || this.tile_corners[0].y > max_coord.y){
+			//The lowest x/y of the square is after the highest x/y of the template, cannot be touched
+			this.fillTile("blue");
+			this.isHit = false;
+			return;
+		}
+		this.clearTile();
 	}
 
 }

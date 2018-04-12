@@ -47,6 +47,7 @@ function mousemove_func(evt) {
 
 function mouseup_func(evt) {
 	mousedown = false;
+	board.showCoverageCone(template.getConeVerts());
 }
 
 board.drawBoard(p, p, bw, bh);

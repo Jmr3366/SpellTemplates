@@ -23,18 +23,25 @@ function Template(context, canvas_width, canvas_height) {
 		context.stroke();
 	}
 
+	this.getConeVerts = function(){
+		var delta_x = (this.terminus.x - this.origin.x);
+		var delta_y = (this.terminus.y - this.origin.y);
+
+		var vert_1 = {x:(this.terminus.x - delta_y/2), y:(this.terminus.y + delta_x/2)};
+		var vert_2 = {x:(this.terminus.x + delta_y/2), y:(this.terminus.y - delta_x/2)};
+
+		return [this.origin, vert_1, vert_2, this.terminus];
+	}
+
 	this.drawCone = function(){
 		//Draw line from origin to terminus
 		//add cross line running at opposite slope through terminus for same length
-		var delta_x = (this.terminus.x - this.origin.x);
-		var delta_y = (this.terminus.y - this.origin.y);
+		var verts = this.getConeVerts();
 		context.beginPath();
-		context.moveTo(this.origin.x, this.origin.y);
-		context.lineTo(this.terminus.x, this.terminus.y);
-		context.lineTo(this.terminus.x - delta_y/2, this.terminus.y + delta_x/2);
-		context.lineTo(this.origin.x, this.origin.y);
-		context.lineTo(this.terminus.x + delta_y/2, this.terminus.y - delta_x/2);
-		context.lineTo(this.terminus.x, this.terminus.y);
+		context.moveTo(verts[0].x, verts[0].y);
+		context.lineTo(verts[1].x, verts[1].y);
+		context.lineTo(verts[2].x, verts[2].y);
+		context.lineTo(verts[0].x, verts[0].y);
 		context.lineWidth=2;
 		context.strokeStyle = "red";
 		context.stroke();
