@@ -30,7 +30,7 @@ function getMousePos(canvasGrid, event) {
 function mousedown_func(evt) {
 	mousedown = true;
 	var mousePos = getMousePos(canvasGrid, evt);
-	//console.log(mousedown, mousePos); 
+	console.log(mousedown, mousePos); 
 	template.clear();
 	//template.drawBox(mousePos, board.getTileByCoord(mousePos.x, mousePos.y));
 	template.setOrigin(mousePos, board.getTileByCoord(mousePos.x, mousePos.y));
@@ -67,7 +67,10 @@ function dblclick_func(evt) {
 
 board.drawBoard(p, p, bw, bh);
 
-canvasGrid.addEventListener('mousedown touchstart', function(evt){mousedown_func(evt)}, false);
-canvasGrid.addEventListener('mousemove touchmove', function(evt){mousemove_func(evt)}, false);
-canvasGrid.addEventListener('mouseup touchend', function(evt){mouseup_func(evt)}, false);
+canvasGrid.addEventListener('mousedown', function(evt){mousedown_func(evt)}, false);
+canvasGrid.addEventListener('touchstart', function(evt){mousedown_func(evt)}, false);
+canvasGrid.addEventListener('mousemove', function(evt){mousemove_func(evt)}, false);
+canvasGrid.addEventListener('touchmove', function(evt){mousemove_func(evt)}, false);
+canvasGrid.addEventListener('mouseup', function(evt){mouseup_func(evt)}, false);
+canvasGrid.addEventListener('touchend', function(evt){mouseup_func(evt)}, false);
 canvasGrid.addEventListener('dblclick', function(evt){dblclick_func(evt)}, false);
