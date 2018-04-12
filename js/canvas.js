@@ -31,9 +31,10 @@ function mousedown_func(evt) {
 	mousedown = true;
 	var mousePos = getMousePos(canvasGrid, evt);
 	//console.log(mousedown, mousePos); 
-	template.clear(mousePos);
+	template.clear();
 	//template.drawBox(mousePos, board.getTileByCoord(mousePos.x, mousePos.y));
 	template.setOrigin(mousePos, board.getTileByCoord(mousePos.x, mousePos.y));
+	mousemove_func(evt);
 }
 
 function mousemove_func(evt) {
@@ -42,6 +43,7 @@ function mousemove_func(evt) {
 		template.setVector(mousePos,200);
 		template.clear();
 		template.drawCone();
+		if(template.originLocked){template.drawOrigin();}
 	}
 }
 
@@ -50,8 +52,22 @@ function mouseup_func(evt) {
 	board.showCoverageCone(template.getConeVerts());
 }
 
+function dblclick_func(evt) {
+	var mousePos = getMousePos(canvasGrid, evt);
+	if(template.originLocked){
+		template.unlockOrigin();
+		//Move origin and draw new template
+		mousedown_func(evt);
+		mousedown=false;
+	} else {
+		template.lockOrigin();
+		template.drawOrigin();
+	}
+}
+
 board.drawBoard(p, p, bw, bh);
 
 canvasGrid.addEventListener('mousedown', function(evt){mousedown_func(evt)}, false);
 canvasGrid.addEventListener('mousemove', function(evt){mousemove_func(evt)}, false);
 canvasGrid.addEventListener('mouseup', function(evt){mouseup_func(evt)}, false);
+canvasGrid.addEventListener('dblclick', function(evt){dblclick_func(evt)}, false);

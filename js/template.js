@@ -3,6 +3,7 @@ function Template(context, canvas_width, canvas_height) {
 	this.origin = {x:null, y:null};
 	this.originTile = null;
 	this.terminus = {x:null, y:null};
+	this.originLocked = false;
 
 	this.drawBox = function(position, tile){
 		context.beginPath();
@@ -48,8 +49,16 @@ function Template(context, canvas_width, canvas_height) {
 	}
 
 	this.setOrigin = function(position, tile){
+		if(this.originLocked){return;}
 		this.origin = {x:position.x, y:position.y};
 		this.originTile = tile;
+	}
+
+	this.drawOrigin = function(){
+		context.beginPath();
+		context.arc(this.origin.x, this.origin.y, 10, 0, 2*Math.PI);
+		context.fillStyle = "red";
+		context.fill();
 	}
 
 	this.setTerminus = function(position){
@@ -66,6 +75,14 @@ function Template(context, canvas_width, canvas_height) {
 		var slope_length = Math.sqrt(1+(slope*slope));
 		var multiplier = length / slope_length;
 		this.terminus = {x:this.origin.x+(multiplier*Math.sign(delta_x)), y:this.origin.y+(multiplier*slope*Math.sign(delta_x))};
+	}
+
+	this.lockOrigin = function(){
+		this.originLocked = true;
+	}
+
+	this.unlockOrigin = function(){
+		this.originLocked = false;
 	}
 
 	this.clear = function(){
