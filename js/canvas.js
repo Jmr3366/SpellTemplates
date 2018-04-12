@@ -67,7 +67,7 @@ function dblclick_func(evt) {
 
 board.drawBoard(p, p, bw, bh);
 
-canvasGrid.addEventListener('mousedown', function(evt){mousedown_func(evt)}, false);
-canvasGrid.addEventListener('mousemove', function(evt){mousemove_func(evt)}, false);
-canvasGrid.addEventListener('mouseup', function(evt){mouseup_func(evt)}, false);
+canvasGrid.addEventListener('mousedown touchstart', function(evt){mousedown_func(evt)}, false);
+canvasGrid.addEventListener('mousemove touchmove', function(evt){mousemove_func(evt)}, false);
+canvasGrid.addEventListener('mouseup touchend', function(evt){mouseup_func(evt)}, false);
 canvasGrid.addEventListener('dblclick', function(evt){dblclick_func(evt)}, false);
