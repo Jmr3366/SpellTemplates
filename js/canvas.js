@@ -1,7 +1,7 @@
 // Box width
-var bw = 800;
+var bw = document.getElementById("canvasGrid").width;
 // Box height
-var bh = 800;
+var bh = document.getElementById("canvasGrid").height;
 // Padding
 var p = 10;
 // Mouse currently up or down
