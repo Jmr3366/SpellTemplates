@@ -21,6 +21,7 @@ var template = new Template(contextTemplate, canvasTemplate.width, canvasTemplat
 
 function getMousePos(canvasGrid, event) {
 	var rect = canvasGrid.getBoundingClientRect();
+	if(event.touches){event = event.touches[0];}
 	return {
 		x: event.clientX - rect.left,
 		y: event.clientY - rect.top
