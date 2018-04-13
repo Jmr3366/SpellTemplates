@@ -63,6 +63,7 @@ function dblclick_func(evt) {
 		template.unlockOrigin();
 		//Move origin and draw new template
 		mousedown_func(evt);
+		board.clearTiles();
 		mousedown=false;
 	} else {
 		template.lockOrigin();

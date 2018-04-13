@@ -51,6 +51,14 @@ function Board(contextGrid, contextTiles) {
 		}
 	}
 
+	this.clearTiles = function(){
+		for(i = 0; i < this.tile_set.length; i++){
+			for (var j = 0; j < this.tile_set[i].length; j++) {
+				this.tile_set[i][j].clearTile();
+			}
+		}
+	}
+
 	this.refresh = function(position){
 		for(i = 0; i < this.tile_set.length; i++){
 			for (var j = 0; j < this.tile_set[i].length; j++) {
