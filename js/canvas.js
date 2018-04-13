@@ -53,7 +53,7 @@ function mousemove_func(evt) {
 function mouseup_func(evt) {
 	evt.preventDefault();
 	mousedown = false;
-	board.showCoverageCone(template.getConeVerts());
+	board.showCoverageCone(template);
 }
 
 function dblclick_func(evt) {
