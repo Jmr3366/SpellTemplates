@@ -6,11 +6,15 @@ function Board(contextGrid, contextTiles) {
 	this.origin = {x:null,y:null};
 	this.tile_width;
 	this.tile_height;
+	this.height;
+	this.width;
 
 	this.drawBoard = function(base_x, base_y, width, height){
 		var remaining_width = width;
 		var remaining_height = height;
 		var T = new Tile();
+		this.height=height;
+		this.width=width;
 		this.tile_width = T.BASE_TILE_WIDTH * this.tile_size_multiplier;
 		this.tile_height = T.BASE_TILE_HEIGHT * this.tile_size_multiplier;
 		this.origin = {x:base_x, y:base_y};
@@ -55,6 +59,24 @@ function Board(contextGrid, contextTiles) {
 		for(i = 0; i < this.tile_set.length; i++){
 			for (var j = 0; j < this.tile_set[i].length; j++) {
 				this.tile_set[i][j].clearTile();
+			}
+		}
+	}
+
+	this.resetHits = function(){
+		for(i = 0; i < this.tile_set.length; i++){
+			for (var j = 0; j < this.tile_set[i].length; j++) {
+				this.tile_set[i][j].isHit = false;
+			}
+		}
+	}
+
+	this.colourHits = function(fillstyle){
+		for(i = 0; i < this.tile_set.length; i++){
+			for (var j = 0; j < this.tile_set[i].length; j++) {
+				if(this.tile_set[i][j].isHit){
+					this.tile_set[i][j].fillTile(fillstyle);
+				}
 			}
 		}
 	}

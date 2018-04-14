@@ -34,6 +34,7 @@ function mousedown_func(evt) {
 	var mousePos = getMousePos(canvasGrid, evt);
 	//console.log(mousedown, mousePos); 
 	template.clear();
+	board.clearTiles();
 	//template.drawBox(mousePos, board.getTileByCoord(mousePos.x, mousePos.y));
 	template.setOrigin(mousePos, board.getTileByCoord(mousePos.x, mousePos.y));
 	mousemove_func(evt);
@@ -47,13 +48,20 @@ function mousemove_func(evt) {
 		template.clear();
 		template.drawCone();
 		if(template.originLocked){template.drawOrigin();}
+
+		board.resetHits();
+		template.calculateHitCone(board);
+		board.colourHits("red");
 	}
 }
 
 function mouseup_func(evt) {
 	evt.preventDefault();
 	mousedown = false;
-	board.showCoverageCone(template);
+	//board.showCoverageCone(template);
+	board.resetHits();
+	template.calculateHitCone(board);
+	board.colourHits("red");
 }
 
 function dblclick_func(evt) {
@@ -80,3 +88,4 @@ canvasGrid.addEventListener('touchmove', function(evt){mousemove_func(evt)}, fal
 canvasGrid.addEventListener('mouseup', function(evt){mouseup_func(evt)}, false);
 canvasGrid.addEventListener('touchend', function(evt){mouseup_func(evt)}, false);
 canvasGrid.addEventListener('dblclick', function(evt){dblclick_func(evt)}, false);
+
