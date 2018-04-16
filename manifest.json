@@ -1,0 +1,25 @@
+{
+  "short_name": "Spell Templates",
+  "name": "SirCinnamon's Spell Template Tool",
+  "icons": [
+    {
+      "src": "icons/favicon-32x32.png",
+      "type": "image/png",
+      "sizes": "32x32"
+    },
+    {
+      "src": "icons/favicon-96x96.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "icons/favicon-196x196.png",
+      "type": "image/png",
+      "sizes": "196x196"
+    }
+  ],
+  "background_color": "#835C3B",
+  "display": "standalone",
+  "theme_color": "#3B6182",
+  "start_url": "index.html"
+}
