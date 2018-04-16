@@ -67,34 +67,69 @@ function Template(context, canvas_width, canvas_height) {
 		//Get leftmost tile edge and start scan from there
 		var poly = [verts[0],verts[1],verts[2]];
 		poly = this.cropPoly(poly, board.origin, {x:board.origin.x+board.width, y:board.origin.y+board.height});
+		this.calculateHitPoly(poly, board);
+	}
 
-		var scan_x = Math.ceil((this.farthestBound(poly, "min", "x") - board.origin.x)/board.tile_width)*board.tile_width+board.origin.x;
+	this.calculateHitPoly = function(polyVerts, board){
+		var scan_x = Math.ceil((this.farthestBound(polyVerts, "min", "x") - board.origin.x)/board.tile_width)*board.tile_width+board.origin.x;
 		scan_x = Math.max(scan_x, board.origin.x);
-		var max_tile_edge_x = Math.ceil((this.farthestBound(poly, "max", "x")-board.origin.x)/board.tile_width)*board.tile_width+board.origin.x;
+		var max_tile_edge_x = Math.ceil((this.farthestBound(polyVerts, "max", "x")-board.origin.x)/board.tile_width)*board.tile_width+board.origin.x;
 		max_tile_edge_x = Math.min(max_tile_edge_x, board.origin.x+board.width);
+
+		var that = this;
+		var comp_x = function (u, v){return that.farthestBound(u, "min", "x") - that.farthestBound(v, "min", "x");}
+
 		while(scan_x <= max_tile_edge_x){
-			var vertical_segments = this.slicePoly(poly, scan_x, true);
-			poly = vertical_segments[1];
+			if(scan_x==max_tile_edge_x){this.calculateHitColumn(polyVerts, board, scan_x);break;}
+			var vertical_segments = this.slicePoly(polyVerts, scan_x, true);
+			vertical_segments.sort(comp_x);
+			polyVerts = vertical_segments[1];
 			var curr_vertical_segment = vertical_segments[0];
-			var scan_y = Math.ceil((this.farthestBound(curr_vertical_segment, "min", "y")-board.origin.y)/board.tile_height)*board.tile_height+board.origin.y;
-			scan_y = Math.max(scan_y, board.origin.y);
-			var max_tile_edge_y = Math.ceil((this.farthestBound(curr_vertical_segment, "max", "y")-board.origin.y)/board.tile_height)*board.tile_height+board.origin.y;
-			max_tile_edge_y = Math.min(max_tile_edge_y, board.origin.y+board.height);
-			while(scan_y <= max_tile_edge_y){
-				var horizontal_segments = this.slicePoly(curr_vertical_segment, scan_y, false);
-				horizontal_segments.reverse(); //They are returned sorted inverse
-				curr_vertical_segment = horizontal_segments[1];
-				var curr_horizontal_segment = horizontal_segments[0];
-				if(this.polyArea(curr_horizontal_segment) > (board.tile_width*board.tile_height*this.minHitFactor)){
-					board.getTileByCoord(scan_x-board.tile_width/2, scan_y-board.tile_height/2).isHit = true;
-				}
-				scan_y += board.tile_height;
-				if(horizontal_segments.length == 1){break;}
+			if(!polyVerts){
+				//No cut happened
+				scan_x += board.tile_width;
+				polyVerts = vertical_segments[0];
+				continue;
 			}
+			
+			this.calculateHitColumn(curr_vertical_segment, board, scan_x);
 			scan_x += board.tile_width;
 			if(vertical_segments.length == 1){break;}
 		}
+	}
 
+	this.calculateHitColumn = function(polyVerts, board, curr_x){
+		var scan_y = Math.ceil((this.farthestBound(polyVerts, "min", "y")-board.origin.y)/board.tile_height)*board.tile_height+board.origin.y;
+		scan_y = Math.max(scan_y, board.origin.y);
+		var max_tile_edge_y = Math.ceil((this.farthestBound(polyVerts, "max", "y")-board.origin.y)/board.tile_height)*board.tile_height+board.origin.y;
+		max_tile_edge_y = Math.min(max_tile_edge_y, board.origin.y+board.height);
+		
+		var that = this;
+		var comp_y = function (u, v){return that.farthestBound(u, "min", "y") - that.farthestBound(v, "min", "y");}
+		
+		while(scan_y <= max_tile_edge_y){
+			if(scan_y==max_tile_edge_y){this.calculateHitTile(polyVerts, board, curr_x, scan_y);break;}
+			var horizontal_segments = this.slicePoly(polyVerts, scan_y, false);
+			horizontal_segments.sort(comp_y); //They are returned sorted inverse
+			polyVerts = horizontal_segments[1];
+			var curr_horizontal_segment = horizontal_segments[0];
+			if(!polyVerts){
+				//No cut happened
+				scan_y += board.tile_height;
+				polyVerts = horizontal_segments[0];
+				continue;
+			}
+			this.calculateHitTile(curr_horizontal_segment, board, curr_x, scan_y);
+			scan_y += board.tile_height;
+			if(horizontal_segments.length == 1){break;}
+		}
+	}
+
+	this.calculateHitTile = function(polyVerts, board, curr_x, curr_y){
+		if(!polyVerts){return;}
+		if(this.polyArea(polyVerts) > (board.tile_width*board.tile_height*this.minHitFactor)){
+			board.getTileByCoord(curr_x-board.tile_width/2, curr_y-board.tile_height/2).isHit = true;
+		}
 	}
 
 	this.setOrigin = function(position, tile){

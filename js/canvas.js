@@ -50,8 +50,9 @@ function mousemove_func(evt) {
 		if(template.originLocked){template.drawOrigin();}
 
 		board.resetHits();
+		board.clearTiles();
 		template.calculateHitCone(board);
-		board.colourHits("red");
+		board.colourHits("orange");
 	}
 }
 
@@ -60,8 +61,9 @@ function mouseup_func(evt) {
 	mousedown = false;
 	//board.showCoverageCone(template);
 	board.resetHits();
+	board.clearTiles();
 	template.calculateHitCone(board);
-	board.colourHits("red");
+	board.colourHits("orange");
 }
 
 function dblclick_func(evt) {
