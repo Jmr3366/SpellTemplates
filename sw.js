@@ -24,10 +24,10 @@ self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(cacheName).then(cache => {
       return cache.addAll([
-        `/`,
-        `/index.html`,
-        `/main.css`,
-        `/js/main.js`
+        `./`,
+        `./index.html`,
+        `./main.css`,
+        `./js/main.js`
       ])
           .then(() => self.skipWaiting());
     })
