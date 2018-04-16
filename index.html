@@ -30,6 +30,14 @@
 		<canvas id="canvasUnits" width="780px" height="780px"></canvas>
 		<canvas id="canvasGrid" width="780px" height="780px"></canvas>
 		</div>
+
+		<script>
+		if('serviceWorker' in navigator) {
+		  navigator.serviceWorker
+		           .register('/sw.js')
+		           .then(function() { console.log("Service Worker Registered"); });
+		}
+		</script>
 	</body>
 	<script language="JavaScript" type="text/javascript" src="./js/main.js"></script>
 </html>
