@@ -1,6 +1,9 @@
 {
-  "short_name": "Spell Templates",
+  "short_name": "SCST",
   "name": "SirCinnamon's Spell Template Tool",
+  "description": "An app for aiming and calculating spell hits for Tabletop RPGs",
+  "dir": "ltr",
+  "lang": "en",
   "icons": [
     {
       "src": "icons/favicon-32x32.png",
@@ -16,6 +19,11 @@
       "src": "icons/favicon-196x196.png",
       "type": "image/png",
       "sizes": "196x196"
+    },
+    {
+      "src": "icons/mstile-310x310.png",
+      "type": "image/png",
+      "sizes": "310x310"
     }
   ],
   "background_color": "#835C3B",
