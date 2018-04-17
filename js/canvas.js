@@ -112,12 +112,12 @@ function init_canvases() {
 
 init_canvases();
 
-canvasGrid.addEventListener('mousedown', function(evt){mousedown_func(evt)}, false);
-canvasGrid.addEventListener('touchstart', function(evt){mousedown_func(evt)}, false);
-canvasGrid.addEventListener('mousemove', function(evt){mousemove_func(evt)}, false);
-canvasGrid.addEventListener('touchmove', function(evt){mousemove_func(evt)}, false);
-canvasGrid.addEventListener('mouseup', function(evt){mouseup_func(evt)}, false);
-canvasGrid.addEventListener('touchend', function(evt){mouseup_func(evt)}, false);
-canvasGrid.addEventListener('dblclick', function(evt){dblclick_func(evt)}, false);
+canvasGrid.addEventListener('mousedown', mousedown_func, false);
+canvasGrid.addEventListener('touchstart', mousedown_func, false);
+canvasGrid.addEventListener('mousemove', mousemove_func, false);
+canvasGrid.addEventListener('touchmove', mousemove_func, false);
+canvasGrid.addEventListener('mouseup', mouseup_func, false);
+canvasGrid.addEventListener('touchend', mouseup_func, false);
+canvasGrid.addEventListener('dblclick', dblclick_func, false);
 document.defaultView.addEventListener('resize', function(evt){resize_func(evt)}, false);
 
