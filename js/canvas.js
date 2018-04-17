@@ -1,12 +1,11 @@
 // Box width
-var bw = document.getElementById("canvasGrid").width;
+var bw;
 // Box height
-var bh = document.getElementById("canvasGrid").height;
-// Padding
-var p = 10;
+var bh;
 // Mouse currently up or down
 var mousedown = false;
 
+var canvasDiv = document.getElementById("canvasDiv");
 var canvasGrid = document.getElementById("canvasGrid");
 var contextGrid = canvasGrid.getContext("2d");
 var canvasUnits = document.getElementById("canvasUnits");
@@ -16,8 +15,8 @@ var contextTemplate = canvasTemplate.getContext("2d");
 var canvasTiles = document.getElementById("canvasTiles");
 var contextTiles = canvasTiles.getContext("2d");
 
-var board = new Board(contextGrid, contextTiles);
-var template = new Template(contextTemplate, canvasTemplate.width, canvasTemplate.height);
+var board;
+var template;
 
 function getMousePos(canvasGrid, event) {
 	var rect = canvasGrid.getBoundingClientRect();
@@ -26,6 +25,11 @@ function getMousePos(canvasGrid, event) {
 		x: event.clientX - rect.left,
 		y: event.clientY - rect.top
 	};
+}
+
+function resizeCanvas(canvas, width, height) {
+	canvas.width = width;
+	canvas.height = height;
 }
 
 function mousedown_func(evt) {
@@ -59,7 +63,6 @@ function mousemove_func(evt) {
 function mouseup_func(evt) {
 	evt.preventDefault();
 	mousedown = false;
-	//board.showCoverageCone(template);
 	board.resetHits();
 	board.clearTiles();
 	template.calculateHitCone(board);
@@ -81,7 +84,33 @@ function dblclick_func(evt) {
 	}
 }
 
-board.drawBoard(p, p, bw, bh);
+function resize_func(evt) {
+	clearTimeout(resizeTimer);
+	//console.log("resize event fired");
+	var resizeTimer = setTimeout(function() {
+
+		//console.log("resize event processed");
+		init_canvases();
+	          
+	}, 200);
+}
+
+function init_canvases() {
+	bw = parseInt(getComputedStyle(canvasDiv, null).getPropertyValue("width").replace("px", ""));
+	bh = parseInt(getComputedStyle(canvasDiv, null).getPropertyValue("height").replace("px", ""));
+
+	resizeCanvas(canvasGrid, bw, bh);
+	resizeCanvas(canvasUnits, bw, bh);
+	resizeCanvas(canvasTemplate, bw, bh);
+	resizeCanvas(canvasTiles, bw, bh);
+
+	board = new Board(contextGrid, contextTiles);
+	template = new Template(contextTemplate, canvasTemplate.width, canvasTemplate.height);
+
+	board.drawBoard(Math.floor(((bw-1)%board.tile_width)/2), 0, bw, bh);
+}
+
+init_canvases();
 
 canvasGrid.addEventListener('mousedown', function(evt){mousedown_func(evt)}, false);
 canvasGrid.addEventListener('touchstart', function(evt){mousedown_func(evt)}, false);
@@ -90,4 +119,5 @@ canvasGrid.addEventListener('touchmove', function(evt){mousemove_func(evt)}, fal
 canvasGrid.addEventListener('mouseup', function(evt){mouseup_func(evt)}, false);
 canvasGrid.addEventListener('touchend', function(evt){mouseup_func(evt)}, false);
 canvasGrid.addEventListener('dblclick', function(evt){dblclick_func(evt)}, false);
+document.defaultView.addEventListener('resize', function(evt){resize_func(evt)}, false);
 

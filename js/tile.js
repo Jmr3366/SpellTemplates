@@ -1,15 +1,9 @@
-function Tile(x, y, size_mul, contextGrid, contextTile){
+function Tile(x, y, height, width, contextGrid, contextTile){
 	this.is_hex = false;
-	this.width = 0;
-	this.height = 0;
 	this.has_entity = false;
 	this.has_caster = false;
 	this.isHit = false;
-	this.BASE_TILE_WIDTH = 40;
-	this.BASE_TILE_HEIGHT = 40;
-	this.tile_width = this.BASE_TILE_WIDTH * size_mul;
-	this.tile_height = this.BASE_TILE_HEIGHT * size_mul;
-	this.tile_corners = [{"x":x,"y":y},{"x":x+this.tile_width,"y":y},{"x":x+this.tile_width,"y":y+this.tile_height},{"x":x,"y":y+this.tile_height}]
+	this.tile_corners = [{"x":x,"y":y},{"x":x+width,"y":y},{"x":x+width,"y":y+height},{"x":x,"y":y+height}]
 
 	this.drawTile = function(){
 		contextGrid.beginPath();
@@ -26,13 +20,13 @@ function Tile(x, y, size_mul, contextGrid, contextTile){
 
 	this.fillTile = function(fillStyle="red"){
 		contextTile.beginPath();
-		contextTile.rect(x+1, y+1, this.tile_width-1, this.tile_height-1);
+		contextTile.rect(x+1, y+1, width-1, height-1);
 		contextTile.fillStyle= fillStyle;
 		contextTile.fill();
 	}
 
 	this.clearTile = function(){
-		contextTile.clearRect(x+1, y+1, this.tile_width-1, this.tile_height-1);
+		contextTile.clearRect(x+1, y+1, width-1, height-1);
 	}
 
 	this.calculateHitCone = function(template){

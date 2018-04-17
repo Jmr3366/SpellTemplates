@@ -4,27 +4,26 @@ function Board(contextGrid, contextTiles) {
 	this.tile_set = [];
 	this.tile_size_multiplier = 1;
 	this.origin = {x:null,y:null};
-	this.tile_width;
-	this.tile_height;
+	this.BASE_TILE_WIDTH = 40;
+	this.BASE_TILE_HEIGHT = 40;
+	this.tile_width = this.BASE_TILE_WIDTH * this.tile_size_multiplier;
+	this.tile_height = this.BASE_TILE_HEIGHT * this.tile_size_multiplier;
 	this.height;
 	this.width;
 
 	this.drawBoard = function(base_x, base_y, width, height){
 		var remaining_width = width;
 		var remaining_height = height;
-		var T = new Tile();
-		this.height=height;
-		this.width=width;
-		this.tile_width = T.BASE_TILE_WIDTH * this.tile_size_multiplier;
-		this.tile_height = T.BASE_TILE_HEIGHT * this.tile_size_multiplier;
 		this.origin = {x:base_x, y:base_y};
 		var curr_x = base_x;
 		var curr_y = base_y;
 		this.tile_count=0;
-		while(((base_y+height)-curr_y) >= this.tile_height){
+		while(((base_y+height)-curr_y) >= this.tile_height+1){
+			//console.log("REMAINING_Y vs CURR_Y: ",(base_y+height)-curr_y, "vs", curr_y);
 			var row = [];
-			while((base_x+width-curr_x) >= this.tile_width) {
-				var tile = new Tile(curr_x, curr_y, this.tile_size_multiplier, contextGrid, contextTiles);
+			while((base_x+width-curr_x) >= this.tile_width+1) {
+				//console.log("REMAINING_X vs CURR_X: ",(base_x+width-curr_x), "vs", curr_x);
+				var tile = new Tile(curr_x, curr_y, this.tile_height, this.tile_width, contextGrid, contextTiles);
 				tile.drawTile();
 				row.push(tile);
 				curr_x+=this.tile_width;
@@ -35,6 +34,8 @@ function Board(contextGrid, contextTiles) {
 			this.tile_set.push(row);
 			curr_y += this.tile_height;
 		}
+		this.width = this.tile_set[0].length * this.tile_width;
+		this.height = this.tile_set.length * this.tile_height;
 	}
 
 	this.getTileByCoord = function(x,y){
@@ -43,7 +44,7 @@ function Board(contextGrid, contextTiles) {
 		x = (x - (x % this.tile_width))/this.tile_width;
 		y = (y - (y % this.tile_height))/this.tile_height;
 		if(y > this.tile_set.length){return null;}
-		if(y > this.tile_set[0].length){return null;}
+		if(x > this.tile_set[0].length){return null;}
 		return this.tile_set[y][x];
 	}
 

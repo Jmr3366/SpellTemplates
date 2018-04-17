@@ -12,14 +12,14 @@ body h1 {
 #canvasDiv {
 	position:relative;
 	background: tan;
-	width: 820px;
-	height: 820px;
+	width: 80vw;
+	height: 80vh;
 	margin: auto;
+	padding: 20px;
 }
 
 canvas {
-	margin: 20px;
 	position: absolute;
-	top: 0px;
-	left: 0px;
+	top: 20px;
+	left: 20px;
 }
