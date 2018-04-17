@@ -24,7 +24,17 @@
       "src": "icons/mstile-310x310.png",
       "type": "image/png",
       "sizes": "310x310"
-    }
+    },
+    {
+      "src": "icons/favicon-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "icons/favicon-1024x1024.png",
+      "type": "image/png",
+      "sizes": "1024x1024"
+    },
   ],
   "background_color": "#835C3B",
   "display": "standalone",
