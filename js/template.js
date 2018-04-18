@@ -149,7 +149,7 @@ function Template(context, canvas_width, canvas_height) {
 		this.terminus = {x:position.x, y:position.y};
 	}
 
-	this.setVector = function(position, length=200){
+	this.setVector = function(position, length){
 		//set terminus based on origin, 2nd position and length
 		var delta_x = (position.x - this.origin.x);
 		var delta_y = (position.y - this.origin.y);
@@ -159,6 +159,10 @@ function Template(context, canvas_width, canvas_height) {
 		var slope_length = Math.sqrt(1+(slope*slope));
 		var multiplier = length / slope_length;
 		this.terminus = {x:this.origin.x+(multiplier*Math.sign(delta_x)), y:this.origin.y+(multiplier*slope*Math.sign(delta_x))};
+	}
+
+	this.changeMagnitude = function(length){
+		this.setVector(this.terminus, length);
 	}
 
 	this.lockOrigin = function(){

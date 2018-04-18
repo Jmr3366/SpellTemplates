@@ -22,6 +22,7 @@ var contextTiles = canvasTiles.getContext("2d");
 
 var board;
 var template;
+var templateSize = 3;
 
 function getMousePos(canvasGrid, event) {
 	var rect = canvasGrid.getBoundingClientRect();
@@ -45,14 +46,21 @@ function vibrate(events){
 	}
 }
 
+function paintTemplate(){
+	template.clear();
+	board.clearTiles();
+	board.resetHits();
+	if(template.originLocked){template.drawOrigin();}
+	template.drawCone();
+	template.calculateHitCone(board);
+	board.colourHits("orange");
+}
+
 function mousedown_func(evt) {
 	evt.preventDefault();
 	mousedown = true;
 	var mousePos = getMousePos(canvasGrid, evt);
 	//console.log(mousedown, mousePos); 
-	template.clear();
-	board.clearTiles();
-	//template.drawBox(mousePos, board.getTileByCoord(mousePos.x, mousePos.y));
 	template.setOrigin(mousePos, board.getTileByCoord(mousePos.x, mousePos.y));
 	mousemove_func(evt);
 }
@@ -61,25 +69,14 @@ function mousemove_func(evt) {
 	evt.preventDefault();
 	if(mousedown){
 		var mousePos = getMousePos(canvasGrid, evt);
-		template.setVector(mousePos,board.tile_width*3);
-		template.clear();
-		template.drawCone();
-		if(template.originLocked){template.drawOrigin();}
-
-		board.resetHits();
-		board.clearTiles();
-		template.calculateHitCone(board);
-		board.colourHits("orange");
+		template.setVector(mousePos,board.tile_width*templateSize);
+		paintTemplate();
 	}
 }
 
 function mouseup_func(evt) {
 	evt.preventDefault();
 	mousedown = false;
-	board.resetHits();
-	board.clearTiles();
-	template.calculateHitCone(board);
-	board.colourHits("orange");
 }
 
 function dblclick_func(evt) {
@@ -99,6 +96,7 @@ function dblclick_func(evt) {
 
 function touchstart_func(evt) {
 	if(evt.touches.length == 1){
+		//Start longpress
 		longPressOrigin = {x:evt.touches[0].clientX, y:evt.touches[0].clientY};
 		longPressTimer = setTimeout(function() {
 			vibrate(LONG_PRESS_VIBRATION);
@@ -111,6 +109,7 @@ function touchstart_func(evt) {
 
 function touchmove_func(evt) {
 	if(evt.touches.length == 1){
+		//Cancel longpress if in progress & have moved enough away
 		if(longPressOrigin){
 			var dx = evt.touches[0].clientX - longPressOrigin.x
 			var dy = evt.touches[0].clientY - longPressOrigin.y
@@ -119,14 +118,17 @@ function touchmove_func(evt) {
 				longPressOrigin = null;
 			}
 		}
+
 		mousemove_func(evt);
 	}
 }
 
 function touchend_func(evt) {
 	if(evt.touches.length <= 1){
+		//Cancel longpress happening
 		clearTimeout(longPressTimer);
 		longPressOrigin = null;
+
 		mouseup_func(evt);
 	}
 }
@@ -155,6 +157,18 @@ function init_canvases() {
 	board.drawBoard(Math.floor(((bw-1)%board.tile_width)/2), 0, bw, bh);
 }
 
+function increment_template_size(){
+	if(templateSize<25){templateSize++};
+	template.changeMagnitude(board.tile_width*templateSize);
+	paintTemplate();
+}
+
+function decrement_template_size(){
+	if(templateSize>1){templateSize--;}
+	template.changeMagnitude(board.tile_width*templateSize);
+	paintTemplate();
+}
+
 init_canvases();
 
 canvasGrid.addEventListener('mousedown', mousedown_func, {passive:false});
@@ -166,4 +180,6 @@ canvasGrid.addEventListener('touchend', touchend_func, {passive:false});
 canvasGrid.addEventListener('touchcancel', touchend_func, {passive:false});
 canvasGrid.addEventListener('dblclick', dblclick_func, {passive:false});
 document.defaultView.addEventListener('resize', resize_func, {passive:true});
+document.getElementById("incrementTemplateSize").addEventListener('click', increment_template_size, {passive:true});
+document.getElementById("decrementTemplateSize").addEventListener('click', decrement_template_size, {passive:true});
 
