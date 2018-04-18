@@ -129,6 +129,14 @@ function resizeCanvas(canvas, width, height) {
 	canvas.height = height;
 }
 
+function vibrate(events){
+	navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
+	//console.log(navigator.vibrate);
+	if (navigator.vibrate) {
+		navigator.vibrate(...events);
+	}
+}
+
 function mousedown_func(evt) {
 	evt.preventDefault();
 	mousedown = true;
@@ -184,6 +192,7 @@ function dblclick_func(evt) {
 function touchstart_func(evt) {
 	longPressOrigin = {x:evt.touches[0].clientX, y:evt.touches[0].clientY};
 	longPressTimer = setTimeout(function() {
+		vibrate([200]);
 		dblclick_func(evt);
 	}, 500);
 	if(evt.touches.length == 1){mousedown_func(evt);}
