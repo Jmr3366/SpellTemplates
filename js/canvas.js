@@ -98,30 +98,37 @@ function dblclick_func(evt) {
 }
 
 function touchstart_func(evt) {
-	longPressOrigin = {x:evt.touches[0].clientX, y:evt.touches[0].clientY};
-	longPressTimer = setTimeout(function() {
-		vibrate(LONG_PRESS_VIBRATION);
-		dblclick_func(evt);
-	}, 500);
-	if(evt.touches.length == 1){mousedown_func(evt);}
+	if(evt.touches.length == 1){
+		longPressOrigin = {x:evt.touches[0].clientX, y:evt.touches[0].clientY};
+		longPressTimer = setTimeout(function() {
+			vibrate(LONG_PRESS_VIBRATION);
+			dblclick_func(evt);
+		}, 500);
+
+		mousedown_func(evt);
+	}
 }
 
 function touchmove_func(evt) {
-	if(longPressOrigin){
-		var dx = evt.touches[0].clientX - longPressOrigin.x
-		var dy = evt.touches[0].clientY - longPressOrigin.y
-		if(Math.sqrt(dx * dx + dy * dy) > LONG_PRESS_FORGIVENESS){
-			clearTimeout(longPressTimer);
-			longPressOrigin = null;
+	if(evt.touches.length == 1){
+		if(longPressOrigin){
+			var dx = evt.touches[0].clientX - longPressOrigin.x
+			var dy = evt.touches[0].clientY - longPressOrigin.y
+			if(Math.sqrt(dx * dx + dy * dy) > LONG_PRESS_FORGIVENESS){
+				clearTimeout(longPressTimer);
+				longPressOrigin = null;
+			}
 		}
+		mousemove_func(evt);
 	}
-	if(evt.touches.length == 1){mousemove_func(evt);}
 }
 
 function touchend_func(evt) {
-	clearTimeout(longPressTimer);
-	longPressOrigin = null;
-	if(evt.touches.length == 1){mouseup_func(evt);}
+	if(evt.touches.length <= 1){
+		clearTimeout(longPressTimer);
+		longPressOrigin = null;
+		mouseup_func(evt);
+	}
 }
 
 function resize_func(evt) {
