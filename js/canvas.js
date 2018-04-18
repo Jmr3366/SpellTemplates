@@ -4,6 +4,10 @@ var bw;
 var bh;
 // Mouse currently up or down
 var mousedown = false;
+//Long Press settings
+var longPressTimer;
+var longPressOrigin;
+var LONG_PRESS_FORGIVENESS = 5;
 
 var canvasDiv = document.getElementById("canvasDiv");
 var canvasGrid = document.getElementById("canvasGrid");
@@ -17,7 +21,6 @@ var contextTiles = canvasTiles.getContext("2d");
 
 var board;
 var template;
-var longPressTimer;
 
 function getMousePos(canvasGrid, event) {
 	var rect = canvasGrid.getBoundingClientRect();
@@ -93,7 +96,11 @@ function touchstart_func(evt) {
 }
 
 function touchmove_func(evt) {
-	clearTimeout(longPressTimer);
+	var dx = evt.touches[0].x - longPressOrigin.x
+	var dy = evt.touches[0].y - longPressOrigin.y
+	if(Math.sqrt(dx * dx + dy * dy) < LONG_PRESS_FORGIVENESS){
+		clearTimeout(longPressTimer);
+	}
 	if(evt.touches.length == 1){mousemove_func(evt);}
 }
 
