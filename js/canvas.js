@@ -8,6 +8,7 @@ var mousedown = false;
 var longPressTimer;
 var longPressOrigin;
 var LONG_PRESS_FORGIVENESS = 5;
+var LONG_PRESS_VIBRATION = [75];
 
 var canvasDiv = document.getElementById("canvasDiv");
 var canvasGrid = document.getElementById("canvasGrid");
@@ -99,7 +100,7 @@ function dblclick_func(evt) {
 function touchstart_func(evt) {
 	longPressOrigin = {x:evt.touches[0].clientX, y:evt.touches[0].clientY};
 	longPressTimer = setTimeout(function() {
-		vibrate([200]);
+		vibrate(LONG_PRESS_VIBRATION);
 		dblclick_func(evt);
 	}, 500);
 	if(evt.touches.length == 1){mousedown_func(evt);}
