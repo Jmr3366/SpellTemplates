@@ -182,6 +182,7 @@ function dblclick_func(evt) {
 }
 
 function touchstart_func(evt) {
+	longPressOrigin = {x:evt.touches[0].x, y:evt.touches[0].y};
 	longPressTimer = setTimeout(function() {
 		dblclick_func(evt);
 	}, 500);
@@ -234,6 +235,7 @@ canvasGrid.addEventListener('mousemove', mousemove_func, {passive:false});
 canvasGrid.addEventListener('touchmove', touchmove_func, {passive:false});
 canvasGrid.addEventListener('mouseup', mouseup_func, {passive:false});
 canvasGrid.addEventListener('touchend', touchend_func, {passive:false});
+canvasGrid.addEventListener('touchcancel', touchend_func, {passive:false});
 canvasGrid.addEventListener('dblclick', dblclick_func, {passive:false});
 document.defaultView.addEventListener('resize', resize_func, {passive:true});
 
