@@ -40,7 +40,24 @@
 			<canvas id="canvasUnits" width="150px" height="150px"></canvas>
 			<canvas id="canvasGrid" width="150px" height="150px"></canvas>
 		</div>
-
+		<div id="toolbarDiv">
+			<div id="toolbarBtnDiv">
+				<table>
+					<thead>
+					</thead>
+					<tbody><tr>
+						<td><button id="decrementTemplateSize">-</button></td>
+						<td><button>#</button></td>
+						<td><button id="incrementTemplateSize">+</button></td>
+						<td><button>Man</button></td>
+						<td><button>Cone</button></td>
+						<td><button>Circle</button></td>
+						<td><button>Line</button></td>
+					</tr></tbody>
+				</table>
+			</div>
+		</div>
+		
 		<script>
 		if('serviceWorker' in navigator) {
 		  navigator.serviceWorker

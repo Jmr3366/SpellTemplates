@@ -18,6 +18,59 @@ body h1 {
 	padding: 20px;
 }
 
+#toolbarDiv {
+	overflow: hidden;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100vw;
+	height: 10vh;
+	max-height: 60px;
+}
+
+#toolbarBtnDiv {
+	overflow: hidden;
+	background-color: #3B6182;
+	margin: 0px auto;
+	width: 100vw;
+	max-width: 600px;
+	height: 10vh;
+	max-height: 60px;
+}
+
+#toolbardiv table {
+	width: 100%;
+	height: 100%;
+	table-layout: fixed;
+}
+
+#toolbardiv table td{
+	border-right: 2px #2a465e solid;
+	height: 100%;
+}
+
+#toolbarDiv table td:last-of-type {
+	border:none;
+}
+
+#toolbarDiv button {
+	display: block;
+	text-align: center;
+	height: calc(100% - 8px);
+	width: calc(100% - 8px);
+	text-decoration: none;
+	background: none;
+	border: none;
+	color: white;
+	font-weight: bold;
+	margin: 4px;
+/*	background: #2a465e;*/
+}
+
+#toolbarDiv button:focus {
+	outline: none;
+}
+
 canvas {
 	position: absolute;
 	top: 20px;
