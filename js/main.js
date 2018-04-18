@@ -182,7 +182,7 @@ function dblclick_func(evt) {
 }
 
 function touchstart_func(evt) {
-	longPressOrigin = {x:evt.touches[0].x, y:evt.touches[0].y};
+	longPressOrigin = {x:evt.touches[0].clientX, y:evt.touches[0].clientY};
 	longPressTimer = setTimeout(function() {
 		dblclick_func(evt);
 	}, 500);
@@ -190,16 +190,20 @@ function touchstart_func(evt) {
 }
 
 function touchmove_func(evt) {
-	var dx = evt.touches[0].x - longPressOrigin.x
-	var dy = evt.touches[0].y - longPressOrigin.y
-	if(Math.sqrt(dx * dx + dy * dy) < LONG_PRESS_FORGIVENESS){
-		clearTimeout(longPressTimer);
+	if(longPressOrigin){
+		var dx = evt.touches[0].clientX - longPressOrigin.x
+		var dy = evt.touches[0].clientY - longPressOrigin.y
+		if(Math.sqrt(dx * dx + dy * dy) > LONG_PRESS_FORGIVENESS){
+			clearTimeout(longPressTimer);
+			longPressOrigin = null;
+		}
 	}
 	if(evt.touches.length == 1){mousemove_func(evt);}
 }
 
 function touchend_func(evt) {
 	clearTimeout(longPressTimer);
+	longPressOrigin = null;
 	if(evt.touches.length == 1){mouseup_func(evt);}
 }
 
