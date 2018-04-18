@@ -4,8 +4,8 @@ function Board(contextGrid, contextTiles) {
 	this.tile_set = [];
 	this.tile_size_multiplier = 1;
 	this.origin = {x:null,y:null};
-	this.BASE_TILE_WIDTH = 40;
-	this.BASE_TILE_HEIGHT = 40;
+	this.BASE_TILE_WIDTH = 30;
+	this.BASE_TILE_HEIGHT = 30;
 	this.tile_width = this.BASE_TILE_WIDTH * this.tile_size_multiplier;
 	this.tile_height = this.BASE_TILE_HEIGHT * this.tile_size_multiplier;
 	this.height;
@@ -110,6 +110,7 @@ var contextTiles = canvasTiles.getContext("2d");
 
 var board;
 var template;
+var longPressTimer;
 
 function getMousePos(canvasGrid, event) {
 	var rect = canvasGrid.getBoundingClientRect();
@@ -141,7 +142,7 @@ function mousemove_func(evt) {
 	evt.preventDefault();
 	if(mousedown){
 		var mousePos = getMousePos(canvasGrid, evt);
-		template.setVector(mousePos,200);
+		template.setVector(mousePos,board.tile_width*3);
 		template.clear();
 		template.drawCone();
 		if(template.originLocked){template.drawOrigin();}
@@ -177,14 +178,29 @@ function dblclick_func(evt) {
 	}
 }
 
+function touchstart_func(evt) {
+	longPressTimer = setTimeout(function() {
+		dblclick_func(evt);
+	}, 500);
+	if(evt.touches.length == 1){mousedown_func(evt);}
+}
+
+function touchmove_func(evt) {
+	clearTimeout(longPressTimer);
+	if(evt.touches.length == 1){mousemove_func(evt);}
+}
+
+function touchend_func(evt) {
+	clearTimeout(longPressTimer);
+	if(evt.touches.length == 1){mouseup_func(evt);}
+}
+
 function resize_func(evt) {
 	clearTimeout(resizeTimer);
 	//console.log("resize event fired");
 	var resizeTimer = setTimeout(function() {
-
 		//console.log("resize event processed");
 		init_canvases();
-	          
 	}, 200);
 }
 
@@ -206,11 +222,11 @@ function init_canvases() {
 init_canvases();
 
 canvasGrid.addEventListener('mousedown', mousedown_func, {passive:false});
-canvasGrid.addEventListener('touchstart', mousedown_func, {passive:false});
+canvasGrid.addEventListener('touchstart', touchstart_func, {passive:false});
 canvasGrid.addEventListener('mousemove', mousemove_func, {passive:false});
-canvasGrid.addEventListener('touchmove', mousemove_func, {passive:false});
+canvasGrid.addEventListener('touchmove', touchmove_func, {passive:false});
 canvasGrid.addEventListener('mouseup', mouseup_func, {passive:false});
-canvasGrid.addEventListener('touchend', mouseup_func, {passive:false});
+canvasGrid.addEventListener('touchend', touchend_func, {passive:false});
 canvasGrid.addEventListener('dblclick', dblclick_func, {passive:false});
 document.defaultView.addEventListener('resize', resize_func, {passive:true});
 
