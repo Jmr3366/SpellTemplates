@@ -264,6 +264,28 @@ function decrement_template_size(){
 	paintTemplate();
 }
 
+function set_template_cone(){
+	var origin = template.origin;
+	var originLock = template.originLocked;
+	var terminus = template.terminus;
+	template = new ConeTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+	template.setOrigin(origin);
+	template.setVector(terminus, board.tile_width*templateSize);
+	template.originLocked = originLock;
+	paintTemplate();
+}
+
+function set_template_line(){
+	var origin = template.origin;
+	var originLock = template.originLocked;
+	var terminus = template.terminus;
+	template = new LineTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+	template.setOrigin(origin);
+	template.setVector(terminus, board.tile_width*templateSize);
+	template.originLocked = originLock;
+	paintTemplate();
+}
+
 init_canvases();
 
 canvasGrid.addEventListener('mousedown', mousedown_func, {passive:false});
@@ -277,6 +299,8 @@ canvasGrid.addEventListener('dblclick', dblclick_func, {passive:false});
 document.defaultView.addEventListener('resize', resize_func, {passive:true});
 document.getElementById("incrementTemplateSize").addEventListener('click', increment_template_size, {passive:true});
 document.getElementById("decrementTemplateSize").addEventListener('click', decrement_template_size, {passive:true});
+document.getElementById("coneTemplateButton").addEventListener('click', set_template_cone, {passive:true});
+document.getElementById("lineTemplateButton").addEventListener('click', set_template_line, {passive:true});
 
 function Template(context, canvas_width, canvas_height, board) {
 	this.size_multiplier = 1;
