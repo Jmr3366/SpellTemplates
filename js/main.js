@@ -144,8 +144,8 @@ function paintTemplate(){
 	board.clearTiles();
 	board.resetHits();
 	if(template.originLocked){template.drawOrigin();}
-	template.drawCone();
-	template.calculateHitCone(board);
+	template.draw();
+	template.calculateHit(board);
 	board.colourHits("orange");
 }
 
@@ -245,7 +245,7 @@ function init_canvases() {
 	resizeCanvas(canvasTiles, bw, bh);
 
 	board = new Board(contextGrid, contextTiles);
-	template = new Template(contextTemplate, canvasTemplate.width, canvasTemplate.height);
+	template = new LineTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
 
 	board.drawBoard(Math.floor(((bw-1)%board.tile_width)/2), 0, bw, bh);
 }
@@ -278,7 +278,7 @@ document.defaultView.addEventListener('resize', resize_func, {passive:true});
 document.getElementById("incrementTemplateSize").addEventListener('click', increment_template_size, {passive:true});
 document.getElementById("decrementTemplateSize").addEventListener('click', decrement_template_size, {passive:true});
 
-function Template(context, canvas_width, canvas_height) {
+function Template(context, canvas_width, canvas_height, board) {
 	this.size_multiplier = 1;
 	this.origin = {x:null, y:null};
 	this.originTile = null;
@@ -305,33 +305,8 @@ function Template(context, canvas_width, canvas_height) {
 		context.stroke();
 	}
 
-	this.getConeVerts = function(){
-		var delta_x = (this.terminus.x - this.origin.x);
-		var delta_y = (this.terminus.y - this.origin.y);
-
-		var vert_1 = {x:(this.terminus.x - delta_y/2), y:(this.terminus.y + delta_x/2)};
-		var vert_2 = {x:(this.terminus.x + delta_y/2), y:(this.terminus.y - delta_x/2)};
-
-		return [this.origin, vert_1, vert_2, this.terminus];
-	}
-
-	this.drawCone = function(){
-		//Draw line from origin to terminus
-		//add cross line running at opposite slope through terminus for same length
-		var verts = this.getConeVerts();
-		context.beginPath();
-		context.moveTo(verts[0].x, verts[0].y);
-		context.lineTo(verts[1].x, verts[1].y);
-		context.lineTo(verts[2].x, verts[2].y);
-		context.lineTo(verts[0].x, verts[0].y);
-		context.lineWidth=2;
-		context.strokeStyle = "red";
-		context.stroke();
-	}
-
 	this.fillPoly = function(poly, color){
-		//Draw line from origin to terminus
-		//add cross line running at opposite slope through terminus for same length
+		//Fill an arbitrary polygon with a color
 		context.beginPath();
 		context.moveTo(poly[0].x, poly[0].y);
 		for (var i = 0; i < poly.length-1; i++) {
@@ -342,27 +317,15 @@ function Template(context, canvas_width, canvas_height) {
 		context.fill();
 	}
 
-	this.calculateHitCone = function(board){
-		var verts = this.getConeVerts();
-		//Get leftmost tile edge and start scan from there
-		var poly = [verts[0],verts[1],verts[2]];
-		poly = this.cropPoly(poly, board.origin, {x:board.origin.x+board.width, y:board.origin.y+board.height});
-		this.calculateHitPoly(poly, board);
-	}
-
-	this.calculateHitPoly = function(polyVerts, board){
+	this.calculateHitPoly = function(polyVerts){
 		var scan_x = Math.ceil((this.farthestBound(polyVerts, "min", "x") - board.origin.x)/board.tile_width)*board.tile_width+board.origin.x;
 		scan_x = Math.max(scan_x, board.origin.x);
 		var max_tile_edge_x = Math.ceil((this.farthestBound(polyVerts, "max", "x")-board.origin.x)/board.tile_width)*board.tile_width+board.origin.x;
 		max_tile_edge_x = Math.min(max_tile_edge_x, board.origin.x+board.width);
 
-		var that = this;
-		var comp_x = function (u, v){return that.farthestBound(u, "min", "x") - that.farthestBound(v, "min", "x");}
-
 		while(scan_x <= max_tile_edge_x){
-			if(scan_x==max_tile_edge_x){this.calculateHitColumn(polyVerts, board, scan_x);break;}
+			if(scan_x==max_tile_edge_x){this.calculateHitColumn(polyVerts, scan_x);break;}
 			var vertical_segments = this.slicePoly(polyVerts, scan_x, true);
-			vertical_segments.sort(comp_x);
 			polyVerts = vertical_segments[1];
 			var curr_vertical_segment = vertical_segments[0];
 			if(!polyVerts){
@@ -372,25 +335,21 @@ function Template(context, canvas_width, canvas_height) {
 				continue;
 			}
 			
-			this.calculateHitColumn(curr_vertical_segment, board, scan_x);
+			this.calculateHitColumn(curr_vertical_segment, scan_x);
 			scan_x += board.tile_width;
 			if(vertical_segments.length == 1){break;}
 		}
 	}
 
-	this.calculateHitColumn = function(polyVerts, board, curr_x){
+	this.calculateHitColumn = function(polyVerts, curr_x){
 		var scan_y = Math.ceil((this.farthestBound(polyVerts, "min", "y")-board.origin.y)/board.tile_height)*board.tile_height+board.origin.y;
 		scan_y = Math.max(scan_y, board.origin.y);
 		var max_tile_edge_y = Math.ceil((this.farthestBound(polyVerts, "max", "y")-board.origin.y)/board.tile_height)*board.tile_height+board.origin.y;
 		max_tile_edge_y = Math.min(max_tile_edge_y, board.origin.y+board.height);
 		
-		var that = this;
-		var comp_y = function (u, v){return that.farthestBound(u, "min", "y") - that.farthestBound(v, "min", "y");}
-		
 		while(scan_y <= max_tile_edge_y){
-			if(scan_y==max_tile_edge_y){this.calculateHitTile(polyVerts, board, curr_x, scan_y);break;}
+			if(scan_y==max_tile_edge_y){this.calculateHitTile(polyVerts, curr_x, scan_y);break;}
 			var horizontal_segments = this.slicePoly(polyVerts, scan_y, false);
-			horizontal_segments.sort(comp_y); //They are returned sorted inverse
 			polyVerts = horizontal_segments[1];
 			var curr_horizontal_segment = horizontal_segments[0];
 			if(!polyVerts){
@@ -399,13 +358,13 @@ function Template(context, canvas_width, canvas_height) {
 				polyVerts = horizontal_segments[0];
 				continue;
 			}
-			this.calculateHitTile(curr_horizontal_segment, board, curr_x, scan_y);
+			this.calculateHitTile(curr_horizontal_segment, curr_x, scan_y);
 			scan_y += board.tile_height;
 			if(horizontal_segments.length == 1){break;}
 		}
 	}
 
-	this.calculateHitTile = function(polyVerts, board, curr_x, curr_y){
+	this.calculateHitTile = function(polyVerts, curr_x, curr_y){
 		if(!polyVerts){return;}
 		if(this.polyArea(polyVerts) > (board.tile_width*board.tile_height*this.minHitFactor)){
 			board.getTileByCoord(curr_x-board.tile_width/2, curr_y-board.tile_height/2).isHit = true;
@@ -462,10 +421,10 @@ function Template(context, canvas_width, canvas_height) {
 			polyVerts = this.slicePoly(polyVerts, bottomright.x-1, true)[0];
 		}
 		if(this.farthestBound(polyVerts, "min", "y") < topleft.y){
-			polyVerts = this.slicePoly(polyVerts, topleft.y+1, false)[0];
+			polyVerts = this.slicePoly(polyVerts, topleft.y+1, false)[1];
 		}
 		if(this.farthestBound(polyVerts, "max", "y") > bottomright.y){
-			polyVerts = this.slicePoly(polyVerts, bottomright.y-1, false)[1];
+			polyVerts = this.slicePoly(polyVerts, bottomright.y-1, false)[0];
 		}
 		return polyVerts;
 	}
@@ -475,14 +434,18 @@ function Template(context, canvas_width, canvas_height) {
 		var that = this;
 		var p = polyVerts;
 		var a, b;
+		var sort;
+		var that=this;
 		//console.log("Slicing p="+JSON.stringify(p)+" at line "+line+" "+vertical);
 		//console.log("Slicing at line "+line+" "+((vertical)?"vertically":"horizontally"));
 		if(vertical){
 			a = {x:line, y:this.farthestBound(p, "min", "y")-10};
 			b = {x:line, y:this.farthestBound(p, "max", "y")+10};
+			sort = function (u, v){return that.farthestBound(u, "min", "x") - that.farthestBound(v, "min", "x");}
 		} else {
 			a = {x:this.farthestBound(p, "min", "x")-10, y:line};
 			b = {x:this.farthestBound(p, "max", "x")+10, y:line};
+			sort = function (u, v){return that.farthestBound(u, "min", "y") - that.farthestBound(v, "min", "y");}
 		}
 
 		var iscs = [];	// intersections
@@ -543,6 +506,7 @@ function Template(context, canvas_width, canvas_height) {
 			}
 			if (dir > 1){break;}
 		}
+		pgs.sort(sort);
 		return pgs;
 	}
 
@@ -635,7 +599,87 @@ function Template(context, canvas_width, canvas_height) {
 	}
 }
 
-function Tile(x, y, height, width, contextGrid, contextTile){
+function ConeTemplate(context, canvas_width, canvas_height, board) {
+	Template.call(this, context, canvas_width, canvas_height, board);
+
+	this.getVerts = function(){
+		var delta_x = (this.terminus.x - this.origin.x);
+		var delta_y = (this.terminus.y - this.origin.y);
+
+		var vert_1 = {x:(this.terminus.x - delta_y/2), y:(this.terminus.y + delta_x/2)};
+		var vert_2 = {x:(this.terminus.x + delta_y/2), y:(this.terminus.y - delta_x/2)};
+
+		return [this.origin, vert_1, vert_2, this.terminus];
+	}
+
+	this.draw = function(){
+		//Draw line from origin to terminus
+		//add cross line running at opposite slope through terminus for same length
+		var verts = this.getVerts();
+		context.beginPath();
+		context.moveTo(verts[0].x, verts[0].y);
+		context.lineTo(verts[1].x, verts[1].y);
+		context.lineTo(verts[2].x, verts[2].y);
+		context.lineTo(verts[0].x, verts[0].y);
+		context.lineWidth=2;
+		context.strokeStyle = "red";
+		context.stroke();
+	}
+
+	this.calculateHit = function(){
+		var verts = this.getVerts();
+		//Get leftmost tile edge and start scan from there
+		var poly = [verts[0],verts[1],verts[2]];
+		poly = this.cropPoly(poly, board.origin, {x:board.origin.x+board.width, y:board.origin.y+board.height});
+		this.calculateHitPoly(poly);
+	}
+}
+
+function LineTemplate(context, canvas_width, canvas_height, board) {
+	Template.call(this, context, canvas_width, canvas_height, board);
+
+	this.getVerts = function(){
+		var delta_x = (this.terminus.x - this.origin.x);
+		var delta_y = (this.terminus.y - this.origin.y);
+		var slope = delta_x/delta_y;
+		var lineWidth = board.tile_width;
+
+		var x_change = (lineWidth/2)/Math.sqrt(1+(slope*slope));
+		var y_change = (x_change*slope);
+
+		if(delta_x == 0){x_change = lineWidth/2;y_change=0;}
+		if(delta_y == 0){y_change = lineWidth/2;x_change=0;}
+
+		var vert_1 = {x:(this.origin.x + x_change), y:(this.origin.y - y_change)};
+		var vert_2 = {x:(this.origin.x - x_change), y:(this.origin.y + y_change)};
+		var vert_3 = {x:(this.terminus.x - x_change), y:(this.terminus.y + y_change)};
+		var vert_4 = {x:(this.terminus.x + x_change), y:(this.terminus.y - y_change)};
+
+		return [this.origin, vert_1, vert_2, vert_3, vert_4, this.terminus];
+	}
+
+	this.draw = function(){
+		var verts = this.getVerts();
+		context.beginPath();
+		context.moveTo(verts[1].x, verts[1].y);
+		context.lineTo(verts[2].x, verts[2].y);
+		context.lineTo(verts[3].x, verts[3].y);
+		context.lineTo(verts[4].x, verts[4].y);
+		context.lineTo(verts[1].x, verts[1].y);
+		context.lineWidth=2;
+		context.strokeStyle = "red";
+		context.stroke();
+	}
+
+	this.calculateHit = function(){
+		var verts = this.getVerts();
+		//Get leftmost tile edge and start scan from there
+		var poly = [verts[1],verts[2],verts[3],verts[4]];
+		poly = this.cropPoly(poly, board.origin, {x:board.origin.x+board.width, y:board.origin.y+board.height});
+		console.log(poly);
+		this.calculateHitPoly(poly);
+	}
+}function Tile(x, y, height, width, contextGrid, contextTile){
 	this.is_hex = false;
 	this.has_entity = false;
 	this.has_caster = false;

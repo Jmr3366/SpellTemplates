@@ -51,8 +51,8 @@ function paintTemplate(){
 	board.clearTiles();
 	board.resetHits();
 	if(template.originLocked){template.drawOrigin();}
-	template.drawCone();
-	template.calculateHitCone(board);
+	template.draw();
+	template.calculateHit(board);
 	board.colourHits("orange");
 }
 
@@ -152,7 +152,7 @@ function init_canvases() {
 	resizeCanvas(canvasTiles, bw, bh);
 
 	board = new Board(contextGrid, contextTiles);
-	template = new Template(contextTemplate, canvasTemplate.width, canvasTemplate.height);
+	template = new LineTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
 
 	board.drawBoard(Math.floor(((bw-1)%board.tile_width)/2), 0, bw, bh);
 }
