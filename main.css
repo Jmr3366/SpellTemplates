@@ -67,6 +67,20 @@ body h1 {
 /*	background: #2a465e;*/
 }
 
+#toolbarDiv label {
+	display: block;
+	text-align: center;
+	line-height: calc(100% - 8px);
+	width: calc(100% - 8px);
+	text-decoration: none;
+	background: none;
+	border: none;
+	color: white;
+	font-weight: bold;
+	margin: 4px;
+/*	background: #2a465e;*/
+}
+
 #toolbarDiv button:focus {
 	outline: none;
 }

@@ -158,13 +158,15 @@ function init_canvases() {
 }
 
 function increment_template_size(){
-	if(templateSize<25){templateSize++};
+	if(templateSize<25){templateSize++;}
+	document.getElementById("templateSizeLabel").innerHTML = ""+templateSize*5+"ft";
 	template.changeMagnitude(board.tile_width*templateSize);
 	paintTemplate();
 }
 
 function decrement_template_size(){
 	if(templateSize>1){templateSize--;}
+	document.getElementById("templateSizeLabel").innerHTML = ""+templateSize*5+"ft";
 	template.changeMagnitude(board.tile_width*templateSize);
 	paintTemplate();
 }
