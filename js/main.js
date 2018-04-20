@@ -814,7 +814,7 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 		var start_row = board.getRowByCoord(this.origin.y-this.radius) || 0;
 		var start_col = board.getColByCoord(this.origin.x-this.radius) || 0;
 		var end_row =   board.getRowByCoord(this.origin.y+this.radius) || board.tile_set.length-1;
-		var end_col =   board.getRowByCoord(this.origin.x+this.radius) || board.tile_set[0].length-1;
+		var end_col =   board.getColByCoord(this.origin.x+this.radius) || board.tile_set[0].length-1;
 		// console.log("row: ", start_row, " to ", end_row);
 		// console.log("col: ", start_col, " to ", end_col);
 		for (var y = start_row; y <= end_row; y++) {
