@@ -43,9 +43,27 @@ function Board(contextGrid, contextTiles) {
 		y = y - this.origin.y;
 		x = (x - (x % this.tile_width))/this.tile_width;
 		y = (y - (y % this.tile_height))/this.tile_height;
-		if(y > this.tile_set.length){return null;}
-		if(x > this.tile_set[0].length){return null;}
+		if(y >= this.tile_set.length){return null;}
+		if(x >= this.tile_set[0].length){return null;}
+		if(y < 0){return null;}
+		if(x < 0){return null;}
 		return this.tile_set[y][x];
+	}
+
+	this.getRowByCoord = function(y){
+		y = y - this.origin.y;
+		y = (y - (y % this.tile_height))/this.tile_height;
+		if(y >= this.tile_set.length){return null;}
+		if(y < 0){return null;}
+		return y;
+	}
+
+	this.getColByCoord = function(x){
+		x = x - this.origin.x;
+		x = (x - (x % this.tile_width))/this.tile_width;
+		if(x >= this.tile_set[0].length){return null;}
+		if(x < 0){return null;}
+		return x;
 	}
 
 	this.showCoverageCone = function(verts){

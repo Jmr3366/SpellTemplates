@@ -43,9 +43,27 @@ function Board(contextGrid, contextTiles) {
 		y = y - this.origin.y;
 		x = (x - (x % this.tile_width))/this.tile_width;
 		y = (y - (y % this.tile_height))/this.tile_height;
-		if(y > this.tile_set.length){return null;}
-		if(x > this.tile_set[0].length){return null;}
+		if(y >= this.tile_set.length){return null;}
+		if(x >= this.tile_set[0].length){return null;}
+		if(y < 0){return null;}
+		if(x < 0){return null;}
 		return this.tile_set[y][x];
+	}
+
+	this.getRowByCoord = function(y){
+		y = y - this.origin.y;
+		y = (y - (y % this.tile_height))/this.tile_height;
+		if(y >= this.tile_set.length){return null;}
+		if(y < 0){return null;}
+		return y;
+	}
+
+	this.getColByCoord = function(x){
+		x = x - this.origin.x;
+		x = (x - (x % this.tile_width))/this.tile_width;
+		if(x >= this.tile_set[0].length){return null;}
+		if(x < 0){return null;}
+		return x;
 	}
 
 	this.showCoverageCone = function(verts){
@@ -155,7 +173,9 @@ function mousedown_func(evt) {
 	var mousePos = getMousePos(canvasGrid, evt);
 	//console.log(mousedown, mousePos); 
 	template.setOrigin(mousePos, board.getTileByCoord(mousePos.x, mousePos.y));
-	mousemove_func(evt);
+	if(template.originLocked){
+		mousemove_func(evt);
+	}
 }
 
 function mousemove_func(evt) {
@@ -254,36 +274,56 @@ function increment_template_size(){
 	if(templateSize<25){templateSize++;}
 	document.getElementById("templateSizeLabel").innerHTML = ""+templateSize*5+"ft";
 	template.changeMagnitude(board.tile_width*templateSize);
-	paintTemplate();
+	if(template.isDrawn){paintTemplate();}
+
 }
 
 function decrement_template_size(){
 	if(templateSize>1){templateSize--;}
 	document.getElementById("templateSizeLabel").innerHTML = ""+templateSize*5+"ft";
 	template.changeMagnitude(board.tile_width*templateSize);
-	paintTemplate();
+	if(template.isDrawn){paintTemplate();}
 }
 
 function set_template_cone(){
 	var origin = template.origin;
 	var originLock = template.originLocked;
 	var terminus = template.terminus;
+	var isDrawn = template.isDrawn;
 	template = new ConeTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
 	template.setOrigin(origin);
 	template.setVector(terminus, board.tile_width*templateSize);
 	template.originLocked = originLock;
-	paintTemplate();
+	template.isDrawn = isDrawn;
+	if(template.isDrawn){paintTemplate();}
 }
 
 function set_template_line(){
 	var origin = template.origin;
 	var originLock = template.originLocked;
 	var terminus = template.terminus;
+	var isDrawn = template.isDrawn;
 	template = new LineTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
 	template.setOrigin(origin);
 	template.setVector(terminus, board.tile_width*templateSize);
 	template.originLocked = originLock;
-	paintTemplate();
+	template.isDrawn = isDrawn;
+	if(template.isDrawn){paintTemplate();}
+}
+
+function set_template_circle(){
+	var origin = template.origin;
+	var originLock = template.originLocked;
+	var terminus = template.terminus;
+	var isDrawn = template.isDrawn;
+	template = new CircleTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+	template.setOrigin(origin);
+	template.setTerminus(terminus);
+	template.setVector(terminus, board.tile_width*templateSize);
+	template.setOrigin(origin);
+	template.originLocked = originLock;
+	template.isDrawn = isDrawn;
+	if(template.isDrawn){paintTemplate();}
 }
 
 init_canvases();
@@ -301,6 +341,7 @@ document.getElementById("incrementTemplateSize").addEventListener('click', incre
 document.getElementById("decrementTemplateSize").addEventListener('click', decrement_template_size, {passive:true});
 document.getElementById("coneTemplateButton").addEventListener('click', set_template_cone, {passive:true});
 document.getElementById("lineTemplateButton").addEventListener('click', set_template_line, {passive:true});
+document.getElementById("circleTemplateButton").addEventListener('click', set_template_circle, {passive:true});
 
 function Template(context, canvas_width, canvas_height, board) {
 	this.size_multiplier = 1;
@@ -309,6 +350,7 @@ function Template(context, canvas_width, canvas_height, board) {
 	this.terminus = {x:null, y:null};
 	this.originLocked = false;
 	this.minHitFactor = 0.5;
+	this.isDrawn = false;
 
 	this.drawBox = function(position, tile){
 		context.beginPath();
@@ -327,6 +369,13 @@ function Template(context, canvas_width, canvas_height, board) {
 		context.lineWidth=2;
 		context.strokeStyle = "red";
 		context.stroke();
+	}
+
+	this.drawPoint = function(point, color="red", radius=5){
+		context.beginPath();
+		context.arc(point.x, point.y, radius, 0, 2*Math.PI);
+		context.fillStyle = color;
+		context.fill();
 	}
 
 	this.fillPoly = function(poly, color){
@@ -402,14 +451,15 @@ function Template(context, canvas_width, canvas_height, board) {
 	}
 
 	this.drawOrigin = function(){
-		context.beginPath();
-		context.arc(this.origin.x, this.origin.y, 10, 0, 2*Math.PI);
-		context.fillStyle = "red";
-		context.fill();
+		this.drawPoint(this.origin, "red", 10);
 	}
 
 	this.setTerminus = function(position){
 		this.terminus = {x:position.x, y:position.y};
+	}
+
+	this.drawTerminus = function(){
+		this.drawPoint(this.terminus, "red", 10);
 	}
 
 	this.setVector = function(position, length){
@@ -619,6 +669,7 @@ function Template(context, canvas_width, canvas_height, board) {
 	}
 
 	this.clear = function(){
+		this.isDrawn = false;
 		context.clearRect(0, 0, canvas_width, canvas_height);
 	}
 }
@@ -639,6 +690,7 @@ function ConeTemplate(context, canvas_width, canvas_height, board) {
 	this.draw = function(){
 		//Draw line from origin to terminus
 		//add cross line running at opposite slope through terminus for same length
+		this.isDrawn = true;
 		var verts = this.getVerts();
 		context.beginPath();
 		context.moveTo(verts[0].x, verts[0].y);
@@ -683,6 +735,7 @@ function LineTemplate(context, canvas_width, canvas_height, board) {
 	}
 
 	this.draw = function(){
+		this.isDrawn = true;
 		var verts = this.getVerts();
 		context.beginPath();
 		context.moveTo(verts[1].x, verts[1].y);
@@ -700,8 +753,108 @@ function LineTemplate(context, canvas_width, canvas_height, board) {
 		//Get leftmost tile edge and start scan from there
 		var poly = [verts[1],verts[2],verts[3],verts[4]];
 		poly = this.cropPoly(poly, board.origin, {x:board.origin.x+board.width, y:board.origin.y+board.height});
-		console.log(poly);
 		this.calculateHitPoly(poly);
+	}
+}
+
+function CircleTemplate(context, canvas_width, canvas_height, board) {
+	Template.call(this, context, canvas_width, canvas_height, board);
+	var radius;
+	var terminus_delta;
+	//Terminus will be used to hold the radius of the circle
+
+	this.getVerts = function(){
+		return [this.origin, {x:this.origin.x+this.radius, y:this.origin.y}];
+	}
+
+	this.draw = function(){
+		this.isDrawn = true;
+		var verts = this.getVerts();
+		context.beginPath();
+		context.arc(verts[0].x, verts[0].y, Math.abs(verts[0].x-verts[1].x),0,2*Math.PI);
+		context.lineWidth=2;
+		context.strokeStyle = "red";
+		context.stroke();
+	}
+
+	this.calculateHit = function(){
+		//Check all tiles along circumference for coverage area
+		this.calculateHitCircumference();
+		//Check all tiles nearby for being totally inside
+		this.calculateHitInside();
+	}
+
+	this.calculateHitCircumference = function(){
+		var verts = this.getVerts();
+		var r = Math.abs(verts[0].x-verts[1].x)
+		var arcLength = (board.tile_width/16);
+		arcLength = (2*Math.PI*r)/Math.floor((2*Math.PI*r)/arcLength);
+		var radians = arcLength/r;
+		for(i = 0; i < 2*Math.PI; i=i+radians){
+			var x = (r*Math.cos(i)) + verts[0].x
+			var y = (r*Math.sin(i)) + verts[0].y
+			if(x>=board.origin.x+board.width || x<board.origin.x){
+				continue;
+			}
+			if(y>=board.origin.y+board.height || y<board.origin.y){
+				continue;
+			}
+			// this.drawPoint({x:x, y:y}, "blue", 2);
+			board.getTileByCoord(x,y).fillTile("yellow")
+		}
+	}
+
+	this.calculateHitInside = function(){
+		var start_row = board.getRowByCoord(this.origin.y-this.radius) || 0;
+		var start_col = board.getColByCoord(this.origin.x-this.radius) || 0;
+		var end_row =   board.getRowByCoord(this.origin.y+this.radius) || board.tile_set.length-1;
+		var end_col =   board.getRowByCoord(this.origin.x+this.radius) || board.tile_set[0].length-1;
+		// console.log("row: ", start_row, " to ", end_row);
+		// console.log("col: ", start_col, " to ", end_col);
+		for (var y = start_row; y <= end_row; y++) {
+			//console.log("CURRENT ROW ", y);
+			for (var x = start_col; x <= end_col; x++) {
+				//console.log("CURRENT COL ", x);
+				var tile = board.tile_set[y][x];
+				if(!this.isPointInCircle(tile.tile_corners[0])){continue;}
+				if(!this.isPointInCircle(tile.tile_corners[1])){continue;}
+				if(!this.isPointInCircle(tile.tile_corners[2])){continue;}
+				if(!this.isPointInCircle(tile.tile_corners[3])){continue;}
+				tile.isHit = true;
+			}
+		}
+	}
+
+	this.isPointInCircle = function(point){
+		//Round distance to nearest pixel
+		return (Math.floor(this.distance(point, this.origin)) <= this.radius);
+	}
+
+	this.setOrigin = function(position, tile){
+		if(this.originLocked){return;}
+		this.origin = {x:position.x, y:position.y};
+		this.originTile = tile;
+		if(this.terminus_delta != null){
+			this.terminus = {x:this.origin.x - this.terminus_delta.x, y:this.origin.y - this.terminus_delta.y};
+		}
+	}
+
+	this.setTerminus = function(position){
+		//Overload this to disallow moving terminus
+		//Store terminus as offset from origin
+		if(this.terminus_delta == null){this.terminus_delta = {x:this.origin.x - position.x, y:this.origin.y - position.y};}
+		this.setOrigin(position);
+	}
+
+	this.setVector = function(position, length){
+		//Move origin to position and set radius to length
+		this.radius = length;
+		this.setOrigin(position);
+	}
+
+	this.changeMagnitude = function(length){
+		//Dont move center on magnitude change
+		this.radius = length;
 	}
 }function Tile(x, y, height, width, contextGrid, contextTile){
 	this.is_hex = false;

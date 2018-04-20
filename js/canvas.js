@@ -62,7 +62,9 @@ function mousedown_func(evt) {
 	var mousePos = getMousePos(canvasGrid, evt);
 	//console.log(mousedown, mousePos); 
 	template.setOrigin(mousePos, board.getTileByCoord(mousePos.x, mousePos.y));
-	mousemove_func(evt);
+	if(template.originLocked){
+		mousemove_func(evt);
+	}
 }
 
 function mousemove_func(evt) {
@@ -161,36 +163,56 @@ function increment_template_size(){
 	if(templateSize<25){templateSize++;}
 	document.getElementById("templateSizeLabel").innerHTML = ""+templateSize*5+"ft";
 	template.changeMagnitude(board.tile_width*templateSize);
-	paintTemplate();
+	if(template.isDrawn){paintTemplate();}
+
 }
 
 function decrement_template_size(){
 	if(templateSize>1){templateSize--;}
 	document.getElementById("templateSizeLabel").innerHTML = ""+templateSize*5+"ft";
 	template.changeMagnitude(board.tile_width*templateSize);
-	paintTemplate();
+	if(template.isDrawn){paintTemplate();}
 }
 
 function set_template_cone(){
 	var origin = template.origin;
 	var originLock = template.originLocked;
 	var terminus = template.terminus;
+	var isDrawn = template.isDrawn;
 	template = new ConeTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
 	template.setOrigin(origin);
 	template.setVector(terminus, board.tile_width*templateSize);
 	template.originLocked = originLock;
-	paintTemplate();
+	template.isDrawn = isDrawn;
+	if(template.isDrawn){paintTemplate();}
 }
 
 function set_template_line(){
 	var origin = template.origin;
 	var originLock = template.originLocked;
 	var terminus = template.terminus;
+	var isDrawn = template.isDrawn;
 	template = new LineTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
 	template.setOrigin(origin);
 	template.setVector(terminus, board.tile_width*templateSize);
 	template.originLocked = originLock;
-	paintTemplate();
+	template.isDrawn = isDrawn;
+	if(template.isDrawn){paintTemplate();}
+}
+
+function set_template_circle(){
+	var origin = template.origin;
+	var originLock = template.originLocked;
+	var terminus = template.terminus;
+	var isDrawn = template.isDrawn;
+	template = new CircleTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+	template.setOrigin(origin);
+	template.setTerminus(terminus);
+	template.setVector(terminus, board.tile_width*templateSize);
+	template.setOrigin(origin);
+	template.originLocked = originLock;
+	template.isDrawn = isDrawn;
+	if(template.isDrawn){paintTemplate();}
 }
 
 init_canvases();
@@ -208,4 +230,5 @@ document.getElementById("incrementTemplateSize").addEventListener('click', incre
 document.getElementById("decrementTemplateSize").addEventListener('click', decrement_template_size, {passive:true});
 document.getElementById("coneTemplateButton").addEventListener('click', set_template_cone, {passive:true});
 document.getElementById("lineTemplateButton").addEventListener('click', set_template_line, {passive:true});
+document.getElementById("circleTemplateButton").addEventListener('click', set_template_circle, {passive:true});
 
