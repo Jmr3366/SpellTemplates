@@ -46,10 +46,14 @@ function vibrate(events){
 	}
 }
 
-function paintTemplate(){
+function clearAll(){
 	template.clear();
 	board.clearTiles();
 	board.resetHits();
+}
+
+function paintTemplate(){
+	clearAll();
 	if(template.originLocked){template.drawOrigin();}
 	template.draw();
 	template.calculateHit(board);
@@ -64,6 +68,8 @@ function mousedown_func(evt) {
 	template.setOrigin(mousePos, board.getTileByCoord(mousePos.x, mousePos.y));
 	if(template.originLocked){
 		mousemove_func(evt);
+	} else {
+		clearAll();
 	}
 }
 
