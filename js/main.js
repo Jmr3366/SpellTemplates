@@ -133,7 +133,7 @@ var contextTiles = canvasTiles.getContext("2d");
 
 var board;
 var template;
-var templateSize = 1;
+var templateSize = 3;
 
 function getMousePos(canvasGrid, event) {
 	var rect = canvasGrid.getBoundingClientRect();
@@ -919,7 +919,7 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 		// context.lineWidth=1;
 		// context.strokeStyle = "blue";
 		// context.stroke();
-		
+
 		var poly = ints.slice();
 		for(var i = 0; i < 4; i++){
 			if(this.isPointInCircle(board.tile_set[row][col].tile_corners[i])){
