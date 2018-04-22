@@ -441,22 +441,144 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 
 	this.calculateHitCircumference = function(){
 		var verts = this.getVerts();
-		var r = Math.abs(verts[0].x-verts[1].x)
-		var arcLength = (board.tile_width/16);
-		arcLength = (2*Math.PI*r)/Math.floor((2*Math.PI*r)/arcLength);
-		var radians = arcLength/r;
-		for(i = 0; i < 2*Math.PI; i=i+radians){
-			var x = (r*Math.cos(i)) + verts[0].x
-			var y = (r*Math.sin(i)) + verts[0].y
-			if(x>=board.origin.x+board.width || x<board.origin.x){
-				continue;
-			}
-			if(y>=board.origin.y+board.height || y<board.origin.y){
-				continue;
-			}
-			// this.drawPoint({x:x, y:y}, "blue", 2);
-			board.getTileByCoord(x,y).fillTile("yellow")
+		var start_row = board.getRowByCoord(verts[0].y-this.radius) || 0;
+		var start_col = board.getColByCoord(verts[0].x-this.radius) || 0;
+		var end_row =   board.getRowByCoord(verts[0].y+this.radius) || board.tile_set.length;
+		var end_col =   board.getColByCoord(verts[0].x+this.radius) || board.tile_set[0].length;
+		// console.log("GET HIT -----");
+		// console.log("ENDCOL = ",end_col);
+
+		var x_intersects = [];
+		for (var x = start_col; x <= end_col; x++) {
+			// console.log("CURRENT COL ", x);
+			var x_line = board.origin.x+x*board.tile_width;
+			var delta_x = verts[0].x - x_line;
+			if(Math.abs(delta_x)>this.radius){continue;}
+			var delta_y = this.radius;
+			if(delta_x!=0){delta_y=Math.sqrt((this.radius*this.radius)-(delta_x*delta_x));}
+			x_intersects.push({x:x_line, y:verts[0].y+delta_y});
+			x_intersects.push({x:x_line, y:verts[0].y-delta_y});
 		}
+
+		var y_intersects = [];
+		for (var y = start_row; y <= end_row; y++) {
+			// console.log("CURRENT ROW ", y);
+			var y_line = board.origin.y+y*board.tile_height;
+			var delta_y = verts[0].y - y_line;
+			if(Math.abs(delta_y)>this.radius){continue;}
+			var delta_x = this.radius;
+			if(delta_y!=0){delta_x=Math.sqrt((this.radius*this.radius)-(delta_y*delta_y));}
+			y_intersects.push({x:verts[0].x+delta_x, y:y_line});
+			y_intersects.push({x:verts[0].x-delta_x, y:y_line});
+		}
+		sort = function (u, v){return u.x - v.x;}
+		y_intersects.sort(sort);
+		// for (var i = x_intersects.length - 1; i >= 0; i--) {
+		// 	this.drawPoint(x_intersects[i], "green", 2); 
+		// }
+		// for (var i = y_intersects.length - 1; i >= 0; i--) {
+		// 	this.drawPoint(y_intersects[i], "blue", 2); 
+		// }
+
+		var y_ints_in_col = [];
+		if(x_intersects[0] && x_intersects[0].x != board.origin.x){
+			while(y_intersects.length > 0 && y_intersects[0].x >= x_intersects[0].x-board.tile_width && y_intersects[0].x <= x_intersects[0].x){
+				y_ints_in_col.push(y_intersects.shift());
+			}
+			this.calculateHitColumnSlice([], x_intersects.slice(0,2), y_ints_in_col);
+		}
+		while(x_intersects.length >=2 && x_intersects[0].x < (board.origin.x + board.width)){
+			y_ints_in_col = [];
+			while(y_intersects.length > 0 && y_intersects[0].x < x_intersects[0].x){
+				y_intersects.shift();
+			}
+			while(y_intersects.length > 0 && y_intersects[0].x >= x_intersects[0].x && y_intersects[0].x <= (x_intersects[0].x+board.tile_width)){
+				y_ints_in_col.push(y_intersects.shift());
+			}
+			this.calculateHitColumnSlice(x_intersects.slice(0,2), x_intersects.slice(2,4), y_ints_in_col);
+			x_intersects = x_intersects.slice(2);
+		}
+	}
+
+	this.calculateHitColumnSlice = function(leftwall_ints, rightwall_ints, y_ints){
+		//Split into single tiles, each should have 2 intersections
+		// console.log("COLUMN SET -----");
+		// console.log(leftwall_ints);
+		// console.log(rightwall_ints);
+		// console.log(y_ints);
+
+		var col = (leftwall_ints.length>0)? leftwall_ints[0].x : rightwall_ints[0].x-board.tile_width;
+		col = board.getColByCoord(col);
+		//console.log("COL ",col," = ", (col*board.tile_width)+board.origin.x, " to ", ((col*board.tile_height)+board.tile_height+board.origin.x));
+		var start_coord, end_coord;
+		if((leftwall_ints.length > 0) && (rightwall_ints.length > 0)){
+			start_coord = Math.min(leftwall_ints[1].y,rightwall_ints[1].y);
+			end_coord = Math.max(leftwall_ints[0].y,rightwall_ints[0].y);
+		}
+		else if(leftwall_ints.length>0){
+			start_coord = leftwall_ints[1].y;
+			end_coord = leftwall_ints[0].y;
+		} else {
+			start_coord = rightwall_ints[1].y;
+			end_coord = rightwall_ints[0].y;
+		}
+		var start_row = Math.max(board.getRowByCoord(start_coord), 0);
+		var end_row =   Math.min((board.getRowByCoord(end_coord)||board.tile_set.length), board.tile_set.length-1);
+		// console.log("COL ",col," = ", start_coord, " to ", end_coord);
+		// console.log("COL ",col," = ", start_row, " to ", end_row);
+		var tile_int_set = [];
+		for (var y = start_row; y <= end_row; y++) {
+			// console.log("ROW ",y," = ", (y*board.tile_height)+board.origin.y, " to ", ((y*board.tile_height)+board.tile_height)+board.origin.y);
+
+			tile_int_set = [];
+			for (var i = rightwall_ints.length - 1; i >= 0; i--) {
+				if(board.getRowByCoord(rightwall_ints[i].y)==y){
+					tile_int_set.push(rightwall_ints[i]);
+				}
+			}
+			for (var i = leftwall_ints.length - 1; i >= 0; i--) {
+				if(board.getRowByCoord(leftwall_ints[i].y)==y){
+					tile_int_set.push(leftwall_ints[i]);
+				}
+			}
+			for (var i = y_ints.length - 1; i >= 0; i--) {
+				if(y_ints[i].y == (y*board.tile_height)+board.origin.y || y_ints[i].y == ((y*board.tile_height)+board.tile_height)+board.origin.y){
+					tile_int_set.push(y_ints[i]);
+				}
+			}
+			this.calculateHitTile(col, y, tile_int_set);
+		}
+
+	}
+
+	this.calculateHitTile = function(col, row, ints){
+		//Split into single tiles, each should have 2 intersections or 0, if 0 skip
+		// console.log("TILE -----");
+		// console.log(col,"x",row);
+		// console.log(JSON.stringify(ints));
+		if(ints.length==0){return;}
+		if(ints.length%2 != 0){console.log("ERROR AT TILE ",row,"x",col);return;}
+			
+		// context.beginPath();
+		// context.moveTo(ints[0].x, ints[0].y);
+		// context.lineTo(ints[1].x, ints[1].y);
+		// context.lineWidth=1;
+		// context.strokeStyle = "blue";
+		// context.stroke();
+
+		for(var i = 0; i < 4; i++){
+			if(this.isPointInCircle(board.tile_set[row][col].tile_corners[i])){
+				ints.push(board.tile_set[row][col].tile_corners[i]);
+			}
+		}
+
+		var avgPoint = this.getAveragePoint(ints);
+		var that=this;
+		sort = function (u, v){return that.angleBetweenPoints(avgPoint, u) - that.angleBetweenPoints(avgPoint, v);}
+		ints.sort(sort);
+		// this.fillPoly(ints, "#"+((1<<24)*Math.random()|0).toString(16));
+		// this.fillPoly(ints, "red");
+		if(this.polyArea(ints) > this.minHitFactor*(board.tile_width*board.tile_height)){board.tile_set[row][col].isHit=true;}
 	}
 
 	this.calculateHitInside = function(){
@@ -483,6 +605,20 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 	this.isPointInCircle = function(point){
 		//Round distance to nearest pixel
 		return (Math.floor(this.distance(point, this.origin)) <= this.radius);
+	}
+
+	this.angleBetweenPoints = function(a, b){
+		return Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI;
+	}
+
+	this.getAveragePoint = function(pointArr){
+		var total_x = 0;
+		var total_y = 0;
+		for(var i=0; i<pointArr.length; i++){
+			total_x += pointArr[i].x;
+			total_y += pointArr[i].y;
+		}
+		return {x:(total_x/pointArr.length), y:(total_y/pointArr.length)};
 	}
 
 	this.setOrigin = function(position, tile){

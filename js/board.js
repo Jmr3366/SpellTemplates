@@ -52,17 +52,17 @@ function Board(contextGrid, contextTiles) {
 
 	this.getRowByCoord = function(y){
 		y = y - this.origin.y;
+		if(y < 0){return null;}
 		y = (y - (y % this.tile_height))/this.tile_height;
 		if(y >= this.tile_set.length){return null;}
-		if(y < 0){return null;}
 		return y;
 	}
 
 	this.getColByCoord = function(x){
 		x = x - this.origin.x;
+		if(x < 0){return null;}
 		x = (x - (x % this.tile_width))/this.tile_width;
 		if(x >= this.tile_set[0].length){return null;}
-		if(x < 0){return null;}
 		return x;
 	}
 
