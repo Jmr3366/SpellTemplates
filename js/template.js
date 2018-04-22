@@ -565,20 +565,30 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 		// context.lineWidth=1;
 		// context.strokeStyle = "blue";
 		// context.stroke();
-
+		var poly = ints.slice();
 		for(var i = 0; i < 4; i++){
 			if(this.isPointInCircle(board.tile_set[row][col].tile_corners[i])){
-				ints.push(board.tile_set[row][col].tile_corners[i]);
+				poly.push(board.tile_set[row][col].tile_corners[i]);
 			}
 		}
 
-		var avgPoint = this.getAveragePoint(ints);
+		var avgPoint = this.getAveragePoint(poly);
 		var that=this;
 		sort = function (u, v){return that.angleBetweenPoints(avgPoint, u) - that.angleBetweenPoints(avgPoint, v);}
-		ints.sort(sort);
+		poly.sort(sort);
 		// this.fillPoly(ints, "#"+((1<<24)*Math.random()|0).toString(16));
 		// this.fillPoly(ints, "red");
-		if(this.polyArea(ints) > this.minHitFactor*(board.tile_width*board.tile_height)){board.tile_set[row][col].isHit=true;}
+		var polyArea = this.polyArea(poly);
+		var curvedArea = 0;
+		if(polyArea > this.minHitFactor*(board.tile_width*board.tile_height)){board.tile_set[row][col].isHit=true;return;}
+		else if (ints.length==2){
+			var origin = this.getVerts()[0];
+			var angle = Math.abs(this.angleBetweenPoints(origin, ints[1])-this.angleBetweenPoints(origin, ints[0]));
+			angle = Math.PI*angle/180;
+			if(angle > Math.PI){angle = (2*Math.PI)-angle;}
+			curvedArea += (this.radius * this.radius * 0.5)*(angle-Math.sin(angle));
+		}
+		if(polyArea+curvedArea > this.minHitFactor*(board.tile_width*board.tile_height)){board.tile_set[row][col].isHit=true;}
 	}
 
 	this.calculateHitInside = function(){
