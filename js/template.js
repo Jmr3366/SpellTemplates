@@ -433,13 +433,6 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 	}
 
 	this.calculateHit = function(){
-		//Check all tiles along circumference for coverage area
-		this.calculateHitCircumference();
-		//Check all tiles nearby for being totally inside
-		this.calculateHitInside();
-	}
-
-	this.calculateHitCircumference = function(){
 		var verts = this.getVerts();
 		var start_row = board.getRowByCoord(verts[0].y-this.radius) || 0;
 		var start_col = board.getColByCoord(verts[0].x-this.radius) || 0;
@@ -523,7 +516,7 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 			end_coord = rightwall_ints[0].y;
 		}
 		var start_row = Math.max(board.getRowByCoord(start_coord), 0);
-		var end_row =   Math.min((board.getRowByCoord(end_coord)||board.tile_set.length), board.tile_set.length-1);
+		var end_row =   Math.min(((board.getRowByCoord(end_coord)===null)?board.tile_set.length:board.getRowByCoord(end_coord)), board.tile_set.length-1);
 		// console.log("COL ",col," = ", start_coord, " to ", end_coord);
 		// console.log("COL ",col," = ", start_row, " to ", end_row);
 		var tile_int_set = [];
@@ -556,7 +549,7 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 		// console.log("TILE -----");
 		// console.log(col,"x",row);
 		// console.log(JSON.stringify(ints));
-		if(ints.length==0){return;}
+		if(ints.length==0){board.tile_set[row][col].isHit=true;return;;} // If there are no intersections it is covered fully.
 		if(ints.length%2 != 0){console.log("ERROR AT TILE ",row,"x",col);return;}
 			
 		// context.beginPath();
@@ -593,27 +586,6 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 			curvedArea += (this.radius * this.radius * 0.5)*(angle-Math.sin(angle));
 		}
 		if(polyArea+curvedArea > this.minHitFactor*(board.tile_width*board.tile_height)){board.tile_set[row][col].isHit=true;}
-	}
-
-	this.calculateHitInside = function(){
-		var start_row = board.getRowByCoord(this.origin.y-this.radius) || 0;
-		var start_col = board.getColByCoord(this.origin.x-this.radius) || 0;
-		var end_row =   board.getRowByCoord(this.origin.y+this.radius) || board.tile_set.length-1;
-		var end_col =   board.getColByCoord(this.origin.x+this.radius) || board.tile_set[0].length-1;
-		// console.log("row: ", start_row, " to ", end_row);
-		// console.log("col: ", start_col, " to ", end_col);
-		for (var y = start_row; y <= end_row; y++) {
-			//console.log("CURRENT ROW ", y);
-			for (var x = start_col; x <= end_col; x++) {
-				//console.log("CURRENT COL ", x);
-				var tile = board.tile_set[y][x];
-				if(!this.isPointInCircle(tile.tile_corners[0])){continue;}
-				if(!this.isPointInCircle(tile.tile_corners[1])){continue;}
-				if(!this.isPointInCircle(tile.tile_corners[2])){continue;}
-				if(!this.isPointInCircle(tile.tile_corners[3])){continue;}
-				tile.isHit = true;
-			}
-		}
 	}
 
 	this.isPointInCircle = function(point){
