@@ -552,7 +552,7 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 	}
 
 	this.calculateHitTile = function(col, row, ints){
-		//Split into single tiles, each should have 2 intersections or 0, if 0 skip
+		//Split into single tiles, each should have 4 intersections or 2 or 0, if 0 skip
 		// console.log("TILE -----");
 		// console.log(col,"x",row);
 		// console.log(JSON.stringify(ints));
@@ -561,10 +561,14 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 			
 		// context.beginPath();
 		// context.moveTo(ints[0].x, ints[0].y);
-		// context.lineTo(ints[1].x, ints[1].y);
+		// for(var i = 1; i<ints.length;i++){
+		// 	context.lineTo(ints[i].x, ints[i].y);
+		// }
+		// context.lineTo(ints[0].x, ints[0].y);
 		// context.lineWidth=1;
 		// context.strokeStyle = "blue";
 		// context.stroke();
+
 		var poly = ints.slice();
 		for(var i = 0; i < 4; i++){
 			if(this.isPointInCircle(board.tile_set[row][col].tile_corners[i])){
