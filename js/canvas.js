@@ -160,7 +160,7 @@ function init_canvases() {
 	resizeCanvas(canvasTiles, bw, bh);
 
 	board = new Board(contextGrid, contextTiles);
-	template = new LineTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+	template = new CircleTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
 
 	board.drawBoard(Math.floor(((bw-1)%board.tile_width)/2), 0, bw, bh);
 }

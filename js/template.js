@@ -634,3 +634,4 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 		this.radius = length;
 	}
 }
+
