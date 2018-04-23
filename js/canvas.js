@@ -200,13 +200,13 @@ function first_load() {
 
 	var origin = getParameterByName("origin"); // in format XxY
 	var terminus = getParameterByName("terminus"); // in format XxY
-	origin = {x:parseFloat(origin.split("x")[0])+board.origin.x,y:parseFloat(origin.split("x")[1])+board.origin.y};
-	terminus = {x:parseFloat(terminus.split("x")[0])+board.origin.x,y:parseFloat(terminus.split("x")[1])+board.origin.y};
-	if(origin.x && origin.y){
+	if(origin && origin.split("x").length==2){
+		origin = {x:parseFloat(origin.split("x")[0])+board.origin.x,y:parseFloat(origin.split("x")[1])+board.origin.y};
 		console.log("Origin from param: ", origin);
 		template.setOrigin(origin);
 		template.originLocked = true;
-		if(terminus.x && terminus.y){
+		if(terminus && terminus.split("x").length==2){
+			terminus = {x:parseFloat(terminus.split("x")[0])+board.origin.x,y:parseFloat(terminus.split("x")[1])+board.origin.y};
 			console.log("Terminus from param: ", terminus);
 			template.setTerminus(terminus);
 			template.setVector(template.terminus, board.tile_width*templateSize);
