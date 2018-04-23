@@ -481,7 +481,7 @@ function Template(context, canvas_width, canvas_height, board) {
 	}
 
 	this.calculateHitColumn = function(polyVerts, curr_x){
-		var scan_y = Math.ceil((this.farthestBound(polyVerts, "min", "y")-board.origin.y)/board.tile_height)*board.tile_height+board.origin.y;
+		var scan_y = Math.ceil((this.farthestBound(polyVerts, "min", "y")+1-board.origin.y)/board.tile_height)*board.tile_height+board.origin.y;
 		scan_y = Math.max(scan_y, board.origin.y);
 		var max_tile_edge_y = Math.ceil((this.farthestBound(polyVerts, "max", "y")-board.origin.y)/board.tile_height)*board.tile_height+board.origin.y;
 		max_tile_edge_y = Math.min(max_tile_edge_y, board.origin.y+board.height);
