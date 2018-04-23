@@ -133,7 +133,7 @@ var contextTiles = canvasTiles.getContext("2d");
 
 var board;
 var template;
-var templateSize = 3;
+var templateSize = parseInt(getParameterByName("size")) || 3;
 
 function getMousePos(canvasGrid, event) {
 	var rect = canvasGrid.getBoundingClientRect();
@@ -271,9 +271,59 @@ function init_canvases() {
 	resizeCanvas(canvasTiles, bw, bh);
 
 	board = new Board(contextGrid, contextTiles);
-	template = new CircleTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+	switch((template)?(template.constructor.name):"") {
+		case "LineTemplate":
+			template = new LineTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+			break;
+		case "ConeTemplate":
+			template = new ConeTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+			break;
+		case "CircleTemplate":
+			template = new CircleTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+			break;
+		default:
+			template = new CircleTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+	}
 
 	board.drawBoard(Math.floor(((bw-1)%board.tile_width)/2), 0, bw, bh);
+}
+
+function first_load() {
+	//Handle url params mostly
+	init_canvases();
+
+	var shape = getParameterByName("shape");
+	switch(shape) {
+		case "line":
+			template = new LineTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+			break;
+		case "cone":
+			template = new ConeTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+			break;
+		case "circle":
+			template = new CircleTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+			break;
+		default:
+			template = new CircleTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+	}
+	templateSize--;
+	increment_template_size();
+
+	var origin = getParameterByName("origin"); // in format XxY
+	var terminus = getParameterByName("terminus"); // in format XxY
+	origin = {x:parseInt(origin.split("x")[0])+board.origin.x,y:parseInt(origin.split("x")[1])+board.origin.y};
+	terminus = {x:parseInt(terminus.split("x")[0])+board.origin.x,y:parseInt(terminus.split("x")[1])+board.origin.y};
+	if(origin.x && origin.y){
+		console.log("Origin from param: ", origin);
+		template.setOrigin(origin);
+		template.originLocked = true;
+		if(terminus.x && terminus.y){
+			console.log("Terminus from param: ", terminus);
+			template.setTerminus(terminus);
+			template.setVector(template.terminus, board.tile_width*templateSize);
+			paintTemplate();
+		}
+	}
 }
 
 function increment_template_size(){
@@ -332,7 +382,17 @@ function set_template_circle(){
 	if(template.isDrawn){paintTemplate();}
 }
 
-init_canvases();
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+first_load();
 
 canvasGrid.addEventListener('mousedown', mousedown_func, {passive:false});
 canvasGrid.addEventListener('touchstart', touchstart_func, {passive:false});
