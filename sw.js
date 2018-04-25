@@ -18,7 +18,7 @@
  *
  */
 
-const version = "0.0.2";
+const version = "0.0.3";
 const cacheName = `spelltemplates-${version}`;
 self.addEventListener('install', e => {
   e.waitUntil(
@@ -28,7 +28,13 @@ self.addEventListener('install', e => {
         `./index.html`,
         `./main.css`,
         `./js/main.js`,
-        `./icons/menu/*.png`,
+        `./icons/menu/icons8-add.png`,
+        `./icons/menu/icons8-arrow.png`,
+        `./icons/menu/icons8-circle.png`,
+        `./icons/menu/icons8-man.png`,
+        `./icons/menu/icons8-minus.png`,
+        `./icons/menu/icons8-settings.png`,
+        `./icons/menu/icons8-triangle.png`
       ])
           .then(() => self.skipWaiting());
     })
