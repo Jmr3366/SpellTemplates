@@ -53,18 +53,19 @@ body h1 {
 	border:none;
 }
 
-#toolbarDiv button {
+#toolbarDiv img {
 	display: block;
 	text-align: center;
 	height: calc(100% - 8px);
 	width: calc(100% - 8px);
-	text-decoration: none;
+	max-width: 52px;
+	max-height: 52px;
 	background: none;
 	border: none;
 	color: white;
 	font-weight: bold;
-	margin: 4px;
-/*	background: #2a465e;*/
+	margin: auto;
+	object-fit: contain;
 }
 
 #toolbarDiv label {
