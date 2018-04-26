@@ -250,6 +250,9 @@ function decrement_template_size(){
 }
 
 function set_template_cone(){
+	unitPlacementMode = false;
+	set_menu_highlight("coneTemplateButton");
+
 	var origin = template.origin;
 	var originLock = template.originLocked;
 	var terminus = template.terminus;
@@ -263,6 +266,9 @@ function set_template_cone(){
 }
 
 function set_template_line(){
+	unitPlacementMode = false;
+	set_menu_highlight("lineTemplateButton");
+
 	var origin = template.origin;
 	var originLock = template.originLocked;
 	var terminus = template.terminus;
@@ -276,6 +282,9 @@ function set_template_line(){
 }
 
 function set_template_circle(){
+	unitPlacementMode = false;
+	set_menu_highlight("circleTemplateButton");
+
 	var origin = template.origin;
 	var originLock = template.originLocked;
 	var terminus = template.terminus;
@@ -291,8 +300,16 @@ function set_template_circle(){
 }
 
 function toggle_place_units(){
-	unitPlacementMode = !unitPlacementMode;
-	document.getElementById("placeUnitsButton").classList.toggle("highlight");
+	unitPlacementMode = true;
+	set_menu_highlight("placeUnitsButton");
+}
+
+function set_menu_highlight(btnId){
+	var peers = document.querySelectorAll("#toolbarBtnDiv .highlight");
+	for (var i = peers.length - 1; i >= 0; i--) {
+	 	peers[i].classList.remove("highlight");
+	 }
+	document.getElementById(btnId).classList.add("highlight");
 }
 
 function getParameterByName(name, url) {

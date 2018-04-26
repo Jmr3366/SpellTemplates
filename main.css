@@ -69,7 +69,8 @@ body h1 {
 }
 
 #toolbarDiv .highlight {
-	background: black;
+	background: #2a465e;
+	border-radius: 10px;
 }
 
 #toolbarDiv label {
