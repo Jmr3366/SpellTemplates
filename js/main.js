@@ -1019,8 +1019,8 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 					ints.splice(j, 1);
 				}
 			}
-			
 		}
+
 		if(ints.length==0){board.tile_set[row][col].isHit=true;return;} // If there are no intersections it is covered fully.
 		if(ints.length==1){
 			//If there is one intersection it is a corner, check corner coverage
@@ -1032,7 +1032,7 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 			tile.isHit = true;
 			return;
 		}
-		if(ints.length%2 != 0){console.log("ERROR AT TILE ",row,"x",col);console.log(ints);console.log(this.origin);board.tile_set[row][col].fillTile("purple");return;}
+		//if(ints.length%2 != 0){console.log("ERROR AT TILE ",row,"x",col);console.log(ints);console.log(this.origin);board.tile_set[row][col].fillTile("purple");}
 			
 		// context.beginPath();
 		// context.moveTo(ints[0].x, ints[0].y);
