@@ -76,7 +76,6 @@ function mousedown_func(evt) {
 	mousedown = true;
 	var mousePos = getMousePos(canvasGrid, evt);
 	if(unitPlacementMode){
-		console.log("placeunit");
 		placeUnit(mousePos);
 		return;
 	}
