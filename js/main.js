@@ -86,6 +86,10 @@ function Board(contextGrid, contextTiles) {
 		for(i = 0; i < this.tile_set.length; i++){
 			for (var j = 0; j < this.tile_set[i].length; j++) {
 				this.tile_set[i][j].isHit = false;
+				if(this.tile_set[i][j].entity){
+					this.tile_set[i][j].entity.clear()
+					this.tile_set[i][j].entity.draw()
+				}
 			}
 		}
 	}
@@ -95,6 +99,10 @@ function Board(contextGrid, contextTiles) {
 			for (var j = 0; j < this.tile_set[i].length; j++) {
 				if(this.tile_set[i][j].isHit){
 					this.tile_set[i][j].fillTile(fillstyle);
+					if(this.tile_set[i][j].entity){
+						this.tile_set[i][j].entity.clear()
+						this.tile_set[i][j].entity.draw()
+					}
 				}
 			}
 		}
@@ -109,6 +117,7 @@ function Board(contextGrid, contextTiles) {
 	}
 }
 
+
 // Box width
 var bw;
 // Box height
@@ -120,6 +129,8 @@ var longPressTimer;
 var longPressOrigin;
 var LONG_PRESS_FORGIVENESS = 5;
 var LONG_PRESS_VIBRATION = [75];
+//Unit Placement Settings
+var unitPlacementMode=false;
 
 var canvasDiv = document.getElementById("canvasDiv");
 var canvasGrid = document.getElementById("canvasGrid");
@@ -171,10 +182,24 @@ function paintTemplate(){
 	board.colourHits("orange");
 }
 
+function placeUnit(pos){
+	var tile = board.getTileByCoord(pos.x, pos.y);
+	if(tile.entity){tile.entity.clear();tile.entity=null;}
+	else{
+		tile.entity = new Unit(tile, contextUnits);
+		tile.entity.draw();
+	}
+}
+
 function mousedown_func(evt) {
 	evt.preventDefault();
 	mousedown = true;
 	var mousePos = getMousePos(canvasGrid, evt);
+	if(unitPlacementMode){
+		console.log("placeunit");
+		placeUnit(mousePos);
+		return;
+	}
 	//console.log(mousedown, mousePos); 
 	template.setOrigin(mousePos, board.getTileByCoord(mousePos.x, mousePos.y));
 	if(template.originLocked){
@@ -187,6 +212,9 @@ function mousedown_func(evt) {
 function mousemove_func(evt) {
 	evt.preventDefault();
 	if(mousedown){
+		if(unitPlacementMode){
+			return;
+		}
 		var mousePos = getMousePos(canvasGrid, evt);
 		template.setVector(mousePos,board.tile_width*templateSize);
 		paintTemplate();
@@ -382,6 +410,11 @@ function set_template_circle(){
 	if(template.isDrawn){paintTemplate();}
 }
 
+function toggle_place_units(){
+	unitPlacementMode = !unitPlacementMode;
+	document.getElementById("placeUnitsButton").classList.toggle("highlight");
+}
+
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
@@ -408,6 +441,11 @@ document.getElementById("decrementTemplateSize").addEventListener('click', decre
 document.getElementById("coneTemplateButton").addEventListener('click', set_template_cone, {passive:true});
 document.getElementById("lineTemplateButton").addEventListener('click', set_template_line, {passive:true});
 document.getElementById("circleTemplateButton").addEventListener('click', set_template_circle, {passive:true});
+document.getElementById("placeUnitsButton").addEventListener('click', toggle_place_units, {passive:true});
+
+
+
+
 
 function Template(context, canvas_width, canvas_height, board) {
 	this.size_multiplier = 1;
@@ -1048,7 +1086,7 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 
 function Tile(x, y, height, width, contextGrid, contextTile){
 	this.is_hex = false;
-	this.has_entity = false;
+	this.entity;
 	this.has_caster = false;
 	this.isHit = false;
 	this.tile_corners = [{"x":x,"y":y},{"x":x+width,"y":y},{"x":x+width,"y":y+height},{"x":x,"y":y+height}]
@@ -1128,3 +1166,21 @@ function Tile(x, y, height, width, contextGrid, contextTile){
 
 }
 
+function Unit(tile, context){
+	this.radius=12;
+	this.hitColor="red";
+	this.regColor="green";
+
+	this.draw = function(){
+		var center = {x:((tile.tile_corners[1].x+tile.tile_corners[0].x)/2), y:((tile.tile_corners[3].y+tile.tile_corners[0].y)/2)};
+		context.beginPath();
+		context.arc(center.x, center.y, this.radius, 0, 2*Math.PI);
+		context.fillStyle = (tile.isHit)?this.hitColor:this.regColor;
+		context.fill();
+	}
+
+	this.clear = function(){
+		context.clearRect(tile.tile_corners[0].x, tile.tile_corners[0].y, (tile.tile_corners[1].x-tile.tile_corners[0].x), (tile.tile_corners[1].y-tile.tile_corners[3].y));
+	}
+
+}

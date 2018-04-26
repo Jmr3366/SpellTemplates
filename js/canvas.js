@@ -9,6 +9,8 @@ var longPressTimer;
 var longPressOrigin;
 var LONG_PRESS_FORGIVENESS = 5;
 var LONG_PRESS_VIBRATION = [75];
+//Unit Placement Settings
+var unitPlacementMode=false;
 
 var canvasDiv = document.getElementById("canvasDiv");
 var canvasGrid = document.getElementById("canvasGrid");
@@ -60,10 +62,24 @@ function paintTemplate(){
 	board.colourHits("orange");
 }
 
+function placeUnit(pos){
+	var tile = board.getTileByCoord(pos.x, pos.y);
+	if(tile.entity){tile.entity.clear();tile.entity=null;}
+	else{
+		tile.entity = new Unit(tile, contextUnits);
+		tile.entity.draw();
+	}
+}
+
 function mousedown_func(evt) {
 	evt.preventDefault();
 	mousedown = true;
 	var mousePos = getMousePos(canvasGrid, evt);
+	if(unitPlacementMode){
+		console.log("placeunit");
+		place_unit(mousePos);
+		return;
+	}
 	//console.log(mousedown, mousePos); 
 	template.setOrigin(mousePos, board.getTileByCoord(mousePos.x, mousePos.y));
 	if(template.originLocked){
@@ -76,6 +92,9 @@ function mousedown_func(evt) {
 function mousemove_func(evt) {
 	evt.preventDefault();
 	if(mousedown){
+		if(unitPlacementMode){
+			return;
+		}
 		var mousePos = getMousePos(canvasGrid, evt);
 		template.setVector(mousePos,board.tile_width*templateSize);
 		paintTemplate();
@@ -271,6 +290,11 @@ function set_template_circle(){
 	if(template.isDrawn){paintTemplate();}
 }
 
+function toggle_place_units(){
+	unitPlacementMode = !unitPlacementMode;
+	document.getElementById("placeUnitsButton").classList.toggle("highlight");
+}
+
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
@@ -297,4 +321,5 @@ document.getElementById("decrementTemplateSize").addEventListener('click', decre
 document.getElementById("coneTemplateButton").addEventListener('click', set_template_cone, {passive:true});
 document.getElementById("lineTemplateButton").addEventListener('click', set_template_line, {passive:true});
 document.getElementById("circleTemplateButton").addEventListener('click', set_template_circle, {passive:true});
+document.getElementById("placeUnitsButton").addEventListener('click', toggle_place_units, {passive:true});
 

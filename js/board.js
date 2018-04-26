@@ -86,6 +86,10 @@ function Board(contextGrid, contextTiles) {
 		for(i = 0; i < this.tile_set.length; i++){
 			for (var j = 0; j < this.tile_set[i].length; j++) {
 				this.tile_set[i][j].isHit = false;
+				if(this.tile_set[i][j].entity){
+					this.tile_set[i][j].entity.clear()
+					this.tile_set[i][j].entity.draw()
+				}
 			}
 		}
 	}
@@ -95,6 +99,10 @@ function Board(contextGrid, contextTiles) {
 			for (var j = 0; j < this.tile_set[i].length; j++) {
 				if(this.tile_set[i][j].isHit){
 					this.tile_set[i][j].fillTile(fillstyle);
+					if(this.tile_set[i][j].entity){
+						this.tile_set[i][j].entity.clear()
+						this.tile_set[i][j].entity.draw()
+					}
 				}
 			}
 		}

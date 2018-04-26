@@ -68,6 +68,10 @@ body h1 {
 	object-fit: contain;
 }
 
+#toolbarDiv .highlight {
+	background: black;
+}
+
 #toolbarDiv label {
 	display: block;
 	text-align: center;
