@@ -641,7 +641,10 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 	this.setTerminus = function(position){
 		//Overload this to disallow moving terminus
 		//Store terminus as offset from origin
-		if(this.terminus_delta == null){this.terminus_delta = {x:this.origin.x - position.x, y:this.origin.y - position.y};}
+		if(this.terminus_delta == null || (this.terminus_delta.x==0&&this.terminus_delta.y==0)){
+			this.terminus_delta = {x:this.origin.x - position.x, y:this.origin.y - position.y};
+			this.terminus=position;
+		}
 		this.setOrigin(position);
 	}
 

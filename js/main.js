@@ -299,16 +299,16 @@ function init_canvases() {
 	board = new Board(contextGrid, contextTiles);
 	switch((template)?(template.constructor.name):"") {
 		case "LineTemplate":
-			template = new LineTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+			set_template_line();
 			break;
 		case "ConeTemplate":
-			template = new ConeTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+			set_template_cone();
 			break;
 		case "CircleTemplate":
-			template = new CircleTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+			set_template_circle();
 			break;
 		default:
-			template = new CircleTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+			set_template_circle();
 	}
 
 	board.drawBoard(Math.floor(((bw-1)%board.tile_width)/2), 0, bw, bh);
@@ -321,16 +321,16 @@ function first_load() {
 	var shape = getParameterByName("shape");
 	switch(shape) {
 		case "line":
-			template = new LineTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+			set_template_line();
 			break;
 		case "cone":
-			template = new ConeTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+			set_template_cone();
 			break;
 		case "circle":
-			template = new CircleTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+			set_template_circle();
 			break;
 		default:
-			template = new CircleTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+			set_template_circle();
 	}
 	templateSize--;
 	increment_template_size();
@@ -371,6 +371,10 @@ function set_template_cone(){
 	unitPlacementMode = false;
 	set_menu_highlight("coneTemplateButton");
 
+	if(template == undefined){
+		template = new ConeTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+		return;
+	}
 	var origin = template.origin;
 	var originLock = template.originLocked;
 	var terminus = template.terminus;
@@ -387,6 +391,10 @@ function set_template_line(){
 	unitPlacementMode = false;
 	set_menu_highlight("lineTemplateButton");
 
+	if(template == undefined){
+		template = new LineTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+		return;
+	}
 	var origin = template.origin;
 	var originLock = template.originLocked;
 	var terminus = template.terminus;
@@ -403,6 +411,10 @@ function set_template_circle(){
 	unitPlacementMode = false;
 	set_menu_highlight("circleTemplateButton");
 
+	if(template == undefined){
+		template = new CircleTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+		return;
+	}
 	var origin = template.origin;
 	var originLock = template.originLocked;
 	var terminus = template.terminus;
@@ -1101,7 +1113,10 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 	this.setTerminus = function(position){
 		//Overload this to disallow moving terminus
 		//Store terminus as offset from origin
-		if(this.terminus_delta == null){this.terminus_delta = {x:this.origin.x - position.x, y:this.origin.y - position.y};}
+		if(this.terminus_delta == null || (this.terminus_delta.x==0&&this.terminus_delta.y==0)){
+			this.terminus_delta = {x:this.origin.x - position.x, y:this.origin.y - position.y};
+			this.terminus=position;
+		}
 		this.setOrigin(position);
 	}
 
