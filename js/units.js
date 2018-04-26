@@ -12,7 +12,7 @@ function Unit(tile, context){
 	}
 
 	this.clear = function(){
-		context.clearRect(tile.tile_corners[0].x, tile.tile_corners[0].y, (tile.tile_corners[1].x-tile.tile_corners[0].x), (tile.tile_corners[1].y-tile.tile_corners[3].y));
+		context.clearRect(tile.tile_corners[0].x, tile.tile_corners[0].y, (tile.tile_corners[1].x-tile.tile_corners[0].x), (tile.tile_corners[3].y-tile.tile_corners[0].y));
 	}
 
 }

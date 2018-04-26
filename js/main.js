@@ -117,7 +117,6 @@ function Board(contextGrid, contextTiles) {
 	}
 }
 
-
 // Box width
 var bw;
 // Box height
@@ -442,10 +441,6 @@ document.getElementById("coneTemplateButton").addEventListener('click', set_temp
 document.getElementById("lineTemplateButton").addEventListener('click', set_template_line, {passive:true});
 document.getElementById("circleTemplateButton").addEventListener('click', set_template_circle, {passive:true});
 document.getElementById("placeUnitsButton").addEventListener('click', toggle_place_units, {passive:true});
-
-
-
-
 
 function Template(context, canvas_width, canvas_height, board) {
 	this.size_multiplier = 1;
@@ -1180,7 +1175,8 @@ function Unit(tile, context){
 	}
 
 	this.clear = function(){
-		context.clearRect(tile.tile_corners[0].x, tile.tile_corners[0].y, (tile.tile_corners[1].x-tile.tile_corners[0].x), (tile.tile_corners[1].y-tile.tile_corners[3].y));
+		context.clearRect(tile.tile_corners[0].x, tile.tile_corners[0].y, (tile.tile_corners[1].x-tile.tile_corners[0].x), (tile.tile_corners[3].y-tile.tile_corners[0].y));
 	}
 
 }
+
