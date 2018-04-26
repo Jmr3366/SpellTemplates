@@ -490,7 +490,7 @@ function Template(context, canvas_width, canvas_height, board) {
 		context.beginPath();
 		context.arc(point.x, point.y, radius, 0, 2*Math.PI);
 		context.lineWidth=2;
-		context.strokeStyle = "red";
+		context.strokeStyle = color;
 		context.stroke();
 		// context.fillStyle = color;
 		// context.fill();
@@ -988,12 +988,12 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 
 			tile_int_set = [];
 			for (var i = rightwall_ints.length - 1; i >= 0; i--) {
-				if(board.getRowByCoord(rightwall_ints[i].y)==y){
+				if(board.getRowByCoord(rightwall_ints[i].y)==y || rightwall_ints[i].y == ((y*board.tile_height)+board.tile_height)+board.origin.y){
 					tile_int_set.push(rightwall_ints[i]);
 				}
 			}
 			for (var i = leftwall_ints.length - 1; i >= 0; i--) {
-				if(board.getRowByCoord(leftwall_ints[i].y)==y){
+				if(board.getRowByCoord(leftwall_ints[i].y)==y || leftwall_ints[i].y == ((y*board.tile_height)+board.tile_height)+board.origin.y){
 					tile_int_set.push(leftwall_ints[i]);
 				}
 			}
@@ -1012,8 +1012,27 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 		// console.log("TILE -----");
 		// console.log(col,"x",row);
 		// console.log(JSON.stringify(ints));
-		if(ints.length==0){board.tile_set[row][col].isHit=true;return;;} // If there are no intersections it is covered fully.
-		if(ints.length%2 != 0){console.log("ERROR AT TILE ",row,"x",col);return;}
+
+		for (var i = 0; i < ints.length; i++) {
+			for (var j = i+1; j < ints.length; j++) {
+				if(JSON.stringify(ints[j]) === JSON.stringify(ints[i])){
+					ints.splice(j, 1);
+				}
+			}
+			
+		}
+		if(ints.length==0){board.tile_set[row][col].isHit=true;return;} // If there are no intersections it is covered fully.
+		if(ints.length==1){
+			//If there is one intersection it is a corner, check corner coverage
+			var tile = board.tile_set[row][col]
+			if(!this.isPointInCircle(tile.tile_corners[0])){return;}
+			if(!this.isPointInCircle(tile.tile_corners[1])){return;}
+			if(!this.isPointInCircle(tile.tile_corners[2])){return;}
+			if(!this.isPointInCircle(tile.tile_corners[3])){return;}
+			tile.isHit = true;
+			return;
+		}
+		if(ints.length%2 != 0){console.log("ERROR AT TILE ",row,"x",col);console.log(ints);console.log(this.origin);board.tile_set[row][col].fillTile("purple");return;}
 			
 		// context.beginPath();
 		// context.moveTo(ints[0].x, ints[0].y);
