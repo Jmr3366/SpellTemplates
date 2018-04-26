@@ -29,8 +29,11 @@ function Template(context, canvas_width, canvas_height, board) {
 	this.drawPoint = function(point, color="red", radius=5){
 		context.beginPath();
 		context.arc(point.x, point.y, radius, 0, 2*Math.PI);
-		context.fillStyle = color;
-		context.fill();
+		context.lineWidth=2;
+		context.strokeStyle = "red";
+		context.stroke();
+		// context.fillStyle = color;
+		// context.fill();
 	}
 
 	this.fillPoly = function(poly, color){
