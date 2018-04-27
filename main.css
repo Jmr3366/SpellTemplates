@@ -86,11 +86,12 @@ body h1 {
 	min-width: 100px;
 }
 
-#settingsDiv label{
+#settingsDiv table label{
 	font-size: 22px;
 	float: left;
 }
 
+/*Slider from W3Schools*/
 #settingsDiv .slider{
 	-webkit-appearance: none;  /* Override default CSS styles */
     appearance: none;
@@ -121,6 +122,14 @@ body h1 {
     height: 25px; /* Slider handle height */
     background: #3B6182; /* Green background */
     cursor: pointer; /* Cursor on hover */
+}
+
+#settingsDiv .credits{
+	font-size: 13px;
+	position: absolute;
+	left: 0px;
+	bottom: 0px;
+	width: 100%;
 }
 
 #canvasDiv {
