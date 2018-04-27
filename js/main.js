@@ -297,6 +297,7 @@ function init_canvases() {
 	resizeCanvas(canvasTiles, bw, bh);
 
 	board = new Board(contextGrid, contextTiles);
+	board.drawBoard(Math.floor(((bw-1)%board.tile_width)/2), 0, bw, bh);
 	switch((template)?(template.constructor.name):"") {
 		case "LineTemplate":
 			set_template_line();
@@ -311,7 +312,6 @@ function init_canvases() {
 			set_template_circle();
 	}
 
-	board.drawBoard(Math.floor(((bw-1)%board.tile_width)/2), 0, bw, bh);
 }
 
 function first_load() {
