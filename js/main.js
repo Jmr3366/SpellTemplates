@@ -4,10 +4,8 @@ function Board(contextGrid, contextTiles) {
 	this.tile_set = [];
 	this.tile_size_multiplier = 1;
 	this.origin = {x:null,y:null};
-	this.BASE_TILE_WIDTH = 30;
-	this.BASE_TILE_HEIGHT = 30;
-	this.tile_width = this.BASE_TILE_WIDTH * this.tile_size_multiplier;
-	this.tile_height = this.BASE_TILE_HEIGHT * this.tile_size_multiplier;
+	this.tile_width = 30;
+	this.tile_height = 30;
 	this.height;
 	this.width;
 
@@ -130,6 +128,8 @@ var LONG_PRESS_FORGIVENESS = 5;
 var LONG_PRESS_VIBRATION = [75];
 //Unit Placement Settings
 var unitPlacementMode=false;
+//Custom settings
+var settings = {};
 
 var canvasDiv = document.getElementById("canvasDiv");
 var canvasGrid = document.getElementById("canvasGrid");
@@ -384,6 +384,7 @@ function set_template_cone(){
 	template.setVector(terminus, board.tile_width*templateSize);
 	template.originLocked = originLock;
 	template.isDrawn = isDrawn;
+	//if(settings.hit_threshold){template.minHitFactor = settings.hit_threshold/100;}
 	if(template.isDrawn){paintTemplate();}
 }
 
@@ -404,6 +405,7 @@ function set_template_line(){
 	template.setVector(terminus, board.tile_width*templateSize);
 	template.originLocked = originLock;
 	template.isDrawn = isDrawn;
+	//if(settings.hit_threshold){template.minHitFactor = settings.hit_threshold/100;}
 	if(template.isDrawn){paintTemplate();}
 }
 
@@ -426,6 +428,7 @@ function set_template_circle(){
 	template.setOrigin(origin);
 	template.originLocked = originLock;
 	template.isDrawn = isDrawn;
+	//if(settings.hit_threshold){template.minHitFactor = settings.hit_threshold/100;}
 	if(template.isDrawn){paintTemplate();}
 }
 
@@ -442,14 +445,37 @@ function set_menu_highlight(btnId){
 	document.getElementById(btnId).classList.add("highlight");
 }
 
+function open_settings_menu(){
+	document.getElementById("settingsDiv").classList.add("active");
+}
+
+function close_settings_menu(){
+	document.getElementById("settingsDiv").classList.remove("active");
+}
+
+function update_settings(){
+	var settings_obj = {};
+	settings_obj.tile_size = document.querySelector(".tile-size.slider").value;
+	settings_obj.hit_threshold = document.querySelector(".hit-threshold.slider").value;
+	console.log("UPDATE",settings_obj);
+	settings = settings_obj;
+}
+
+function slider_update(evt){
+	var outputClass = evt.target.classList.value.replace("slider","").replace("input","").trim();
+	var output = document.querySelector(".output."+outputClass);
+	output.innerHTML = evt.target.value;
+	update_settings();
+}
+
 function getParameterByName(name, url) {
-    if (!url) url = window.location.href;
-    name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-        results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
+	if (!url) url = window.location.href;
+	name = name.replace(/[\[\]]/g, "\\$&");
+	var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+		results = regex.exec(url);
+	if (!results) return null;
+	if (!results[2]) return '';
+	return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
 first_load();
@@ -469,6 +495,12 @@ document.getElementById("coneTemplateButton").addEventListener('click', set_temp
 document.getElementById("lineTemplateButton").addEventListener('click', set_template_line, {passive:true});
 document.getElementById("circleTemplateButton").addEventListener('click', set_template_circle, {passive:true});
 document.getElementById("placeUnitsButton").addEventListener('click', toggle_place_units, {passive:true});
+document.getElementById("settingsButton").addEventListener('click', open_settings_menu, {passive:true});
+document.getElementById("settingsCloseButton").addEventListener('click', close_settings_menu, {passive:true});
+var sliders = document.getElementsByClassName("slider");
+for(var i = 0; i<sliders.length;i++){
+	sliders[i].addEventListener('input', slider_update, {passive:true});
+}
 
 function Template(context, canvas_width, canvas_height, board) {
 	this.size_multiplier = 1;

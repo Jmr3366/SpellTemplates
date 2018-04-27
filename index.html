@@ -37,6 +37,27 @@
 		<div id="settingsButtonDiv">
 			<img id="settingsButton" src="./icons/menu/icons8-settings.png" alt="settings"></img>
 		</div>
+		<div id="settingsDiv">
+			<div style="width: 100%;height:10vh;"><button id="settingsCloseButton">X</button></div>
+			<table>
+				<tbody>
+					<tr>
+						<td><label>Hit Threshold:</label></td>
+						<td><label class="hit-threshold output">50</label><label>%</label></td>
+					</tr>
+					<tr>
+						<td colspan=2><input type="range" name="hit-threshold" min="1" max="100" value=50 class="slider hit-threshold input"></td>
+					</tr>
+					<tr>
+						<td><label>Tile Size:</label></td>
+						<td><label class="tile-size output">30</label><label>px</label></td>
+					</tr>
+					<tr>
+						<td colspan=2><input type="range" name="tile-size" min="5" max="60" value=30 class="slider tile-size input"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 		<div id="canvasDiv" style="background: tan;">
 			<canvas id="canvasTiles" width="150px" height="150px"></canvas>
 			<canvas id="canvasTemplate" width="150px" height="150px"></canvas>

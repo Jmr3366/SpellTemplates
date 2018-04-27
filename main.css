@@ -21,7 +21,14 @@ body h1 {
 	background: black;
 	opacity: 0.4;
 	border-radius: 10px;
-	z-index: 100;
+	z-index: 50;
+	transition: 0.2s;
+}
+
+#settingsButtonDiv:hover {
+	opacity: 1;
+	background: #333;
+	transition: 0.2s;
 }
 
 #settingsButtonDiv img{
@@ -31,6 +38,89 @@ body h1 {
 	right: 0;
 	max-height: 60px;
 	max-width: 60px;
+}
+
+#settingsDiv {
+	overflow: hidden;
+	position: fixed;
+	top: 0;
+	right: 0;
+	min-height: 100%;
+	min-width: 0px;
+	width: 0vw;
+	background: #eee;
+	z-index: 100;
+	transition: 0.3s
+}
+
+#settingsDiv.active {
+	min-width: 300px;
+	width: 22vw;
+	transition: 0.3s;
+	border-left: #2a465e solid; 
+}
+
+#settingsDiv #settingsCloseButton {
+	max-height: 40px;
+	max-width: 40px;
+	width: 10vh;
+	height: 10vh;
+	border-radius: 10px;
+	float: left;
+	margin: 10px;
+	background-color: #3B6182;
+	border: #2a465e solid;
+	color: white;
+	font-weight: bold;
+	font-size: 30px;
+	display: block;
+}
+
+#settingsDiv table{
+	margin-left: 15px;
+	width: calc(100%-15px);
+}
+
+#settingsDiv td{
+	padding-top: 10px;
+	min-width: 100px;
+}
+
+#settingsDiv label{
+	font-size: 22px;
+	float: left;
+}
+
+#settingsDiv .slider{
+	-webkit-appearance: none;  /* Override default CSS styles */
+    appearance: none;
+    width: 100%; /* Full-width */
+    height: 25px; /* Specified height */
+    background: #d3d3d3; /* Grey background */
+    outline: none; /* Remove outline */
+    opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+    transition: opacity .2s;
+}
+
+#settingsDiv .slider:hover{
+    opacity: 1; /* Set transparency (for mouse-over effects on hover) */
+}
+
+#settingsDiv .slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    width: 25px; /* Set a specific slider handle width */
+    height: 25px; /* Slider handle height */
+    background: #3B6182; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+}
+
+#settingsDiv .slider::-moz-range-thumb {
+    width: 25px; /* Set a specific slider handle width */
+    height: 25px; /* Slider handle height */
+    background: #3B6182; /* Green background */
+    cursor: pointer; /* Cursor on hover */
 }
 
 #canvasDiv {
