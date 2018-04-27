@@ -992,6 +992,8 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 		}
 		var start_row = Math.max(board.getRowByCoord(start_coord), 0);
 		var end_row =   Math.min(((board.getRowByCoord(end_coord)===null)?board.tile_set.length:board.getRowByCoord(end_coord)), board.tile_set.length-1);
+		if(start_coord>=(board.origin.y+(board.tile_set.length*board.tile_height))){start_row=(end_row+1);}
+		if(end_coord<=board.origin.y){end_row=-1;}
 		// console.log("COL ",col," = ", start_coord, " to ", end_coord);
 		// console.log("COL ",col," = ", start_row, " to ", end_row);
 		var tile_int_set = [];
