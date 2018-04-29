@@ -119,6 +119,9 @@ function dblclick_func(evt) {
 	} else {
 		template.lockOrigin();
 		template.drawOrigin();
+		if(!template.terminusRequired){
+			mousemove_func(evt);
+		}
 	}
 }
 
