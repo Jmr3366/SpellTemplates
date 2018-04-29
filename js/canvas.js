@@ -83,7 +83,7 @@ function mousedown_func(evt) {
 	}
 	//console.log(mousedown, mousePos); 
 	template.setOrigin(mousePos, board.getTileByCoord(mousePos.x, mousePos.y));
-	if(template.originLocked){
+	if(template.originLocked || !template.terminusRequired){
 		mousemove_func(evt);
 	} else {
 		clearAll();
@@ -113,8 +113,8 @@ function dblclick_func(evt) {
 	if(template.originLocked){
 		template.unlockOrigin();
 		//Move origin and draw new template
-		mousedown_func(evt);
 		board.clearTiles();
+		mousedown_func(evt);
 		mousedown=false;
 	} else {
 		template.lockOrigin();

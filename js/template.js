@@ -6,6 +6,7 @@ function Template(context, canvas_width, canvas_height, board) {
 	this.originLocked = false;
 	this.minHitFactor = 0.5;
 	this.isDrawn = false;
+	this.terminusRequired = false;
 
 	this.drawBox = function(position, tile){
 		context.beginPath();
@@ -419,6 +420,7 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 	Template.call(this, context, canvas_width, canvas_height, board);
 	var radius;
 	var terminus_delta;
+	this.terminusRequired = true;
 	//Terminus will be used to hold the radius of the circle
 
 	this.getVerts = function(){

@@ -200,7 +200,7 @@ function mousedown_func(evt) {
 	}
 	//console.log(mousedown, mousePos); 
 	template.setOrigin(mousePos, board.getTileByCoord(mousePos.x, mousePos.y));
-	if(template.originLocked){
+	if(template.originLocked || !template.terminusRequired){
 		mousemove_func(evt);
 	} else {
 		clearAll();
@@ -230,8 +230,8 @@ function dblclick_func(evt) {
 	if(template.originLocked){
 		template.unlockOrigin();
 		//Move origin and draw new template
-		mousedown_func(evt);
 		board.clearTiles();
+		mousedown_func(evt);
 		mousedown=false;
 	} else {
 		template.lockOrigin();
@@ -510,6 +510,7 @@ function Template(context, canvas_width, canvas_height, board) {
 	this.originLocked = false;
 	this.minHitFactor = 0.5;
 	this.isDrawn = false;
+	this.terminusRequired = false;
 
 	this.drawBox = function(position, tile){
 		context.beginPath();
@@ -923,6 +924,7 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 	Template.call(this, context, canvas_width, canvas_height, board);
 	var radius;
 	var terminus_delta;
+	this.terminusRequired = true;
 	//Terminus will be used to hold the radius of the circle
 
 	this.getVerts = function(){
