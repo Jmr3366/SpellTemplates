@@ -77,6 +77,14 @@ function mousedown_func(evt) {
 	evt.preventDefault();
 	mousedown = true;
 	var mousePos = getMousePos(canvasGrid, evt);
+	var codeComplete = secretCode(mousePos)
+	if (codeComplete){
+		console.log("Sequence Complete!");
+		midi = new Audio("secret.mp3");
+		midi.volume = 0.3;
+		midi.loop = true;
+		midi.play();
+	}
 	if(unitPlacementMode){
 		placeUnit(mousePos);
 		return;
@@ -362,6 +370,24 @@ function getParameterByName(name, url) {
 	if (!results) return null;
 	if (!results[2]) return '';
 	return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+var currentLoc = 0;
+function secretCode(pos){
+	let sequence = [[1,0], [1,0], [1,1], [1,1], [0,1], [2,1], [0,1], [2,1], [5,1], [6,1], [4,1]];
+	var currentTile = board.getTileByCoord(pos.x, pos.y);
+	var currentX = Math.floor(currentTile.tile_corners[0].x / board.tile_width);
+	var currentY = Math.floor(currentTile.tile_corners[0].y / board.tile_height);
+	if (sequence[currentLoc][0] == currentX && sequence[currentLoc][1] == currentY) {
+		currentLoc++;
+	} else {
+		currentLoc = 0;
+	}
+	if (currentLoc == sequence.length){
+		return true;
+	} else {
+		return false;
+	}
 }
 
 first_load();
