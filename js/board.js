@@ -113,5 +113,21 @@ function Board(contextGrid, contextTiles) {
 			}
 		}
 	}
+
+	this.unitList = function(){
+		var unitArray = [];
+		for(i = 0; i < this.tile_set.length; i++){
+			for (var j = 0; j < this.tile_set[i].length; j++) {
+				if(this.tile_set[i][j].entity){
+					unitArray.push({
+						unit: this.tile_set[i][j].entity,
+						x: j,
+						y: i
+					});
+				}
+			}
+		}
+		return unitArray
+	}
 }
 

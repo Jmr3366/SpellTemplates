@@ -182,8 +182,12 @@ function init_canvases() {
 	resizeCanvas(canvasTemplate, bw, bh);
 	resizeCanvas(canvasTiles, bw, bh);
 
+	var unitList = [];
+	if(board){unitList = board.unitList();}
+
 	board = new Board(contextGrid, contextTiles);
 	board.drawBoard(Math.floor(((bw-1)%board.tile_width)/2), 0, bw, bh);
+	init_units(unitList);
 	switch((template)?(template.constructor.name):"") {
 		case "LineTemplate":
 			set_template_line();
@@ -198,6 +202,16 @@ function init_canvases() {
 			set_template_circle();
 	}
 
+}
+
+function init_units(unitList){
+	for (var i = 0; i<unitList.length; i++){
+		var tile = board.tile_set[unitList[i].y][unitList[i].x];
+		if(!tile){continue;}
+		tile.entity = unitList[i].unit;
+		tile.entity.setTile(tile)
+		tile.entity.draw();
+	}
 }
 
 function first_load() {
@@ -238,6 +252,7 @@ function first_load() {
 	}
 }
 
+
 function increment_template_size(){
 	if(templateSize<25){templateSize++;}
 	document.getElementById("templateSizeLabel").innerHTML = ""+templateSize*5+"ft";
@@ -270,7 +285,7 @@ function set_template_cone(){
 	template.setVector(terminus, board.tile_width*templateSize);
 	template.originLocked = originLock;
 	template.isDrawn = isDrawn;
-	//if(settings.hit_threshold){template.minHitFactor = settings.hit_threshold/100;}
+	if(settings.hit_threshold){template.minHitFactor = settings.hit_threshold/100;}
 	if(template.isDrawn){paintTemplate();}
 }
 
@@ -291,7 +306,7 @@ function set_template_line(){
 	template.setVector(terminus, board.tile_width*templateSize);
 	template.originLocked = originLock;
 	template.isDrawn = isDrawn;
-	//if(settings.hit_threshold){template.minHitFactor = settings.hit_threshold/100;}
+	if(settings.hit_threshold){template.minHitFactor = settings.hit_threshold/100;}
 	if(template.isDrawn){paintTemplate();}
 }
 
@@ -314,7 +329,7 @@ function set_template_circle(){
 	template.setOrigin(origin);
 	template.originLocked = originLock;
 	template.isDrawn = isDrawn;
-	//if(settings.hit_threshold){template.minHitFactor = settings.hit_threshold/100;}
+	if(settings.hit_threshold){template.minHitFactor = settings.hit_threshold/100;}
 	if(template.isDrawn){paintTemplate();}
 }
 
@@ -345,6 +360,7 @@ function update_settings(){
 	settings_obj.hit_threshold = document.querySelector(".hit-threshold.slider").value;
 	console.log("UPDATE",settings_obj);
 	settings = settings_obj;
+	init_canvases();
 }
 
 function slider_update(evt){
