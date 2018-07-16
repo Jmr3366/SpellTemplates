@@ -491,7 +491,7 @@ function update_settings(){
 	var settings_obj = {};
 	settings_obj.tile_size = document.querySelector(".tile-size.slider").value;
 	settings_obj.hit_threshold = document.querySelector(".hit-threshold.slider").value;
-	console.log("UPDATE",settings_obj);
+	// console.log("UPDATE",settings_obj);
 	settings = settings_obj;
 	init_canvases();
 }
