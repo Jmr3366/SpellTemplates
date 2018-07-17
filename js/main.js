@@ -370,7 +370,7 @@ function first_load() {
 	templateSize--;
 	increment_template_size();
 
-	//Add units from url param
+	//Add units from url param in format X1xY1,...,XnxYn
 	var units = getParameterByName("units");
 	if(units && units.split("x").length>=2){
 		unitListString = units.split(",");
@@ -381,6 +381,10 @@ function first_load() {
 		console.log("Units from param: ", JSON.stringify(units.split(",")));
 		init_units(unitList);
 	}
+
+	//Set template magnitude from param
+	var templateParam = getParameterByName("templateSize");
+	if(templateParam % 5 == 0 && templateParam/5 >= 1 &&  templateParam/5 <= 25){set_template_size(templateParam/5);}
 
 	//Add template from url param
 	var origin = getParameterByName("origin"); // in format XxY
@@ -401,19 +405,19 @@ function first_load() {
 }
 
 
-function increment_template_size(){
-	if(templateSize<25){templateSize++;}
+function set_template_size(size){
+	templateSize=size
 	document.getElementById("templateSizeLabel").innerHTML = ""+templateSize*5+"ft";
 	template.changeMagnitude(board.tile_width*templateSize);
 	if(template.isDrawn){paintTemplate();}
+}
 
+function increment_template_size(){
+	if(templateSize<25){set_template_size(templateSize+1);}
 }
 
 function decrement_template_size(){
-	if(templateSize>1){templateSize--;}
-	document.getElementById("templateSizeLabel").innerHTML = ""+templateSize*5+"ft";
-	template.changeMagnitude(board.tile_width*templateSize);
-	if(template.isDrawn){paintTemplate();}
+	if(templateSize>1){set_template_size(templateSize-1);}
 }
 
 function set_template_cone(){
