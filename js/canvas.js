@@ -206,7 +206,9 @@ function init_canvases() {
 
 function init_units(unitList){
 	for (var i = 0; i<unitList.length; i++){
-		var tile = board.tile_set[unitList[i].y][unitList[i].x];
+		var col = board.tile_set[unitList[i].y]
+		if(!col){continue;}
+		var tile = col[unitList[i].x];
 		if(!tile){continue;}
 		tile.entity = unitList[i].unit;
 		tile.entity.setTile(tile)
@@ -235,6 +237,19 @@ function first_load() {
 	templateSize--;
 	increment_template_size();
 
+	//Add units from url param
+	var units = getParameterByName("units");
+	if(units && units.split("x").length>=2){
+		unitListString = units.split(",");
+		unitList = [];
+		for(var i=0; i<unitListString.length;i++){
+			unitList.push({unit: new Unit(null, contextUnits),x:unitListString[i].split("x")[0], y:unitListString[i].split("x")[1]});
+		}
+		console.log("Units from param: ", JSON.stringify(units.split(",")));
+		init_units(unitList);
+	}
+
+	//Add template from url param
 	var origin = getParameterByName("origin"); // in format XxY
 	var terminus = getParameterByName("terminus"); // in format XxY
 	if(origin && origin.split("x").length==2){
