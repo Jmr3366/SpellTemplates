@@ -7,6 +7,7 @@ function Template(context, canvas_width, canvas_height, board) {
 	this.minHitFactor = 0.5;
 	this.isDrawn = false;
 	this.terminusRequired = true;
+	this.shape = "template";
 
 	this.drawBox = function(position, tile){
 		context.beginPath();
@@ -335,6 +336,7 @@ function Template(context, canvas_width, canvas_height, board) {
 
 function ConeTemplate(context, canvas_width, canvas_height, board) {
 	Template.call(this, context, canvas_width, canvas_height, board);
+	this.shape = "cone";
 
 	this.getVerts = function(){
 		var delta_x = (this.terminus.x - this.origin.x);
@@ -372,6 +374,7 @@ function ConeTemplate(context, canvas_width, canvas_height, board) {
 
 function LineTemplate(context, canvas_width, canvas_height, board) {
 	Template.call(this, context, canvas_width, canvas_height, board);
+	this.shape = "line";
 
 	this.getVerts = function(){
 		var delta_x = (this.terminus.x - this.origin.x);
@@ -418,6 +421,7 @@ function LineTemplate(context, canvas_width, canvas_height, board) {
 
 function CircleTemplate(context, canvas_width, canvas_height, board) {
 	Template.call(this, context, canvas_width, canvas_height, board);
+	this.shape = "circle";
 	var radius;
 	var terminus_delta;
 	this.terminusRequired = false;

@@ -125,11 +125,28 @@ body h1 {
     cursor: pointer; /* Cursor on hover */
 }
 
-#settingsDiv #reset_btn {
+#settingsDiv #export_btn {
+	padding: 6px;
+	width: 30%;
+	margin-right: 10px;
+	margin-left: 2px;
+}
+
+#settingsDiv #export_tb {
+	font-size: 18px;
+	padding: 6px;
+	width: 65%;
+	float: right;
+}
+
+#settingsDiv button {
 	font-size: 18px;
 	color: white;
 	background: #3B6182;
 	border: none;
+}
+
+#settingsDiv #reset_btn {
 	padding: 6px;
 	position: absolute;
 	bottom: 45px;

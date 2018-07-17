@@ -533,6 +533,42 @@ function slider_update(evt){
 	update_settings();
 }
 
+function export_state(){
+	var url = (""+window.location).split("?")[0];
+	var params = [];
+	if(template.isDrawn){
+		//collect template size
+		params.push("templateSize="+templateSize*5);
+		//collect template shape
+		params.push("shape="+template.shape);
+		//collect template pos
+		params.push("origin="+(template.origin.x-board.origin.x)+"x"+(template.origin.y-board.origin.y));
+		params.push("terminus="+(template.terminus.x-board.origin.x)+"x"+(template.terminus.y-board.origin.y));
+	}
+	//collect unit pos
+	var unitList = board.unitList();
+	var unitListString = "";
+	for(var i =0; i < unitList.length; i++){
+		if(i!=0){unitListString+=",";}
+		unitListString+=unitList[i].x+"x"+unitList[i].y
+	}
+	if(unitListString!=""){params.push("units="+unitListString);}
+	if(params.length > 0){
+		url = url + "?" + params.join("&")
+	}
+	document.querySelector("#export_tb").disabled=false;
+	document.querySelector("#export_tb").value=url
+}
+
+function copy_value(target){
+	target.select();
+	target.disabled=true;
+	var value = target.value;
+	document.execCommand("copy");
+	target.value = "Copied to clipboard!"
+	setTimeout(function(target, value){target.value = value; target.disabled=false;},850, target, value)
+}
+
 function getParameterByName(name, url) {
 	if (!url) url = window.location.href;
 	name = name.replace(/[\[\]]/g, "\\$&");
@@ -576,6 +612,7 @@ function Template(context, canvas_width, canvas_height, board) {
 	this.minHitFactor = 0.5;
 	this.isDrawn = false;
 	this.terminusRequired = true;
+	this.shape = "template";
 
 	this.drawBox = function(position, tile){
 		context.beginPath();
@@ -904,6 +941,7 @@ function Template(context, canvas_width, canvas_height, board) {
 
 function ConeTemplate(context, canvas_width, canvas_height, board) {
 	Template.call(this, context, canvas_width, canvas_height, board);
+	this.shape = "cone";
 
 	this.getVerts = function(){
 		var delta_x = (this.terminus.x - this.origin.x);
@@ -941,6 +979,7 @@ function ConeTemplate(context, canvas_width, canvas_height, board) {
 
 function LineTemplate(context, canvas_width, canvas_height, board) {
 	Template.call(this, context, canvas_width, canvas_height, board);
+	this.shape = "line";
 
 	this.getVerts = function(){
 		var delta_x = (this.terminus.x - this.origin.x);
@@ -987,6 +1026,7 @@ function LineTemplate(context, canvas_width, canvas_height, board) {
 
 function CircleTemplate(context, canvas_width, canvas_height, board) {
 	Template.call(this, context, canvas_width, canvas_height, board);
+	this.shape = "circle";
 	var radius;
 	var terminus_delta;
 	this.terminusRequired = false;
