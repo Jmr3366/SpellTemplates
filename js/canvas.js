@@ -363,6 +363,17 @@ function update_settings(){
 	init_canvases();
 }
 
+function reset_settings(){
+	settings = {
+		tile_size: "30",
+		hit_threshold: "50"
+	};
+	document.querySelector(".tile-size.slider").value = settings.tile_size;
+	document.querySelector(".hit-threshold.slider").value = settings.hit_threshold;
+	slider_update({target:document.querySelector(".tile-size.slider")});
+	slider_update({target:document.querySelector(".hit-threshold.slider")});
+}
+
 function slider_update(evt){
 	var outputClass = evt.target.classList.value.replace("slider","").replace("input","").trim();
 	var output = document.querySelector(".output."+outputClass);

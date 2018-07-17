@@ -78,7 +78,8 @@ body h1 {
 
 #settingsDiv table{
 	margin-left: 15px;
-	width: calc(100%-15px);
+	width: calc(100% - 30px);
+	min-width: 270px;
 }
 
 #settingsDiv td{
@@ -113,15 +114,28 @@ body h1 {
     appearance: none;
     width: 25px; /* Set a specific slider handle width */
     height: 25px; /* Slider handle height */
-    background: #3B6182; /* Green background */
+    background: #3B6182; /* Blue background */
     cursor: pointer; /* Cursor on hover */
 }
 
 #settingsDiv .slider::-moz-range-thumb {
     width: 25px; /* Set a specific slider handle width */
     height: 25px; /* Slider handle height */
-    background: #3B6182; /* Green background */
+    background: #3B6182; /* Blue background */
     cursor: pointer; /* Cursor on hover */
+}
+
+#settingsDiv #reset_btn {
+	font-size: 18px;
+	color: white;
+	background: #3B6182;
+	border: none;
+	padding: 6px;
+	position: absolute;
+	bottom: 45px;
+	left: 15px;
+	margin: auto;
+	min-width: 150px;
 }
 
 #settingsDiv .credits{
@@ -129,7 +143,8 @@ body h1 {
 	position: absolute;
 	left: 0px;
 	bottom: 0px;
-	width: 100%;
+	min-width: 300px;
+	width: 22vw;
 }
 
 #canvasDiv {
