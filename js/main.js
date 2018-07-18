@@ -220,14 +220,6 @@ function mousedown_func(evt) {
 	evt.preventDefault();
 	mousedown = true;
 	var mousePos = getMousePos(canvasGrid, evt);
-	var codeComplete = secretCode(mousePos)
-	if (codeComplete){
-		console.log("Sequence Complete!");
-		midi = new Audio("secret.mp3");
-		midi.volume = 0.3;
-		midi.loop = true;
-		midi.play();
-	}
 	if(unitPlacementMode){
 		placeUnit(mousePos);
 		return;
@@ -322,6 +314,17 @@ function resize_func(evt) {
 		//console.log("resize event processed");
 		init_canvases();
 	}, 200);
+}
+
+function keydown_func(evt){
+	var codeComplete = secretCode(evt.keyCode)
+	if (codeComplete){
+		console.log("Sequence Complete!");
+		midi = new Audio("secret.mp3");
+		midi.volume = 0.3;
+		midi.loop = true;
+		midi.play();
+	}
 }
 
 function init_canvases() {
@@ -604,22 +607,32 @@ function getParameterByName(name, url) {
 }
 
 var currentLoc = 0;
-function secretCode(pos){
-	let sequence = [[1,0], [1,0], [1,1], [1,1], [0,1], [2,1], [0,1], [2,1], [5,1], [6,1], [4,1]];
-	var currentTile = board.getTileByCoord(pos.x, pos.y);
-	var currentX = Math.floor(currentTile.tile_corners[0].x / board.tile_width);
-	var currentY = Math.floor(currentTile.tile_corners[0].y / board.tile_height);
-	if (sequence[currentLoc][0] == currentX && sequence[currentLoc][1] == currentY) {
+function secretCode(keycode){
+	var allowedKeys = {
+	  37: 'left',
+	  38: 'up',
+	  39: 'right',
+	  40: 'down',
+	  65: 'a',
+	  66: 'b'
+	};
+	var sequence = ['up', 'up', 'down', 'down', 'left', 'right', 'left', 'right', 'b', 'a'];
+	if (sequence[currentLoc] == allowedKeys[keycode]) {
 		currentLoc++;
+	} else if(sequence[0] == allowedKeys[keycode]) {
+		//restart sequence
+		currentLoc = 1;
 	} else {
 		currentLoc = 0;
 	}
 	if (currentLoc == sequence.length){
+		currentLoc = 0;
 		return true;
 	} else {
 		return false;
 	}
 }
+
 
 first_load();
 
@@ -631,6 +644,7 @@ canvasGrid.addEventListener('mouseup', mouseup_func, {passive:false});
 canvasGrid.addEventListener('touchend', touchend_func, {passive:false});
 canvasGrid.addEventListener('touchcancel', touchend_func, {passive:false});
 canvasGrid.addEventListener('dblclick', dblclick_func, {passive:false});
+window.addEventListener('keydown', keydown_func, {passive:false});
 document.defaultView.addEventListener('resize', resize_func, {passive:true});
 document.getElementById("incrementTemplateSize").addEventListener('click', increment_template_size, {passive:true});
 document.getElementById("decrementTemplateSize").addEventListener('click', decrement_template_size, {passive:true});

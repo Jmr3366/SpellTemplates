@@ -77,14 +77,6 @@ function mousedown_func(evt) {
 	evt.preventDefault();
 	mousedown = true;
 	var mousePos = getMousePos(canvasGrid, evt);
-	var codeComplete = secretCode(mousePos)
-	if (codeComplete){
-		console.log("Sequence Complete!");
-		midi = new Audio("secret.mp3");
-		midi.volume = 0.3;
-		midi.loop = true;
-		midi.play();
-	}
 	if(unitPlacementMode){
 		placeUnit(mousePos);
 		return;
@@ -473,7 +465,6 @@ function getParameterByName(name, url) {
 
 var currentLoc = 0;
 function secretCode(keycode){
-	console.log(keycode)
 	var allowedKeys = {
 	  37: 'left',
 	  38: 'up',
