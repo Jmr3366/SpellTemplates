@@ -427,6 +427,12 @@ function export_state(){
 	document.querySelector("#export_tb").value=url
 }
 
+function clear_state(){
+	board.clearUnits();
+	template.clear()
+	init_canvases();
+}
+
 function copy_value(target){
 	target.select();
 	target.disabled=true;

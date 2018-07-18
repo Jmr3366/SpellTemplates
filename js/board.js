@@ -129,5 +129,15 @@ function Board(contextGrid, contextTiles) {
 		}
 		return unitArray
 	}
+
+	this.clearUnits = function(){
+		for(i = 0; i < this.tile_set.length; i++){
+			for (var j = 0; j < this.tile_set[i].length; j++) {
+				if(this.tile_set[i][j].entity){
+					this.tile_set[i][j].entity = null;
+				}
+			}
+		}
+	}
 }
 
