@@ -255,10 +255,6 @@ body h1 {
 /*	background: #2a465e;*/
 }
 
-#toolbarDiv button:focus {
-	outline: none;
-}
-
 canvas {
 	position: absolute;
 	top: 20px;
