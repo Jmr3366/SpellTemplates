@@ -11,6 +11,7 @@ var LONG_PRESS_FORGIVENESS = 5;
 var LONG_PRESS_VIBRATION = [75];
 //Unit Placement Settings
 var unitPlacementMode=false;
+var unitStyle=0;
 //Custom settings
 var settings = {};
 
@@ -69,6 +70,7 @@ function placeUnit(pos){
 	if(tile.entity){tile.entity.clear();tile.entity=null;}
 	else{
 		tile.entity = new Unit(tile, contextUnits);
+		tile.entity.setShape(unitStyle);
 		tile.entity.draw();
 	}
 }
@@ -364,7 +366,14 @@ function set_template_circle(){
 }
 
 function toggle_place_units(){
-	unitPlacementMode = true;
+	if(unitPlacementMode){
+		if(unitStyle==0){unitStyle=4;}
+		else if(unitStyle==4){unitStyle=6;}
+		else{unitStyle=0;}
+	} else {
+		unitPlacementMode = true;
+		unitStyle=0;
+	}
 	set_menu_highlight("placeUnitsButton");
 }
 
