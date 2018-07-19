@@ -2,7 +2,7 @@ function Unit(tile, context){
 	this.radius=12;
 	this.hitColour="#3B6182";
 	this.regColour="#3B6182";
-	this.shape=6;
+	this.shape=0;
 
 	this.draw = function(){
 		var center = {x:((tile.tile_corners[1].x+tile.tile_corners[0].x)/2), y:((tile.tile_corners[3].y+tile.tile_corners[0].y)/2)};
