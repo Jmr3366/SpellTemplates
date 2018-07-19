@@ -61,7 +61,7 @@ function paintTemplate(){
 	if(template.originLocked){template.drawOrigin();}
 	template.draw();
 	template.calculateHit(board);
-	board.colourHits("orange");
+	board.colourHits("#E55934");
 }
 
 function placeUnit(pos){
@@ -493,14 +493,14 @@ function secretCode(keycode){
 
 first_load();
 
-canvasGrid.addEventListener('mousedown', mousedown_func, {passive:false});
-canvasGrid.addEventListener('touchstart', touchstart_func, {passive:false});
-canvasGrid.addEventListener('mousemove', mousemove_func, {passive:false});
-canvasGrid.addEventListener('touchmove', touchmove_func, {passive:false});
-canvasGrid.addEventListener('mouseup', mouseup_func, {passive:false});
-canvasGrid.addEventListener('touchend', touchend_func, {passive:false});
-canvasGrid.addEventListener('touchcancel', touchend_func, {passive:false});
-canvasGrid.addEventListener('dblclick', dblclick_func, {passive:false});
+canvasTemplate.addEventListener('mousedown', mousedown_func, {passive:false});
+canvasTemplate.addEventListener('touchstart', touchstart_func, {passive:false});
+canvasTemplate.addEventListener('mousemove', mousemove_func, {passive:false});
+canvasTemplate.addEventListener('touchmove', touchmove_func, {passive:false});
+canvasTemplate.addEventListener('mouseup', mouseup_func, {passive:false});
+canvasTemplate.addEventListener('touchend', touchend_func, {passive:false});
+canvasTemplate.addEventListener('touchcancel', touchend_func, {passive:false});
+canvasTemplate.addEventListener('dblclick', dblclick_func, {passive:false});
 window.addEventListener('keydown', keydown_func, {passive:false});
 document.defaultView.addEventListener('resize', resize_func, {passive:true});
 document.getElementById("incrementTemplateSize").addEventListener('click', increment_template_size, {passive:true});

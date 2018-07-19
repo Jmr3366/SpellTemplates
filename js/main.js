@@ -204,7 +204,7 @@ function paintTemplate(){
 	if(template.originLocked){template.drawOrigin();}
 	template.draw();
 	template.calculateHit(board);
-	board.colourHits("orange");
+	board.colourHits("#E55934");
 }
 
 function placeUnit(pos){
@@ -636,14 +636,14 @@ function secretCode(keycode){
 
 first_load();
 
-canvasGrid.addEventListener('mousedown', mousedown_func, {passive:false});
-canvasGrid.addEventListener('touchstart', touchstart_func, {passive:false});
-canvasGrid.addEventListener('mousemove', mousemove_func, {passive:false});
-canvasGrid.addEventListener('touchmove', touchmove_func, {passive:false});
-canvasGrid.addEventListener('mouseup', mouseup_func, {passive:false});
-canvasGrid.addEventListener('touchend', touchend_func, {passive:false});
-canvasGrid.addEventListener('touchcancel', touchend_func, {passive:false});
-canvasGrid.addEventListener('dblclick', dblclick_func, {passive:false});
+canvasTemplate.addEventListener('mousedown', mousedown_func, {passive:false});
+canvasTemplate.addEventListener('touchstart', touchstart_func, {passive:false});
+canvasTemplate.addEventListener('mousemove', mousemove_func, {passive:false});
+canvasTemplate.addEventListener('touchmove', touchmove_func, {passive:false});
+canvasTemplate.addEventListener('mouseup', mouseup_func, {passive:false});
+canvasTemplate.addEventListener('touchend', touchend_func, {passive:false});
+canvasTemplate.addEventListener('touchcancel', touchend_func, {passive:false});
+canvasTemplate.addEventListener('dblclick', dblclick_func, {passive:false});
 window.addEventListener('keydown', keydown_func, {passive:false});
 document.defaultView.addEventListener('resize', resize_func, {passive:true});
 document.getElementById("incrementTemplateSize").addEventListener('click', increment_template_size, {passive:true});
@@ -669,6 +669,7 @@ function Template(context, canvas_width, canvas_height, board) {
 	this.isDrawn = false;
 	this.terminusRequired = true;
 	this.shape = "template";
+	this.lineColour = "#9E3316";
 
 	this.drawBox = function(position, tile){
 		context.beginPath();
@@ -685,11 +686,11 @@ function Template(context, canvas_width, canvas_height, board) {
 		context.moveTo(this.origin.x, this.origin.y);
 		context.lineTo(this.terminus.x, this.terminus.y);
 		context.lineWidth=2;
-		context.strokeStyle = "red";
+		context.strokeStyle = this.lineColour;
 		context.stroke();
 	}
 
-	this.drawPoint = function(point, color="red", radius=5){
+	this.drawPoint = function(point, color=this.lineColour, radius=5){
 		context.beginPath();
 		context.arc(point.x, point.y, radius, 0, 2*Math.PI);
 		context.lineWidth=2;
@@ -772,7 +773,7 @@ function Template(context, canvas_width, canvas_height, board) {
 	}
 
 	this.drawOrigin = function(){
-		this.drawPoint(this.origin, "red", 10);
+		this.drawPoint(this.origin, this.lineColour, 10);
 	}
 
 	this.setTerminus = function(position){
@@ -780,7 +781,7 @@ function Template(context, canvas_width, canvas_height, board) {
 	}
 
 	this.drawTerminus = function(){
-		this.drawPoint(this.terminus, "red", 10);
+		this.drawPoint(this.terminus, this.lineColour, 10);
 	}
 
 	this.setVector = function(position, length){
@@ -1020,7 +1021,7 @@ function ConeTemplate(context, canvas_width, canvas_height, board) {
 		context.lineTo(verts[2].x, verts[2].y);
 		context.lineTo(verts[0].x, verts[0].y);
 		context.lineWidth=2;
-		context.strokeStyle = "red";
+		context.strokeStyle = this.lineColour;
 		context.stroke();
 	}
 
@@ -1067,7 +1068,7 @@ function LineTemplate(context, canvas_width, canvas_height, board) {
 		context.lineTo(verts[4].x, verts[4].y);
 		context.lineTo(verts[1].x, verts[1].y);
 		context.lineWidth=2;
-		context.strokeStyle = "red";
+		context.strokeStyle = this.lineColour;
 		context.stroke();
 	}
 
@@ -1098,7 +1099,7 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 		context.beginPath();
 		context.arc(verts[0].x, verts[0].y, Math.abs(verts[0].x-verts[1].x),0,2*Math.PI);
 		context.lineWidth=2;
-		context.strokeStyle = "red";
+		context.strokeStyle = this.lineColour;
 		context.stroke();
 	}
 
@@ -1335,6 +1336,8 @@ function Tile(x, y, height, width, contextGrid, contextTile){
 	this.has_caster = false;
 	this.isHit = false;
 	this.tile_corners = [{"x":x,"y":y},{"x":x+width,"y":y},{"x":x+width,"y":y+height},{"x":x,"y":y+height}]
+	this.currentFill = null;
+	this.gridColor = "#2C363F"
 
 	this.drawTile = function(){
 		contextGrid.beginPath();
@@ -1345,11 +1348,12 @@ function Tile(x, y, height, width, contextGrid, contextTile){
 		contextGrid.lineTo(0.5 + this.tile_corners[3].x, 0.5 + this.tile_corners[3].y);
 		contextGrid.lineTo(0.5 + this.tile_corners[0].x, 0.5 + this.tile_corners[0].y);
 
-		contextGrid.strokeStyle = "black";
+		contextGrid.strokeStyle = this.gridColor;
 		contextGrid.stroke();
 	}
 
 	this.fillTile = function(fillStyle="red"){
+		this.currentFill = fillStyle;
 		contextTile.beginPath();
 		contextTile.rect(x+1, y+1, width-1, height-1);
 		contextTile.fillStyle= fillStyle;
@@ -1357,6 +1361,7 @@ function Tile(x, y, height, width, contextGrid, contextTile){
 	}
 
 	this.clearTile = function(){
+		this.currentFill = null;
 		contextTile.clearRect(x+1, y+1, width-1, height-1);
 	}
 
@@ -1413,15 +1418,33 @@ function Tile(x, y, height, width, contextGrid, contextTile){
 
 function Unit(tile, context){
 	this.radius=12;
-	this.hitColor="red";
-	this.regColor="green";
+	this.hitColour="#3B6182";
+	this.regColour="#3B6182";
 
 	this.draw = function(){
 		var center = {x:((tile.tile_corners[1].x+tile.tile_corners[0].x)/2), y:((tile.tile_corners[3].y+tile.tile_corners[0].y)/2)};
+		console.log(tile.tile_corners);
+		console.log(center);
+		console.log(tile.tile_corners[0].x + (tile.tile_corners[1].x-tile.tile_corners[0].x)/2)
+		console.log(tile.tile_corners[0].y + (tile.tile_corners[3].y-tile.tile_corners[0].y)/2)
 		context.beginPath();
 		context.arc(center.x, center.y, this.radius, 0, 2*Math.PI);
-		context.fillStyle = (tile.isHit)?this.hitColor:this.regColor;
+		context.fillStyle = (tile.isHit)?this.hitColour:this.regColour;
 		context.fill();
+		if(tile.isHit){
+			this.crossOut();
+		}
+	}
+
+	this.crossOut = function(){
+		context.beginPath();
+		context.moveTo(tile.tile_corners[0].x+1,tile.tile_corners[0].y+1);
+		context.lineTo(tile.tile_corners[2].x-1,tile.tile_corners[2].y-1);
+		context.moveTo(tile.tile_corners[1].x-1,tile.tile_corners[1].y+1);
+		context.lineTo(tile.tile_corners[3].x+1,tile.tile_corners[3].y-1);
+		context.strokeStyle = tile.currentFill
+		context.lineWidth = 2;
+		context.stroke();
 	}
 
 	this.setTile = function(newTile){

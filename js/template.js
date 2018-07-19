@@ -8,6 +8,7 @@ function Template(context, canvas_width, canvas_height, board) {
 	this.isDrawn = false;
 	this.terminusRequired = true;
 	this.shape = "template";
+	this.lineColour = "#9E3316";
 
 	this.drawBox = function(position, tile){
 		context.beginPath();
@@ -24,11 +25,11 @@ function Template(context, canvas_width, canvas_height, board) {
 		context.moveTo(this.origin.x, this.origin.y);
 		context.lineTo(this.terminus.x, this.terminus.y);
 		context.lineWidth=2;
-		context.strokeStyle = "red";
+		context.strokeStyle = this.lineColour;
 		context.stroke();
 	}
 
-	this.drawPoint = function(point, color="red", radius=5){
+	this.drawPoint = function(point, color=this.lineColour, radius=5){
 		context.beginPath();
 		context.arc(point.x, point.y, radius, 0, 2*Math.PI);
 		context.lineWidth=2;
@@ -111,7 +112,7 @@ function Template(context, canvas_width, canvas_height, board) {
 	}
 
 	this.drawOrigin = function(){
-		this.drawPoint(this.origin, "red", 10);
+		this.drawPoint(this.origin, this.lineColour, 10);
 	}
 
 	this.setTerminus = function(position){
@@ -119,7 +120,7 @@ function Template(context, canvas_width, canvas_height, board) {
 	}
 
 	this.drawTerminus = function(){
-		this.drawPoint(this.terminus, "red", 10);
+		this.drawPoint(this.terminus, this.lineColour, 10);
 	}
 
 	this.setVector = function(position, length){
@@ -359,7 +360,7 @@ function ConeTemplate(context, canvas_width, canvas_height, board) {
 		context.lineTo(verts[2].x, verts[2].y);
 		context.lineTo(verts[0].x, verts[0].y);
 		context.lineWidth=2;
-		context.strokeStyle = "red";
+		context.strokeStyle = this.lineColour;
 		context.stroke();
 	}
 
@@ -406,7 +407,7 @@ function LineTemplate(context, canvas_width, canvas_height, board) {
 		context.lineTo(verts[4].x, verts[4].y);
 		context.lineTo(verts[1].x, verts[1].y);
 		context.lineWidth=2;
-		context.strokeStyle = "red";
+		context.strokeStyle = this.lineColour;
 		context.stroke();
 	}
 
@@ -437,7 +438,7 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 		context.beginPath();
 		context.arc(verts[0].x, verts[0].y, Math.abs(verts[0].x-verts[1].x),0,2*Math.PI);
 		context.lineWidth=2;
-		context.strokeStyle = "red";
+		context.strokeStyle = this.lineColour;
 		context.stroke();
 	}
 

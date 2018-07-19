@@ -4,6 +4,8 @@ function Tile(x, y, height, width, contextGrid, contextTile){
 	this.has_caster = false;
 	this.isHit = false;
 	this.tile_corners = [{"x":x,"y":y},{"x":x+width,"y":y},{"x":x+width,"y":y+height},{"x":x,"y":y+height}]
+	this.currentFill = null;
+	this.gridColor = "#2C363F"
 
 	this.drawTile = function(){
 		contextGrid.beginPath();
@@ -14,11 +16,12 @@ function Tile(x, y, height, width, contextGrid, contextTile){
 		contextGrid.lineTo(0.5 + this.tile_corners[3].x, 0.5 + this.tile_corners[3].y);
 		contextGrid.lineTo(0.5 + this.tile_corners[0].x, 0.5 + this.tile_corners[0].y);
 
-		contextGrid.strokeStyle = "black";
+		contextGrid.strokeStyle = this.gridColor;
 		contextGrid.stroke();
 	}
 
 	this.fillTile = function(fillStyle="red"){
+		this.currentFill = fillStyle;
 		contextTile.beginPath();
 		contextTile.rect(x+1, y+1, width-1, height-1);
 		contextTile.fillStyle= fillStyle;
@@ -26,6 +29,7 @@ function Tile(x, y, height, width, contextGrid, contextTile){
 	}
 
 	this.clearTile = function(){
+		this.currentFill = null;
 		contextTile.clearRect(x+1, y+1, width-1, height-1);
 	}
 
