@@ -5,10 +5,6 @@ function Unit(tile, context){
 
 	this.draw = function(){
 		var center = {x:((tile.tile_corners[1].x+tile.tile_corners[0].x)/2), y:((tile.tile_corners[3].y+tile.tile_corners[0].y)/2)};
-		console.log(tile.tile_corners);
-		console.log(center);
-		console.log(tile.tile_corners[0].x + (tile.tile_corners[1].x-tile.tile_corners[0].x)/2)
-		console.log(tile.tile_corners[0].y + (tile.tile_corners[3].y-tile.tile_corners[0].y)/2)
 		context.beginPath();
 		context.arc(center.x, center.y, this.radius, 0, 2*Math.PI);
 		context.fillStyle = (tile.isHit)?this.hitColour:this.regColour;
