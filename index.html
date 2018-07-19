@@ -42,11 +42,11 @@
 			<table>
 				<tbody>
 					<tr>
-						<td><label>Hit Threshold:</label></td>
-						<td><label class="hit-threshold output">50</label><label>%</label></td>
+						<td><label id="hit_threshold_lbl_1">Hit Threshold:</label></td>
+						<td><label class="hit-threshold output" id="hit_threshold_lbl_2">50</label><label>%</label></td>
 					</tr>
 					<tr>
-						<td colspan=2><input type="range" name="hit-threshold" min="1" max="100" value=50 class="slider hit-threshold input"></td>
+						<td colspan=2><input type="range" name="hit-threshold" min="1" max="100" value=50 class="slider hit-threshold input" aria-labelledby="hit_threshold_lbl_1,hit_threshold_lbl_2"></td>
 					</tr>
 					<tr style="display:none;">
 						<td><label>Tile Size:</label></td>
@@ -56,7 +56,7 @@
 						<td colspan=2><input type="range" name="tile-size" min="10" max="60" step="2" value=30 class="slider tile-size input"></td>
 					</tr>
 					<tr>
-						<td colspan=2><button id="export_btn" onclick="export_state()">Export</button><input id="export_tb" readonly type="text" placeholder="Press Export..." onclick="copy_value(this)"></input></td>
+						<td colspan=2><button id="export_btn" onclick="export_state()">Export</button><input id="export_tb" readonly type="text" placeholder="Press Export..." onclick="copy_value(this)" aria-label="Exported Url"></input></td>
 					</tr>
 				</tbody>
 			</table>
@@ -64,12 +64,14 @@
 			<button id="clear_btn" onclick="clear_state()">Clear Board</button>
 			<label class="credits"><a href='https://ko-fi.com/G2G2CAK2'>Buy Me a Coffee</a><br>Created by Sir Cinnamon - Icons from <a href="https://icons8.com/">Icons8</a></label>
 		</div>
-		<div id="canvasDiv" style="background: tan;">
-			<canvas id="canvasTiles" width="150px" height="150px"></canvas>
-			<canvas id="canvasUnits" width="150px" height="150px"></canvas>
-			<canvas id="canvasGrid" width="150px" height="150px"></canvas>
-			<canvas id="canvasTemplate" width="150px" height="150px"></canvas>
-		</div>
+		<main>
+			<div id="canvasDiv" style="background: tan;">
+				<canvas id="canvasTiles" width="150px" height="150px"></canvas>
+				<canvas id="canvasUnits" width="150px" height="150px"></canvas>
+				<canvas id="canvasGrid" width="150px" height="150px"></canvas>
+				<canvas id="canvasTemplate" width="150px" height="150px"></canvas>
+			</div>
+		</main>
 		<div id="toolbarDiv">
 			<div id="toolbarBtnDiv" style="background-color: #3B6182;">
 				<div>
