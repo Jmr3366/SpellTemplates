@@ -147,6 +147,8 @@ var bw;
 var bh;
 // Mouse currently up or down
 var mousedown = false;
+//Current active touches
+var ongoingTouches = 0;
 //Long Press settings
 var longPressTimer;
 var longPressOrigin;
@@ -272,7 +274,8 @@ function dblclick_func(evt) {
 }
 
 function touchstart_func(evt) {
-	if(evt.touches.length == 1){
+	ongoingTouches += evt.changedTouches.length;
+	if(ongoingTouches == 1){
 		//Start longpress
 		longPressOrigin = {x:evt.touches[0].clientX, y:evt.touches[0].clientY};
 		longPressTimer = setTimeout(function() {
@@ -281,11 +284,13 @@ function touchstart_func(evt) {
 		}, 500);
 
 		mousedown_func(evt);
+	} else {
+		clearTimeout(longPressTimer);
 	}
 }
 
 function touchmove_func(evt) {
-	if(evt.touches.length == 1){
+	if(ongoingTouches == 1){
 		//Cancel longpress if in progress & have moved enough away
 		if(longPressOrigin){
 			var dx = evt.touches[0].clientX - longPressOrigin.x
@@ -301,7 +306,8 @@ function touchmove_func(evt) {
 }
 
 function touchend_func(evt) {
-	if(evt.touches.length <= 1){
+	ongoingTouches -= evt.changedTouches.length;
+	if(ongoingTouches <= 1){
 		//Cancel longpress happening
 		clearTimeout(longPressTimer);
 		longPressOrigin = null;
