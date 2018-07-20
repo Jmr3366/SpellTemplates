@@ -111,6 +111,7 @@ function mouseup_func(evt) {
 
 function dblclick_func(evt) {
 	evt.preventDefault();
+	if(unitPlacementMode){return;}
 	var mousePos = getMousePos(canvasGrid, evt);
 	if(template.originLocked){
 		template.unlockOrigin();
