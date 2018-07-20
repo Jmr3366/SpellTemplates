@@ -37,7 +37,7 @@ Aiming with a circle is easy! Just click on the map where the center of the circ
 ![Cone Aiming](https://i.imgur.com/y4QacMz.png)
 ![Line Aiming](https://i.imgur.com/utGQnh9.png)
 
-Cones and Lines aim a little differently. Because they need both a starting point and a direction, you cannot srag to move the starting point. Instead, the starting point will be placed by the click and you can drag the mouse around to aim the direction of the spell.
+Cones and Lines aim a little differently. Because they need both a starting point and a direction, you cannot drag to move the starting point. Instead, the starting point will be placed by the click and you can drag the mouse around to aim the direction of the spell.
 
 ### Locking
 
