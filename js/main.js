@@ -214,8 +214,7 @@ function placeUnit(pos){
 	var tile = board.getTileByCoord(pos.x, pos.y);
 	if(tile.entity){tile.entity.clear();tile.entity=null;}
 	else{
-		tile.entity = new Unit(tile, contextUnits);
-		tile.entity.setShape(unitStyle);
+		tile.entity = new Unit(tile, unitStyle, contextUnits);
 		tile.entity.draw();
 	}
 }
@@ -400,13 +399,14 @@ function first_load() {
 	templateSize--;
 	increment_template_size();
 
-	//Add units from url param in format X1xY1,...,XnxYn
+	//Add units from url param in format X1xY1xShape1,...,XnxYnxShapen
 	var units = getParameterByName("units");
 	if(units && units.split("x").length>=2){
 		unitListString = units.split(",");
 		unitList = [];
 		for(var i=0; i<unitListString.length;i++){
-			unitList.push({unit: new Unit(null, contextUnits),x:unitListString[i].split("x")[0], y:unitListString[i].split("x")[1]});
+			var shape = unitListString[i].split("x")[2] || 0;
+			unitList.push({unit: new Unit(null, shape, contextUnits),x:unitListString[i].split("x")[0], y:unitListString[i].split("x")[1]});
 		}
 		console.log("Units from param: ", JSON.stringify(units.split(",")));
 		init_units(unitList);
@@ -587,7 +587,7 @@ function export_state(){
 	var unitListString = "";
 	for(var i =0; i < unitList.length; i++){
 		if(i!=0){unitListString+=",";}
-		unitListString+=unitList[i].x+"x"+unitList[i].y
+		unitListString+=unitList[i].x+"x"+unitList[i].y+"x"+unitList[i].unit.shape;
 	}
 	if(unitListString!=""){params.push("units="+unitListString);}
 	if(params.length > 0){
@@ -1432,11 +1432,11 @@ function Tile(x, y, height, width, contextGrid, contextTile){
 
 }
 
-function Unit(tile, context){
+function Unit(tile, shape, context){
 	this.radius=12;
 	this.hitColour="#3B6182";
 	this.regColour="#3B6182";
-	this.shape=0;
+	this.shape=shape;
 
 	this.draw = function(){
 		var center = {x:((tile.tile_corners[1].x+tile.tile_corners[0].x)/2), y:((tile.tile_corners[3].y+tile.tile_corners[0].y)/2)};
