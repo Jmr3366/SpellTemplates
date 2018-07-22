@@ -64,10 +64,8 @@ body h1 {
 }
 
 #settingsDiv #settingsCloseButton {
-	max-height: 40px;
-	max-width: 40px;
-	width: 10vh;
-	height: 10vh;
+	height: 40px;
+	width: 40px;
 	border-radius: 10px;
 	float: left;
 	margin: 10px;
@@ -152,28 +150,31 @@ body h1 {
 #settingsDiv #reset_btn {
 	padding: 6px;
 	position: absolute;
-	bottom: 45px;
-	left: 15px;
-	margin: auto;
+	bottom: 30px;
+	left: 0px;
+	margin-left: 15px;
+	margin-bottom: 15px;
 	min-width: 150px;
 }
 
 #settingsDiv #clear_btn {
 	padding: 6px;
 	position: absolute;
-	bottom: 85px;
-	left: 15px;
-	margin: auto;
+	bottom: 0px;
+	left: 0px;
+	margin-left: 15px;
 	min-width: 150px;
 }
 
 #settingsDiv .credits{
-	font-size: 16px;
+	max-height: 10vh;
+	font-size: 2vh;
 	position: absolute;
 	left: 0px;
 	bottom: 0px;
-	min-width: 300px;
-	width: 22vw;
+	min-width: 280px;
+	width: calc(100% - 20px);
+	margin: 0px 10px 0px 10px;
 }
 
 #canvasDiv {
