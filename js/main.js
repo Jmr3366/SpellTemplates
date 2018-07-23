@@ -157,6 +157,7 @@ var LONG_PRESS_VIBRATION = [75];
 //Unit Placement Settings
 var unitPlacementMode=false;
 var unitStyle=0;
+var unitSvgDelay=500;
 //Custom settings
 var settings = {};
 
@@ -212,6 +213,7 @@ function paintTemplate(){
 
 function placeUnit(pos){
 	var tile = board.getTileByCoord(pos.x, pos.y);
+	if(!tile){return;}
 	if(tile.entity){tile.entity.clear();tile.entity=null;}
 	else{
 		tile.entity = new Unit(tile, unitStyle, contextUnits);
@@ -525,6 +527,25 @@ function toggle_place_units(){
 		unitStyle=0;
 	}
 	set_menu_highlight("placeUnitsButton");
+	flash_unit_shape();
+}
+
+function flash_unit_shape(){
+	var shape;
+	switch(unitStyle){
+		case 4:
+			shape = document.querySelector("#unitsShape4");
+			break;
+		case 6:
+			shape = document.querySelector("#unitsShape6");
+			break;
+		default:
+			shape = document.querySelector("#unitsShape0");
+	}
+	shape.style = "opacity:0.25;"
+	shapeDisplayTimeout = setTimeout(function(shape) {
+			shape.style = "opacity:0;"
+		}, unitSvgDelay, shape);
 }
 
 function set_menu_highlight(btnId){

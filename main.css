@@ -226,7 +226,7 @@ body h1 {
 }
 
 #toolbarBtnDiv img {
-	display: block;
+	display: inline-block;
 	height: 100%;
 	max-height: 100%;
 	max-width: 100%;
@@ -235,6 +235,22 @@ body h1 {
 	flex-grow: 1;
 	flex-shrink: 1;
 	flex-basis: auto;
+}
+
+#toolbarBtnDiv #placeUnitsShape {
+	position: absolute;
+	height: 100%;
+	display: inline-block;
+	object-fit: contain;
+	pointer-events: none;
+}
+
+#toolbarBtnDiv #placeUnitsShape polygon, #toolbarBtnDiv #placeUnitsShape circle {
+	opacity: 0.25;
+	transition: opacity .25s ease-in-out; /* IE */
+	-moz-transition: opacity .25s ease-in-out; /* Firefox */
+	-webkit-transition: opacity .25s ease-in-out; /* Chrome/Safari */
+	-webkit-backface-visibility: hidden; /*Fixes image jitter in chrome/safari*/
 }
 
 #toolbarBtnDiv .highlight {
