@@ -18,7 +18,7 @@
  *
  */
 
-const version = "0.0.4";
+const version = "0.1.0";
 const cacheName = `spelltemplates-${version}`;
 self.addEventListener('install', e => {
   e.waitUntil(
@@ -43,6 +43,19 @@ self.addEventListener('install', e => {
 
 self.addEventListener('activate', event => {
   event.waitUntil(self.clients.claim());
+  event.waitUntil(
+      caches.keys().then(function(cacheNames) {
+        return Promise.all(
+          cacheNames.filter(function(cn) {
+            if(cn == cacheName){return false;}
+            else if(cn.indexOf("spelltemplates") !== -1){console.log("Deleting cache: " + cn); return true;}
+            else{return false;}
+          }).map(function(cn) {
+            return caches.delete(cn);
+          })
+        );
+      })
+    );
 });
 
 self.addEventListener('fetch', event => {
