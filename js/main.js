@@ -583,9 +583,10 @@ function reset_settings(){
 	};
 	document.querySelector(".tile-size.slider").value = settings.tile_size;
 	document.querySelector(".hit-threshold.slider").value = settings.hit_threshold;
-	document.querySelector("input.template-snaping").checked = settings.template_snapping;
+	document.querySelector(".template-snapping.input").checked = settings.template_snapping;
 	slider_update({target:document.querySelector(".tile-size.slider")});
 	slider_update({target:document.querySelector(".hit-threshold.slider")});
+	init_canvases();
 }
 
 function slider_update(evt){
