@@ -87,6 +87,7 @@ function mousedown_func(evt) {
 		return;
 	}
 	//console.log(mousedown, mousePos); 
+	template.snapping = settings.template_snapping;
 	template.setOrigin(mousePos, board.getTileByCoord(mousePos.x, mousePos.y));
 	if(template.originLocked || !template.terminusRequired){
 		mousemove_func(evt);
@@ -425,6 +426,7 @@ function update_settings(){
 	var settings_obj = {};
 	settings_obj.tile_size = document.querySelector(".tile-size.slider").value;
 	settings_obj.hit_threshold = document.querySelector(".hit-threshold.slider").value;
+	settings_obj.template_snapping = document.querySelector(".template-snapping.input").checked;
 	// console.log("UPDATE",settings_obj);
 	settings = settings_obj;
 	init_canvases();
@@ -433,19 +435,20 @@ function update_settings(){
 function reset_settings(){
 	settings = {
 		tile_size: "30",
-		hit_threshold: "50"
+		hit_threshold: "50",
+		template_snapping: false
 	};
 	document.querySelector(".tile-size.slider").value = settings.tile_size;
 	document.querySelector(".hit-threshold.slider").value = settings.hit_threshold;
+	document.querySelector("input.template-snaping").checked = settings.template_snapping;
 	slider_update({target:document.querySelector(".tile-size.slider")});
 	slider_update({target:document.querySelector(".hit-threshold.slider")});
 }
 
 function slider_update(evt){
-	var outputClass = evt.target.classList.value.replace("slider","").replace("input","").trim();
+	var outputClass = evt.target.classList.value.replace("slider","").replace("input","").replace("setting","").trim();
 	var output = document.querySelector(".output."+outputClass);
 	output.innerHTML = evt.target.value;
-	update_settings();
 }
 
 function export_state(){
@@ -551,5 +554,9 @@ document.getElementById("settingsCloseButton").addEventListener('click', close_s
 var sliders = document.getElementsByClassName("slider");
 for(var i = 0; i<sliders.length;i++){
 	sliders[i].addEventListener('input', slider_update, {passive:true});
+}
+var settings_inputs = document.getElementsByClassName("setting");
+for(var i = 0; i<settings_inputs.length;i++){
+	settings_inputs[i].addEventListener('input', update_settings, {passive:true});
 }
 

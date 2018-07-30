@@ -50,14 +50,18 @@
 							<td><label class="hit-threshold output" id="hit_threshold_lbl_2">50</label><label>%</label></td>
 						</tr>
 						<tr>
-							<td colspan=2><input type="range" name="hit-threshold" min="1" max="100" value=50 class="slider hit-threshold input" aria-labelledby="hit_threshold_lbl_1 hit_threshold_lbl_2"></td>
+							<td colspan=2><input type="range" name="hit-threshold" min="1" max="100" value=50 class="slider hit-threshold input setting" aria-labelledby="hit_threshold_lbl_1 hit_threshold_lbl_2"></td>
 						</tr>
 						<tr style="display:none;">
 							<td><label>Tile Size:</label></td>
 							<td><label class="tile-size output">30</label><label>px</label></td>
 						</tr>
 						<tr style="display:none;">
-							<td colspan=2><input type="range" name="tile-size" min="10" max="60" step="2" value=30 class="slider tile-size input"></td>
+							<td colspan=2><input type="range" name="tile-size" min="10" max="60" step="2" value=30 class="slider tile-size input setting"></td>
+						</tr>
+						<tr>
+							<td><label id="template_snapping_lbl">Snap to Grid:</label></td>
+							<td class="checkbox-cell"><input type="checkbox" name="template-snapping" class="template-snapping input setting" aria-labelledby="template_snapping_lbl"><span class="checkmark" /></td>
 						</tr>
 						<tr>
 							<td colspan=2><button id="export_btn" onclick="export_state()">Export</button><input id="export_tb" readonly type="text" placeholder="Press Export..." onclick="copy_value(this)" aria-label="Exported Url"></input></td>

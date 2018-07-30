@@ -9,6 +9,7 @@ function Template(context, canvas_width, canvas_height, board) {
 	this.terminusRequired = true;
 	this.shape = "template";
 	this.lineColour = "#9E3316";
+	this.snapping = false;
 
 	this.drawBox = function(position, tile){
 		context.beginPath();
@@ -107,6 +108,10 @@ function Template(context, canvas_width, canvas_height, board) {
 
 	this.setOrigin = function(position, tile){
 		if(this.originLocked){return;}
+		if(this.snapping){
+			position.x = Math.round((position.x - board.origin.x)/(board.tile_width/2))*(board.tile_width/2) + board.origin.x;
+			position.y = Math.round((position.y - board.origin.y)/(board.tile_width/2))*(board.tile_width/2) + board.origin.y;
+		}
 		this.origin = {x:position.x, y:position.y};
 		this.originTile = tile;
 	}
@@ -640,6 +645,10 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 
 	this.setOrigin = function(position, tile){
 		if(this.originLocked){return;}
+		if(this.snapping){
+			position.x = Math.round((position.x - board.origin.x)/(board.tile_width/2))*(board.tile_width/2) + board.origin.x;
+			position.y = Math.round((position.y - board.origin.y)/(board.tile_width/2))*(board.tile_width/2) + board.origin.y;
+		}
 		this.origin = {x:position.x, y:position.y};
 		this.originTile = tile;
 		if(this.terminus_delta != null){
