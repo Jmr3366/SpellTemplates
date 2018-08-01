@@ -458,7 +458,6 @@ function reset_settings(){
 
 function write_settings_cookie() {
 	var expiry = new Date(Date.now() + 60*(24*60*60*1000));
-	console.log(typeof expiry);
 	var cookie = ["settings=", JSON.stringify(settings), ';', "expires=", expiry.toUTCString(), ';'].join('');
 	document.cookie = cookie;
 }
