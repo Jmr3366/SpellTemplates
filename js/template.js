@@ -101,7 +101,7 @@ function Template(context, canvas_width, canvas_height, board) {
 
 	this.calculateHitTile = function(polyVerts, curr_x, curr_y){
 		if(!polyVerts){return;}
-		if(this.polyArea(polyVerts) > (board.tile_width*board.tile_height*this.minHitFactor)){
+		if(Math.round(this.polyArea(polyVerts)) >= (board.tile_width*board.tile_height*this.minHitFactor)){
 			board.getTileByCoord(curr_x-board.tile_width/2, curr_y-board.tile_height/2).isHit = true;
 		}
 	}
