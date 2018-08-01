@@ -181,11 +181,15 @@ function Template(context, canvas_width, canvas_height, board) {
 		if(vertical){
 			a = {x:line, y:this.farthestBound(p, "min", "y")-10};
 			b = {x:line, y:this.farthestBound(p, "max", "y")+10};
-			sort = function (u, v){return that.farthestBound(u, "min", "x") - that.farthestBound(v, "min", "x");}
+			sort = function (u, v){
+				return that.farthestBound(u, "min", "x") - that.farthestBound(v, "min", "x") || that.farthestBound(u, "max", "x") - that.farthestBound(v, "max", "x");
+			}
 		} else {
 			a = {x:this.farthestBound(p, "min", "x")-10, y:line};
 			b = {x:this.farthestBound(p, "max", "x")+10, y:line};
-			sort = function (u, v){return that.farthestBound(u, "min", "y") - that.farthestBound(v, "min", "y");}
+			sort = function (u, v){
+				return that.farthestBound(u, "min", "y") - that.farthestBound(v, "min", "y") || that.farthestBound(u, "max", "y") - that.farthestBound(v, "max", "y");
+			}
 		}
 
 		var iscs = [];	// intersections
