@@ -383,6 +383,11 @@ function init_units(unitList){
 
 function first_load() {
 	//Handle url params mostly
+	if(document.cookie.includes("settings")) {
+		read_settings_cookie();
+		write_settings_cookie();
+	}
+
 	init_canvases();
 
 	var shape = getParameterByName("shape");
@@ -562,6 +567,7 @@ function open_settings_menu(){
 }
 
 function close_settings_menu(){
+	write_settings_cookie();
 	document.getElementById("settingsDiv").classList.remove("active");
 }
 
@@ -575,18 +581,36 @@ function update_settings(){
 	init_canvases();
 }
 
+function update_settings_menu() {
+	document.querySelector(".tile-size.slider").value = settings.tile_size;
+	document.querySelector(".hit-threshold.slider").value = settings.hit_threshold;
+	document.querySelector(".template-snapping.input").checked = settings.template_snapping;
+	slider_update({target:document.querySelector(".tile-size.slider")});
+	slider_update({target:document.querySelector(".hit-threshold.slider")});
+}
+
 function reset_settings(){
 	settings = {
 		tile_size: "30",
 		hit_threshold: "50",
 		template_snapping: false
 	};
-	document.querySelector(".tile-size.slider").value = settings.tile_size;
-	document.querySelector(".hit-threshold.slider").value = settings.hit_threshold;
-	document.querySelector(".template-snapping.input").checked = settings.template_snapping;
-	slider_update({target:document.querySelector(".tile-size.slider")});
-	slider_update({target:document.querySelector(".hit-threshold.slider")});
+	update_settings_menu();
 	init_canvases();
+}
+
+function write_settings_cookie() {
+	var expiry = new Date(Date.now() + 60*(24*60*60*1000));
+	console.log(typeof expiry);
+	var cookie = ["settings=", JSON.stringify(settings), ';', "expires=", expiry.toUTCString(), ';'].join('');
+	document.cookie = cookie;
+}
+
+function read_settings_cookie() {
+	var result = document.cookie.match(new RegExp('settings=([^;]+)'));
+	result && (result = JSON.parse(result[1]));
+	settings = result;
+	update_settings_menu()
 }
 
 function slider_update(evt){
@@ -650,12 +674,12 @@ function getParameterByName(name, url) {
 var currentLoc = 0;
 function secretCode(keycode){
 	var allowedKeys = {
-	  37: 'left',
-	  38: 'up',
-	  39: 'right',
-	  40: 'down',
-	  65: 'a',
-	  66: 'b'
+		37: 'left',
+		38: 'up',
+		39: 'right',
+		40: 'down',
+		65: 'a',
+		66: 'b'
 	};
 	var sequence = ['up', 'up', 'down', 'down', 'left', 'right', 'left', 'right', 'b', 'a'];
 	if (sequence[currentLoc] == allowedKeys[keycode]) {
