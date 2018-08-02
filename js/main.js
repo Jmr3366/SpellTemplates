@@ -782,7 +782,7 @@ function Template(context, canvas_width, canvas_height, board) {
 	}
 
 	this.calculateHitPoly = function(polyVerts){
-		var scan_x = Math.ceil((this.farthestBound(polyVerts, "min", "x") - board.origin.x)/board.tile_width)*board.tile_width+board.origin.x;
+		var scan_x = Math.floor((this.farthestBound(polyVerts, "min", "x") - board.origin.x)/board.tile_width+1)*board.tile_width+board.origin.x;
 		scan_x = Math.max(scan_x, board.origin.x);
 		var max_tile_edge_x = Math.ceil((this.farthestBound(polyVerts, "max", "x")-board.origin.x)/board.tile_width)*board.tile_width+board.origin.x;
 		max_tile_edge_x = Math.min(max_tile_edge_x, board.origin.x+board.width);
@@ -792,6 +792,8 @@ function Template(context, canvas_width, canvas_height, board) {
 			var vertical_segments = this.slicePoly(polyVerts, scan_x, true);
 			polyVerts = vertical_segments[1];
 			var curr_vertical_segment = vertical_segments[0];
+			this.roundPoly(polyVerts);
+			this.roundPoly(curr_vertical_segment);
 			if(!polyVerts){
 				//No cut happened
 				scan_x += board.tile_width;
@@ -806,7 +808,7 @@ function Template(context, canvas_width, canvas_height, board) {
 	}
 
 	this.calculateHitColumn = function(polyVerts, curr_x){
-		var scan_y = Math.ceil((this.farthestBound(polyVerts, "min", "y")+1-board.origin.y)/board.tile_height)*board.tile_height+board.origin.y;
+		var scan_y = Math.floor((this.farthestBound(polyVerts, "min", "y")+1-board.origin.y)/board.tile_height+1)*board.tile_height+board.origin.y;
 		scan_y = Math.max(scan_y, board.origin.y);
 		var max_tile_edge_y = Math.ceil((this.farthestBound(polyVerts, "max", "y")-board.origin.y)/board.tile_height)*board.tile_height+board.origin.y;
 		max_tile_edge_y = Math.min(max_tile_edge_y, board.origin.y+board.height);
@@ -816,6 +818,8 @@ function Template(context, canvas_width, canvas_height, board) {
 			var horizontal_segments = this.slicePoly(polyVerts, scan_y, false);
 			polyVerts = horizontal_segments[1];
 			var curr_horizontal_segment = horizontal_segments[0];
+			this.roundPoly(polyVerts);
+			this.roundPoly(curr_horizontal_segment);
 			if(!polyVerts){
 				//No cut happened
 				scan_y += board.tile_height;
@@ -882,19 +886,26 @@ function Template(context, canvas_width, canvas_height, board) {
 	}
 
 	this.cropPoly = function(polyVerts, topleft, bottomright){
-		//Move inward 1 pixel for rounding errors
+		//Round xy values slightly to prevent floating point inequality
 		if(this.farthestBound(polyVerts, "min", "x") < topleft.x){
 			polyVerts = this.slicePoly(polyVerts, topleft.x, true)[1];
+			this.roundPoly(polyVerts);
 		}
 		if(this.farthestBound(polyVerts, "max", "x") > bottomright.x){
 			polyVerts = this.slicePoly(polyVerts, bottomright.x, true)[0];
+			this.roundPoly(polyVerts);
 		}
 		if(this.farthestBound(polyVerts, "min", "y") < topleft.y){
 			polyVerts = this.slicePoly(polyVerts, topleft.y, false)[1];
+			this.roundPoly(polyVerts);
 		}
 		if(this.farthestBound(polyVerts, "max", "y") > bottomright.y){
 			polyVerts = this.slicePoly(polyVerts, bottomright.y, false)[0];
+			this.roundPoly(polyVerts);
 		}
+		// for (var i = polyVerts.length - 1; i >= 0; i--) {
+		// 	this.drawPoint(polyVerts[i])
+		// }
 		return polyVerts;
 	}
 
@@ -981,6 +992,13 @@ function Template(context, canvas_width, canvas_height, board) {
 		}
 		pgs.sort(sort);
 		return pgs;
+	}
+
+	this.roundPoly = function(polyVerts){
+		for (var i = polyVerts.length - 1; i >= 0; i--) {
+			polyVerts[i].x = Math.round(polyVerts[i].x * 1000) / 1000
+			polyVerts[i].y = Math.round(polyVerts[i].y * 1000) / 1000
+		}
 	}
 
 	this.polyArea = function(polyVerts){
