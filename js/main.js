@@ -884,16 +884,16 @@ function Template(context, canvas_width, canvas_height, board) {
 	this.cropPoly = function(polyVerts, topleft, bottomright){
 		//Move inward 1 pixel for rounding errors
 		if(this.farthestBound(polyVerts, "min", "x") < topleft.x){
-			polyVerts = this.slicePoly(polyVerts, topleft.x+1, true)[1];
+			polyVerts = this.slicePoly(polyVerts, topleft.x, true)[1];
 		}
 		if(this.farthestBound(polyVerts, "max", "x") > bottomright.x){
-			polyVerts = this.slicePoly(polyVerts, bottomright.x-1, true)[0];
+			polyVerts = this.slicePoly(polyVerts, bottomright.x, true)[0];
 		}
 		if(this.farthestBound(polyVerts, "min", "y") < topleft.y){
-			polyVerts = this.slicePoly(polyVerts, topleft.y+1, false)[1];
+			polyVerts = this.slicePoly(polyVerts, topleft.y, false)[1];
 		}
 		if(this.farthestBound(polyVerts, "max", "y") > bottomright.y){
-			polyVerts = this.slicePoly(polyVerts, bottomright.y-1, false)[0];
+			polyVerts = this.slicePoly(polyVerts, bottomright.y, false)[0];
 		}
 		return polyVerts;
 	}
