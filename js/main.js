@@ -995,6 +995,7 @@ function Template(context, canvas_width, canvas_height, board) {
 	}
 
 	this.roundPoly = function(polyVerts){
+		if(!polyVerts){return;}
 		for (var i = polyVerts.length - 1; i >= 0; i--) {
 			polyVerts[i].x = Math.round(polyVerts[i].x * 1000) / 1000
 			polyVerts[i].y = Math.round(polyVerts[i].y * 1000) / 1000
@@ -1016,6 +1017,7 @@ function Template(context, canvas_width, canvas_height, board) {
 
 	this.farthestBound = function(polyVerts, minmax, xy){
 		//Given either "min" or "max" and "x" or "y", find the bound that fits that description
+		if(!polyVerts){return null;}
 		if(minmax == "min"){
 			return Math.min(...(polyVerts.map(vert => vert[xy])))
 		} else if (minmax == "max"){
