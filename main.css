@@ -44,7 +44,7 @@ body h1 {
 }
 
 #settingsDiv {
-	overflow: hidden;
+	overflow-y: auto;
 	position: fixed;
 	top: 0;
 	right: 0;
@@ -186,10 +186,6 @@ body h1 {
 	-webkit-transform: rotate(45deg);
 	-ms-transform: rotate(45deg);
 	transform: rotate(45deg);
-}
-
-#settingsDiv {
-	overflow: scroll;
 }
 
 #settingsDiv .header {
