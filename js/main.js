@@ -4,8 +4,8 @@ function Board(contextGrid, contextTiles) {
 	this.tile_set = [];
 	this.tile_size_multiplier = 1;
 	this.origin = {x:null,y:null};
-	this.tile_width = 30;
-	this.tile_height = 30;
+	this.tile_width = parseInt(settings.tile_size) || 30;
+	this.tile_height = parseInt(settings.tile_size) || 30;
 	this.height;
 	this.width;
 
@@ -348,11 +348,27 @@ function init_canvases() {
 	resizeCanvas(canvasTiles, bw, bh);
 
 	var unitList = [];
-	if(board){unitList = board.unitList();}
+	var tileSizeRatio = 1;
+	var tileOffset = {x:0, y:0};
+	if(board){
+		unitList = board.unitList();
+		if(settings.tile_size){
+			tileSizeRatio = parseInt(settings.tile_size)/board.tile_width;
+			tileOffset = board.origin;
+		}
+	}
 
 	board = new Board(contextGrid, contextTiles);
 	board.drawBoard(Math.floor(((bw-1)%board.tile_width)/2), 0, bw, bh);
 	init_units(unitList);
+	if(template && template.origin){
+		template.origin.x = ((template.origin.x-tileOffset.x)*tileSizeRatio)+board.origin.x
+		template.origin.y = ((template.origin.y-tileOffset.y)*tileSizeRatio)+board.origin.y
+	}
+	if(template && template.terminus){
+		template.terminus.x = ((template.terminus.x-tileOffset.x)*tileSizeRatio)+board.origin.x
+		template.terminus.y = ((template.terminus.y-tileOffset.y)*tileSizeRatio)+board.origin.y
+	}
 	switch((template)?(template.constructor.name):"") {
 		case "LineTemplate":
 			set_template_line();
@@ -1525,6 +1541,7 @@ function Unit(tile, shape, context){
 
 	this.draw = function(){
 		var center = {x:((tile.tile_corners[1].x+tile.tile_corners[0].x)/2), y:((tile.tile_corners[3].y+tile.tile_corners[0].y)/2)};
+		this.radius = Math.floor((tile.tile_corners[1].x-tile.tile_corners[0].x)/2)-2;
 		if(this.shape > 2 && this.shape < 7){
 			this.drawPoly(center, this.shape);
 		} else {

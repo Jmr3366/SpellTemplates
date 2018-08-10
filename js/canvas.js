@@ -205,11 +205,27 @@ function init_canvases() {
 	resizeCanvas(canvasTiles, bw, bh);
 
 	var unitList = [];
-	if(board){unitList = board.unitList();}
+	var tileSizeRatio = 1;
+	var tileOffset = {x:0, y:0};
+	if(board){
+		unitList = board.unitList();
+		if(settings.tile_size){
+			tileSizeRatio = parseInt(settings.tile_size)/board.tile_width;
+			tileOffset = board.origin;
+		}
+	}
 
 	board = new Board(contextGrid, contextTiles);
 	board.drawBoard(Math.floor(((bw-1)%board.tile_width)/2), 0, bw, bh);
 	init_units(unitList);
+	if(template && template.origin){
+		template.origin.x = ((template.origin.x-tileOffset.x)*tileSizeRatio)+board.origin.x
+		template.origin.y = ((template.origin.y-tileOffset.y)*tileSizeRatio)+board.origin.y
+	}
+	if(template && template.terminus){
+		template.terminus.x = ((template.terminus.x-tileOffset.x)*tileSizeRatio)+board.origin.x
+		template.terminus.y = ((template.terminus.y-tileOffset.y)*tileSizeRatio)+board.origin.y
+	}
 	switch((template)?(template.constructor.name):"") {
 		case "LineTemplate":
 			set_template_line();

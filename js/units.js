@@ -6,6 +6,7 @@ function Unit(tile, shape, context){
 
 	this.draw = function(){
 		var center = {x:((tile.tile_corners[1].x+tile.tile_corners[0].x)/2), y:((tile.tile_corners[3].y+tile.tile_corners[0].y)/2)};
+		this.radius = Math.floor((tile.tile_corners[1].x-tile.tile_corners[0].x)/2)-2;
 		if(this.shape > 2 && this.shape < 7){
 			this.drawPoly(center, this.shape);
 		} else {

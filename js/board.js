@@ -4,8 +4,8 @@ function Board(contextGrid, contextTiles) {
 	this.tile_set = [];
 	this.tile_size_multiplier = 1;
 	this.origin = {x:null,y:null};
-	this.tile_width = 30;
-	this.tile_height = 30;
+	this.tile_width = parseInt(settings.tile_size) || 30;
+	this.tile_height = parseInt(settings.tile_size) || 30;
 	this.height;
 	this.width;
 
