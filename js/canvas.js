@@ -16,7 +16,12 @@ var unitPlacementMode=false;
 var unitStyle=0;
 var unitSvgDelay=500;
 //Custom settings
-var settings = {};
+var default_settings = {
+	tile_size: "30",
+	hit_threshold: "50",
+	template_snapping: false
+};
+var settings = default_settings;
 
 var canvasDiv = document.getElementById("canvasDiv");
 var canvasGrid = document.getElementById("canvasGrid");
@@ -260,7 +265,9 @@ function first_load() {
 		read_settings_cookie();
 		write_settings_cookie();
 	}
-
+	// if(getParameterByName("tileSize")){settings.tile_size = getParameterByName("tileSize") || settings.tile_size;}
+	if(getParameterByName("threshold")){settings.hit_threshold = getParameterByName("threshold") || settings.hit_threshold;}
+	update_settings_menu();
 	init_canvases();
 
 	var shape = getParameterByName("shape");
@@ -463,11 +470,7 @@ function update_settings_menu() {
 }
 
 function reset_settings(){
-	settings = {
-		tile_size: "30",
-		hit_threshold: "50",
-		template_snapping: false
-	};
+	settings = default_settings;
 	update_settings_menu();
 	init_canvases();
 }
@@ -511,6 +514,8 @@ function export_state(){
 		unitListString+=unitList[i].x+"x"+unitList[i].y+"x"+unitList[i].unit.shape;
 	}
 	if(unitListString!=""){params.push("units="+unitListString);}
+	// params.push("tileSize="+settings.tile_size);
+	params.push("threshold="+settings.hit_threshold);
 	if(params.length > 0){
 		url = url + "?" + params.join("&")
 	}
