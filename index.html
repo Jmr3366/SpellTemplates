@@ -30,6 +30,17 @@
 
 		<meta name="google-site-verification" content="OS3O_0Z8nmZA1XIHJNfOh2rYHONA1iLVs2Y5UhQsz5c" />
 
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-137706623-1"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+
+			gtag('config', 'UA-137706623-1');
+		</script>
+
+
 		<noscript>
 			<h1>Sorry, this site requires JavaScript to run :(</h1>
 		</noscript>
@@ -112,9 +123,9 @@
 		
 		<script>
 		if('serviceWorker' in navigator) {
-		  navigator.serviceWorker
-		           .register('./sw.js')
-		           .then(function() { console.log("Service Worker Registered"); });
+			navigator.serviceWorker
+				.register('./sw.js')
+				.then(function() { console.log("Service Worker Registered"); });
 		}
 		</script>
 	</body>
