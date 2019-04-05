@@ -504,7 +504,6 @@ function set_template_cone(){
 	template.isDrawn = isDrawn;
 	if(settings.hit_threshold){template.minHitFactor = settings.hit_threshold/100;}
 	if(template.isDrawn){paintTemplate();}
-	ga('send', 'event', 'tools', 'set_template_cone');
 }
 
 function set_template_line(){
@@ -526,7 +525,6 @@ function set_template_line(){
 	template.isDrawn = isDrawn;
 	if(settings.hit_threshold){template.minHitFactor = settings.hit_threshold/100;}
 	if(template.isDrawn){paintTemplate();}
-	ga('send', 'event', 'tools', 'set_template_line');
 }
 
 function set_template_circle(){
@@ -550,7 +548,6 @@ function set_template_circle(){
 	template.isDrawn = isDrawn;
 	if(settings.hit_threshold){template.minHitFactor = settings.hit_threshold/100;}
 	if(template.isDrawn){paintTemplate();}
-	ga('send', 'event', 'tools', 'set_template_circle');
 }
 
 function toggle_place_units(){
