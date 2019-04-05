@@ -26,7 +26,7 @@ function Board(contextGrid, contextTiles) {
 				row.push(tile);
 				curr_x+=this.tile_width;
 				this.tile_count++;
-			}	
+			}
 			remaining_width = width;
 			curr_x = base_x;
 			this.tile_set.push(row);

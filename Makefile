@@ -11,7 +11,8 @@ all: $(JS_FINAL)
 
 $(JS_FINAL):
 	cat js/*.js >> $(JS_FINAL)
-	minify js/main.js -o $(JS_MIN)
+#   https://github.com/tdewolff/minify/tree/master/cmd/minify
+	~/go/bin/minify js/main.js -o $(JS_MIN)
 
 clean:
 	rm -f $(JS_FINAL)

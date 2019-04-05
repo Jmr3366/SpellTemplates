@@ -26,7 +26,7 @@ function Board(contextGrid, contextTiles) {
 				row.push(tile);
 				curr_x+=this.tile_width;
 				this.tile_count++;
-			}	
+			}
 			remaining_width = width;
 			curr_x = base_x;
 			this.tile_set.push(row);
@@ -224,6 +224,7 @@ function placeUnit(pos){
 		tile.entity = new Unit(tile, unitStyle, contextUnits);
 		tile.entity.draw();
 	}
+	ga('send', 'event', 'canvas', 'placeUnit');
 }
 
 function mousedown_func(evt) {
@@ -242,6 +243,7 @@ function mousedown_func(evt) {
 	} else {
 		clearAll();
 	}
+	ga('send', 'event', 'canvas', 'click');
 }
 
 function mousemove_func(evt) {
@@ -475,10 +477,12 @@ function set_template_size(size){
 
 function increment_template_size(){
 	if(templateSize<25){set_template_size(templateSize+1);}
+	ga('send', 'event', 'tools', 'inc_template_size');
 }
 
 function decrement_template_size(){
 	if(templateSize>1){set_template_size(templateSize-1);}
+	ga('send', 'event', 'tools', 'dec_template_size');
 }
 
 function set_template_cone(){
@@ -500,6 +504,7 @@ function set_template_cone(){
 	template.isDrawn = isDrawn;
 	if(settings.hit_threshold){template.minHitFactor = settings.hit_threshold/100;}
 	if(template.isDrawn){paintTemplate();}
+	ga('send', 'event', 'tools', 'set_template_cone');
 }
 
 function set_template_line(){
@@ -521,6 +526,7 @@ function set_template_line(){
 	template.isDrawn = isDrawn;
 	if(settings.hit_threshold){template.minHitFactor = settings.hit_threshold/100;}
 	if(template.isDrawn){paintTemplate();}
+	ga('send', 'event', 'tools', 'set_template_line');
 }
 
 function set_template_circle(){
@@ -544,6 +550,7 @@ function set_template_circle(){
 	template.isDrawn = isDrawn;
 	if(settings.hit_threshold){template.minHitFactor = settings.hit_threshold/100;}
 	if(template.isDrawn){paintTemplate();}
+	ga('send', 'event', 'tools', 'set_template_circle');
 }
 
 function toggle_place_units(){
@@ -557,6 +564,7 @@ function toggle_place_units(){
 	}
 	set_menu_highlight("placeUnitsButton");
 	flash_unit_shape();
+	ga('send', 'event', 'tools', 'toggle_place_units');
 }
 
 function flash_unit_shape(){
@@ -587,11 +595,13 @@ function set_menu_highlight(btnId){
 
 function open_settings_menu(){
 	document.getElementById("settingsDiv").classList.add("active");
+	ga('send', 'event', 'settings', 'open_settings');
 }
 
 function close_settings_menu(){
 	write_settings_cookie();
 	document.getElementById("settingsDiv").classList.remove("active");
+	ga('send', 'event', 'settings', 'close_settings');
 }
 
 function update_settings(){
@@ -616,6 +626,7 @@ function reset_settings(){
 	settings = default_settings;
 	update_settings_menu();
 	init_canvases();
+	ga('send', 'event', 'settings', 'reset');
 }
 
 function write_settings_cookie() {
@@ -664,12 +675,14 @@ function export_state(){
 	}
 	document.querySelector("#export_tb").disabled=false;
 	document.querySelector("#export_tb").value=url
+	ga('send', 'event', 'settings', 'export');
 }
 
 function clear_state(){
 	board.clearUnits();
 	template.clear()
 	init_canvases();
+	ga('send', 'event', 'settings', 'clear_state');
 }
 
 function copy_value(target){
