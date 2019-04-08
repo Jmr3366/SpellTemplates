@@ -656,8 +656,8 @@ function setTheme(theme){
 	document.querySelector("body").classList.add(theme.class);
 	// Set theme for dynamic elements
 	currentTheme = theme;
-	board.refreshTheme();
-	template.refreshTheme();
+	if(board){board.refreshTheme();}
+	if(template){template.refreshTheme();}
 }
 
 
