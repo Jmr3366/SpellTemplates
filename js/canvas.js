@@ -602,7 +602,6 @@ function secretCode(keycode){
 	2: Highlight (toolbar, buttons)
 	3: HighlightMod (depressed buttons, borders)
 	4: Canvas BG
-	5: Text on Highlight (Greyscale only)
 	6: Grid Lines
 	7: Template Lines
 	8: Hit Tiles
@@ -618,7 +617,6 @@ themes = {
 			"#3B6182",
 			"#2a465e",
 			"#d2b48c",
-			"#fff",
 			"#000",
 			"#9E3316",
 			"#E55934",
@@ -634,7 +632,6 @@ themes = {
 			"#444",
 			"#888",
 			"#999",
-			"#fff",
 			"#333",
 			"#eee",
 			"#cfcfcf",
@@ -650,11 +647,25 @@ themes = {
 			"#7EA16B",
 			"#297045",
 			"#FFE1A8",
-			"#383F51",
 			"#1A1D25",
 			"#1F232D",
 			"#A4A7AF",
 			"#297045",
+		]
+	},
+	theme4: {
+		name: "Bubblegum",
+		class: "theme4",
+		colours:[
+			"#F1FAEE",
+			"#000",
+			"#457B9D",
+			"#1D3557",
+			"#A8DADC",
+			"#1D3557",
+			"#E63946",
+			"#EC6F78",
+			"#457B9D",
 		]
 	}
 }

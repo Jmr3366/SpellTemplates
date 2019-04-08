@@ -8,7 +8,7 @@ function Board(contextGrid, contextTiles) {
 	this.tile_height = parseInt(settings.tile_size) || 30;
 	this.height;
 	this.width;
-	this.hit_tile_colour = currentTheme.colours[8];
+	this.hit_tile_colour = currentTheme.colours[7];
 
 	this.drawBoard = function(base_x, base_y, width, height){
 		var remaining_width = width;
@@ -139,7 +139,7 @@ function Board(contextGrid, contextTiles) {
 			ul[i].unit.refreshTheme()
 		}
 		// Redraw Hits
-		this.hit_tile_colour = currentTheme.colours[8];
+		this.hit_tile_colour = currentTheme.colours[7];
 		this.colourHits();
 		// Redraw Tiles
 		for (var i = this.tile_set.length - 1; i >= 0; i--) {

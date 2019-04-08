@@ -8,7 +8,7 @@ function Template(context, canvas_width, canvas_height, board) {
 	this.isDrawn = false;
 	this.terminusRequired = true;
 	this.shape = "template";
-	this.lineColour = currentTheme.colours[7];
+	this.lineColour = currentTheme.colours[6];
 	this.snapping = false;
 
 	this.drawBox = function(position, tile){
@@ -359,7 +359,7 @@ function Template(context, canvas_width, canvas_height, board) {
 	}
 
 	this.refreshTheme = function(){
-		this.lineColour = currentTheme.colours[7];
+		this.lineColour = currentTheme.colours[6];
 		if(this.isDrawn){
 			this.draw();
 		}

@@ -5,7 +5,7 @@ function Tile(x, y, height, width, contextGrid, contextTile){
 	this.isHit = false;
 	this.tile_corners = [{"x":x,"y":y},{"x":x+width,"y":y},{"x":x+width,"y":y+height},{"x":x,"y":y+height}]
 	this.currentFill = null;
-	this.gridColor = currentTheme.colours[6]
+	this.gridColor = currentTheme.colours[5]
 
 	this.drawTile = function(){
 		contextGrid.beginPath();
@@ -83,7 +83,7 @@ function Tile(x, y, height, width, contextGrid, contextTile){
 	}
 
 	this.refreshTheme = function(){
-		this.gridColor = currentTheme.colours[6];
+		this.gridColor = currentTheme.colours[5];
 		this.drawTile();
 	}
 

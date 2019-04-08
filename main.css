@@ -533,3 +533,56 @@ body.theme3 #canvasDiv {
 	/* Canvas BG - Theme 4 */
 	background: #FFE1A8!important;
 }
+
+body.theme4 {
+	/* BG - Theme 0*/
+	background: #F1FAEE!important;
+}
+body.theme4 h1 {
+	/* Text on BG - Theme 1*/
+	color: #F1FAEE;
+}
+body.theme4 #settingsDiv.active {
+	/* Dark Highlight - Theme 3*/
+	border-color: #1D3557;
+}
+body.theme4 #settingsDiv #settingsCloseButton {
+	/* Highlight - Theme 2*/
+	background-color: #457B9D;
+}
+body.theme4 #settingsDiv .slider::-webkit-slider-thumb{
+	/* Highlight - Theme 2*/
+	background: #457B9D;
+}
+body.theme4 #settingsDiv .slider::-moz-range-thumb{
+	/* Highlight - Theme 2*/
+	background: #457B9D;
+}
+body.theme4 #settingsDiv .checkbox-cell input:checked ~ .checkmark {
+	/* Highlight - Theme 2*/
+	background-color: #457B9D;
+}
+body.theme4 #settingsDiv .radiocontainer input:checked ~ .radio {
+	/* Highlight - Theme 2*/
+	background-color: #457B9D;
+}
+body.theme4 #settingsDiv button {
+	/* Highlight - Theme 2 */
+	background: #457B9D;
+}
+body.theme4 #toolbarBtnDiv {
+	/* Highlight - Theme 2*/
+	background-color: #457B9D!important;
+}
+body.theme4 #toolbarBtnDiv div{
+	/* Dark Highlight - Theme 3 */
+	border-color: #1D3557;
+}
+body.theme4 #toolbarBtnDiv .highlight {
+	/* Dark Highlight - Theme 3 */
+	background: #1D3557;
+}
+body.theme4 #canvasDiv {
+	/* Canvas BG - Theme 4 */
+	background: #A8DADC!important;
+}

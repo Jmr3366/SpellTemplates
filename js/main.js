@@ -8,7 +8,7 @@ function Board(contextGrid, contextTiles) {
 	this.tile_height = parseInt(settings.tile_size) || 30;
 	this.height;
 	this.width;
-	this.hit_tile_colour = currentTheme.colours[8];
+	this.hit_tile_colour = currentTheme.colours[7];
 
 	this.drawBoard = function(base_x, base_y, width, height){
 		var remaining_width = width;
@@ -139,7 +139,7 @@ function Board(contextGrid, contextTiles) {
 			ul[i].unit.refreshTheme()
 		}
 		// Redraw Hits
-		this.hit_tile_colour = currentTheme.colours[8];
+		this.hit_tile_colour = currentTheme.colours[7];
 		this.colourHits();
 		// Redraw Tiles
 		for (var i = this.tile_set.length - 1; i >= 0; i--) {
@@ -764,7 +764,6 @@ function secretCode(keycode){
 	2: Highlight (toolbar, buttons)
 	3: HighlightMod (depressed buttons, borders)
 	4: Canvas BG
-	5: Text on Highlight (Greyscale only)
 	6: Grid Lines
 	7: Template Lines
 	8: Hit Tiles
@@ -780,7 +779,6 @@ themes = {
 			"#3B6182",
 			"#2a465e",
 			"#d2b48c",
-			"#fff",
 			"#000",
 			"#9E3316",
 			"#E55934",
@@ -796,7 +794,6 @@ themes = {
 			"#444",
 			"#888",
 			"#999",
-			"#fff",
 			"#333",
 			"#eee",
 			"#cfcfcf",
@@ -812,11 +809,25 @@ themes = {
 			"#7EA16B",
 			"#297045",
 			"#FFE1A8",
-			"#383F51",
 			"#1A1D25",
 			"#1F232D",
 			"#A4A7AF",
 			"#297045",
+		]
+	},
+	theme4: {
+		name: "Bubblegum",
+		class: "theme4",
+		colours:[
+			"#F1FAEE",
+			"#000",
+			"#457B9D",
+			"#1D3557",
+			"#A8DADC",
+			"#1D3557",
+			"#E63946",
+			"#EC6F78",
+			"#457B9D",
 		]
 	}
 }
@@ -885,7 +896,7 @@ function Template(context, canvas_width, canvas_height, board) {
 	this.isDrawn = false;
 	this.terminusRequired = true;
 	this.shape = "template";
-	this.lineColour = currentTheme.colours[7];
+	this.lineColour = currentTheme.colours[6];
 	this.snapping = false;
 
 	this.drawBox = function(position, tile){
@@ -1236,7 +1247,7 @@ function Template(context, canvas_width, canvas_height, board) {
 	}
 
 	this.refreshTheme = function(){
-		this.lineColour = currentTheme.colours[7];
+		this.lineColour = currentTheme.colours[6];
 		if(this.isDrawn){
 			this.draw();
 		}
@@ -1593,7 +1604,7 @@ function Tile(x, y, height, width, contextGrid, contextTile){
 	this.isHit = false;
 	this.tile_corners = [{"x":x,"y":y},{"x":x+width,"y":y},{"x":x+width,"y":y+height},{"x":x,"y":y+height}]
 	this.currentFill = null;
-	this.gridColor = currentTheme.colours[6]
+	this.gridColor = currentTheme.colours[5]
 
 	this.drawTile = function(){
 		contextGrid.beginPath();
@@ -1671,7 +1682,7 @@ function Tile(x, y, height, width, contextGrid, contextTile){
 	}
 
 	this.refreshTheme = function(){
-		this.gridColor = currentTheme.colours[6];
+		this.gridColor = currentTheme.colours[5];
 		this.drawTile();
 	}
 
@@ -1679,8 +1690,8 @@ function Tile(x, y, height, width, contextGrid, contextTile){
 
 function Unit(tile, shape, context){
 	this.radius=12;
-	this.hitColour=currentTheme.colours[9];
-	this.colour=currentTheme.colours[9];
+	this.hitColour=currentTheme.colours[8];
+	this.colour=currentTheme.colours[8];
 	this.shape=shape;
 
 	this.draw = function(){
@@ -1742,8 +1753,8 @@ function Unit(tile, shape, context){
 	}
 
 	this.refreshTheme = function(){
-		this.hitColour = currentTheme.colours[9];
-		this.colour = currentTheme.colours[9];
+		this.hitColour = currentTheme.colours[8];
+		this.colour = currentTheme.colours[8];
 		this.draw();
 	}
 
