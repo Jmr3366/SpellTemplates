@@ -181,7 +181,8 @@ var unitSvgDelay=500;
 var default_settings = {
 	tile_size: "30",
 	hit_threshold: "50",
-	template_snapping: false
+	template_snapping: false,
+	theme: "theme1"
 };
 var settings = default_settings;
 
@@ -642,6 +643,7 @@ function update_settings_menu() {
 		for(var i = 0; i<radio.length;i++){
 			if (radio[i].value == settings.theme){
 				radio[i].checked = true;
+				themeSelect({target:radio[i]});
 			}
 		}
 	}
