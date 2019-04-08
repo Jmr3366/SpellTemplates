@@ -87,6 +87,23 @@
 						<tr>
 							<td colspan=2><button id="export_btn" onclick="export_state()">Export</button><input id="export_tb" readonly type="text" placeholder="Press Export..." onclick="copy_value(this)" aria-label="Exported Url"></input></td>
 						</tr>
+						<tr>
+							<td colspan=2>
+								<label>Theme:</label>
+							</td>
+						</tr>
+						<tr>
+							<td colspan=2>
+								<label class="radioContainer">Default
+									<input class="setting themeselector" type="radio" name="theme" value="theme1" checked>
+									<span class="radio"></span>
+								</label>
+								<label class="radioContainer">Black+White
+									<input class="setting themeselector" type="radio" name="theme" value="theme2">
+									<span class="radio"></span>
+								</label>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 				<button id="reset_btn" onclick="reset_settings()">Default Settings</button>

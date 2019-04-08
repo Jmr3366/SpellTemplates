@@ -463,6 +463,7 @@ function update_settings(){
 	settings_obj.tile_size = document.querySelector(".tile-size.slider").value;
 	settings_obj.hit_threshold = document.querySelector(".hit-threshold.slider").value;
 	settings_obj.template_snapping = document.querySelector(".template-snapping.input").checked;
+	settings_obj.theme = document.querySelector(".themeselector:checked").value;
 	// console.log("UPDATE",settings_obj);
 	settings = settings_obj;
 	init_canvases();
@@ -474,6 +475,14 @@ function update_settings_menu() {
 	document.querySelector(".template-snapping.input").checked = settings.template_snapping;
 	slider_update({target:document.querySelector(".tile-size.slider")});
 	slider_update({target:document.querySelector(".hit-threshold.slider")});
+	if(settings.theme){
+		var radio = document.getElementsByClassName("themeselector");
+		for(var i = 0; i<radio.length;i++){
+			if (radio[i].value == settings.theme){
+				radio[i].checked = true;
+			}
+		}
+	}
 }
 
 function reset_settings(){
@@ -629,6 +638,11 @@ themes = {
 	}
 }
 currentTheme = themes.theme1;
+function themeSelect(evt){
+	var themeName = evt.target.value;
+	var theme = themes[themeName];
+	if(theme){setTheme(theme);}
+}
 function setTheme(theme){
 	// Clear other theme styles
 	classList = document.querySelector("body").classList;
@@ -668,6 +682,10 @@ document.getElementById("settingsCloseButton").addEventListener('click', close_s
 var sliders = document.getElementsByClassName("slider");
 for(var i = 0; i<sliders.length;i++){
 	sliders[i].addEventListener('input', slider_update, {passive:true});
+}
+var radio = document.getElementsByClassName("themeselector");
+for(var i = 0; i<radio.length;i++){
+	radio[i].addEventListener('input', themeSelect, {passive:true});
 }
 var settings_inputs = document.getElementsByClassName("setting");
 for(var i = 0; i<settings_inputs.length;i++){

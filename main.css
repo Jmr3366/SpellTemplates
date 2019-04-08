@@ -1,5 +1,5 @@
 body {
-	/*BG COLOR - THEME 1*/
+	/*BG COLOR - THEME 0*/
 	background: #835C3B!important;
 	overflow: hidden;
 	font-family: "arial";
@@ -7,7 +7,7 @@ body {
 }
 
 body h1 {
-	/*TEXT ON BG COLOR - THEME 2*/
+	/*TEXT ON BG COLOR - THEME 1*/
 	color: #47311f;
 }
 
@@ -63,7 +63,7 @@ body h1 {
 	min-width: 300px;
 	width: 22vw;
 	transition: 0.3s;
-	/* Dark Highlight - Theme 4*/
+	/* Dark Highlight - Theme 3*/
 	border-left: #2a465e solid; 
 }
 
@@ -73,10 +73,10 @@ body h1 {
 	border-radius: 10px;
 	float: left;
 	margin: 10px;
-	/* Highlight - Theme 3*/
+	/* Highlight - Theme 2*/
 	background-color: #3B6182;
 	border: none;
-	/* Text - Theme 6 */
+	/* Text - Theme 5 */
 	color: white;
 	font-weight: bold;
 	font-size: 30px;
@@ -121,7 +121,7 @@ body h1 {
 	appearance: none;
 	width: 25px; /* Set a specific slider handle width */
 	height: 25px; /* Slider handle height */
-	/* Highlight - Theme 3*/
+	/* Highlight - Theme 2*/
 	background: #3B6182; /* Blue background */
 	cursor: pointer; /* Cursor on hover */
 }
@@ -129,7 +129,7 @@ body h1 {
 #settingsDiv .slider::-moz-range-thumb {
 	width: 25px; /* Set a specific slider handle width */
 	height: 25px; /* Slider handle height */
-	/* Highlight - Theme 3*/
+	/* Highlight - Theme 2*/
 	background: #3B6182; /* Blue background */
 	cursor: pointer; /* Cursor on hover */
 }
@@ -170,7 +170,7 @@ body h1 {
 }
 
 .checkbox-cell input:checked ~ .checkmark {
-	/* Highlight - Theme 3*/
+	/* Highlight - Theme 2*/
 	background-color: #3B6182;
 }
 
@@ -195,6 +195,62 @@ body h1 {
 	-ms-transform: rotate(45deg);
 	transform: rotate(45deg);
 }
+
+/* Custom Radio Btn */
+#settingsDiv label.radiocontainer {
+	display: block;
+	position: relative;
+	padding-left: 35px;
+	margin-bottom: 12px;
+	cursor: pointer;
+	font-size: 22px;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	float: unset!important;
+}
+#settingsDiv .radiocontainer input{
+	position: absolute;
+	opacity: 0;
+	cursor: pointer;
+	height: 0;
+	width: 0;
+}
+.radio {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 26px;
+	width: 26px;
+	background-color: #d3d3d3;
+	opacity: 0.7;
+	border-radius: 50%;
+}
+.radiocontainer:hover input ~ .radio {
+	opacity: 1;
+}
+#settingsDiv .radiocontainer input:checked ~ .radio {
+	/* Highlight - Theme 2*/
+	background-color: #3B6182;
+}
+.radio:after{
+	content: "";
+	position: absolute;
+	display: none;
+}
+.radiocontainer input:checked ~ .radio:after {
+	display: block;
+}
+.radiocontainer .radio:after {
+	top: 7px;
+	left: 7px;
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background: white;
+}
+/* END OF RADIO BTN*/
 
 #settingsDiv .header {
 	width: 100%;
@@ -231,9 +287,9 @@ body h1 {
 
 #settingsDiv button {
 	font-size: 18px;
-	/* Text - Theme 6 */
+	/* Text - Theme 5 */
 	color: white;
-	/* Highlight - Theme 3*/
+	/* Highlight - Theme 2*/
 	background: #3B6182;
 	border: none;
 }
@@ -270,7 +326,7 @@ body h1 {
 
 #canvasDiv {
 	position:relative;
-	/* Canvas BG - Theme 5*/
+	/* Canvas BG - Theme 4*/
 	background: tan;
 	width: 80vw;
 	min-width: 160px;
@@ -292,7 +348,7 @@ body h1 {
 
 #toolbarBtnDiv {
 	/*overflow: hidden;*/
-	/* Highlight - Theme 3*/
+	/* Highlight - Theme 2*/
 	background-color: #3B6182!important;
 	margin: 0px auto;
 	width: 100vw;
@@ -307,7 +363,7 @@ body h1 {
 }
 
 #toolbarBtnDiv div{
-	/* Dark Highlight - Theme 4*/
+	/* Dark Highlight - Theme 3*/
 	border-right: 2px #2a465e solid;
 	height: 100%;
 	display: flex;
@@ -347,7 +403,7 @@ body h1 {
 }
 
 #toolbarBtnDiv .highlight {
-	/* Dark Highlight - Theme 4*/
+	/* Dark Highlight - Theme 3*/
 	background: #2a465e;
 }
 
@@ -359,7 +415,7 @@ body h1 {
 	text-decoration: none;
 	background: none;
 	border: none;
-	/* Text - Theme 6 */
+	/* Text - Theme 5 */
 	color: white;
 	font-weight: bold;
 	margin: 4px;
@@ -400,6 +456,10 @@ body.theme2 #settingsDiv .slider::-moz-range-thumb{
 	background: #444;
 }
 body.theme2 #settingsDiv .checkbox-cell input:checked ~ .checkmark {
+	/* Highlight - Theme 2*/
+	background-color: #444;
+}
+body.theme2 #settingsDiv .radiocontainer input:checked ~ .radio {
 	/* Highlight - Theme 2*/
 	background-color: #444;
 }
