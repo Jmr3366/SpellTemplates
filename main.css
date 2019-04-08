@@ -76,7 +76,6 @@ body h1 {
 	/* Highlight - Theme 2*/
 	background-color: #3B6182;
 	border: none;
-	/* Text - Theme 5 */
 	color: white;
 	font-weight: bold;
 	font-size: 30px;
@@ -287,7 +286,6 @@ body h1 {
 
 #settingsDiv button {
 	font-size: 18px;
-	/* Text - Theme 5 */
 	color: white;
 	/* Highlight - Theme 2*/
 	background: #3B6182;
@@ -415,7 +413,6 @@ body h1 {
 	text-decoration: none;
 	background: none;
 	border: none;
-	/* Text - Theme 5 */
 	color: white;
 	font-weight: bold;
 	margin: 4px;
@@ -449,7 +446,7 @@ body.theme2 #settingsDiv #settingsCloseButton {
 }
 body.theme2 #settingsDiv .slider::-webkit-slider-thumb{
 	/* Highlight - Theme 2*/
-	background: #aaa;
+	background: #444;
 }
 body.theme2 #settingsDiv .slider::-moz-range-thumb{
 	/* Highlight - Theme 2*/
@@ -482,4 +479,57 @@ body.theme2 #toolbarBtnDiv .highlight {
 body.theme2 #canvasDiv {
 	/* Canvas BG - Theme 4 */
 	background: #999!important;
+}
+
+body.theme3 {
+	/* BG - Theme 0*/
+	background: #C9CBA3!important;
+}
+body.theme3 h1 {
+	/* Text on BG - Theme 1*/
+	color: #000;
+}
+body.theme3 #settingsDiv.active {
+	/* Dark Highlight - Theme 3*/
+	border-color: #297045;
+}
+body.theme3 #settingsDiv #settingsCloseButton {
+	/* Highlight - Theme 2*/
+	background-color: #7EA16B;
+}
+body.theme3 #settingsDiv .slider::-webkit-slider-thumb{
+	/* Highlight - Theme 2*/
+	background: #7EA16B;
+}
+body.theme3 #settingsDiv .slider::-moz-range-thumb{
+	/* Highlight - Theme 2*/
+	background: #7EA16B;
+}
+body.theme3 #settingsDiv .checkbox-cell input:checked ~ .checkmark {
+	/* Highlight - Theme 2*/
+	background-color: #7EA16B;
+}
+body.theme3 #settingsDiv .radiocontainer input:checked ~ .radio {
+	/* Highlight - Theme 2*/
+	background-color: #7EA16B;
+}
+body.theme3 #settingsDiv button {
+	/* Highlight - Theme 2 */
+	background: #7EA16B;
+}
+body.theme3 #toolbarBtnDiv {
+	/* Highlight - Theme 2*/
+	background-color: #7EA16B!important;
+}
+body.theme3 #toolbarBtnDiv div{
+	/* Dark Highlight - Theme 3 */
+	border-color: #297045;
+}
+body.theme3 #toolbarBtnDiv .highlight {
+	/* Dark Highlight - Theme 3 */
+	background: #297045;
+}
+body.theme3 #canvasDiv {
+	/* Canvas BG - Theme 4 */
+	background: #FFE1A8!important;
 }

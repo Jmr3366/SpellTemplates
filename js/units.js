@@ -1,7 +1,7 @@
 function Unit(tile, shape, context){
 	this.radius=12;
-	this.hitColour=currentTheme.colours[2];
-	this.colour=currentTheme.colours[2];
+	this.hitColour=currentTheme.colours[9];
+	this.colour=currentTheme.colours[9];
 	this.shape=shape;
 
 	this.draw = function(){
@@ -63,8 +63,8 @@ function Unit(tile, shape, context){
 	}
 
 	this.refreshTheme = function(){
-		this.hitColour = currentTheme.colours[2];
-		this.colour = currentTheme.colours[2];
+		this.hitColour = currentTheme.colours[9];
+		this.colour = currentTheme.colours[9];
 		this.draw();
 	}
 
