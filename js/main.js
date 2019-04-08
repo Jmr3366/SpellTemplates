@@ -8,6 +8,7 @@ function Board(contextGrid, contextTiles) {
 	this.tile_height = parseInt(settings.tile_size) || 30;
 	this.height;
 	this.width;
+	this.hit_tile_colour = currentTheme.colours[8];
 
 	this.drawBoard = function(base_x, base_y, width, height){
 		var remaining_width = width;
@@ -93,6 +94,7 @@ function Board(contextGrid, contextTiles) {
 	}
 
 	this.colourHits = function(fillstyle){
+		fillstyle = fillstyle || this.hit_tile_colour;
 		for(i = 0; i < this.tile_set.length; i++){
 			for (var j = 0; j < this.tile_set[i].length; j++) {
 				if(this.tile_set[i][j].isHit){
@@ -128,6 +130,23 @@ function Board(contextGrid, contextTiles) {
 			}
 		}
 		return unitArray
+	}
+
+	this.refreshTheme = function(){
+		// Redraw Units
+		var ul = this.unitList();
+		for (var i = ul.length - 1; i >= 0; i--) {
+			ul[i].unit.refreshTheme()
+		}
+		// Redraw Hits
+		this.hit_tile_colour = currentTheme.colours[8];
+		this.colourHits();
+		// Redraw Tiles
+		for (var i = this.tile_set.length - 1; i >= 0; i--) {
+			for (var j = this.tile_set[i].length - 1; j >= 0; j--) {
+				this.tile_set[i][j].refreshTheme();
+			}
+		}
 	}
 
 	this.clearUnits = function(){
@@ -213,7 +232,7 @@ function paintTemplate(){
 	if(template.originLocked){template.drawOrigin();}
 	template.draw();
 	template.calculateHit(board);
-	board.colourHits("#E55934");
+	board.colourHits();
 }
 
 function placeUnit(pos){
@@ -221,7 +240,7 @@ function placeUnit(pos){
 	if(!tile){return;}
 	if(tile.entity){tile.entity.clear();tile.entity=null;}
 	else{
-		tile.entity = new Unit(tile, unitStyle, contextUnits);
+		tile.entity = new Unit(tile, unitStyle, contextUnits, board.unit_colour, board.hit_unit_colour);
 		tile.entity.draw();
 	}
 	ga('send', 'event', 'canvas', 'placeUnit');
@@ -728,6 +747,65 @@ function secretCode(keycode){
 	}
 }
 
+/* THEMES
+	0: BG
+	1: Text on BG
+	2: Highlight (toolbar, buttons, units)
+	3: HighlightMod (depressed buttons, borders)
+	4: Canvas BG
+	5: Text on Highlight (Greyscale only)
+	6: Grid Lines
+	7: Template Lines
+	8: Hit Tiles
+*/
+themes = {
+	theme1: {
+		name: "Default",
+		class: "theme1",
+		colours:[
+			"#835C3B",
+			"#47311f",
+			"#3B6182",
+			"#2a465e",
+			"#d2b48c",
+			"#fff",
+			"#000",
+			"#9E3316",
+			"#E55934",
+		]
+	},
+	theme2: {
+		name: "B+W",
+		class: "theme2",
+		colours:[
+			"#222",
+			"#000",
+			"#444",
+			"#888",
+			"#999",
+			"#fff",
+			"#333",
+			"#eee",
+			"#cfcfcf",
+		]
+	}
+}
+currentTheme = themes.theme1;
+function setTheme(theme){
+	// Clear other theme styles
+	classList = document.querySelector("body").classList;
+	for (var i = classList.length - 1; i >= 0; i--) {
+		if(classList[i].startsWith("theme")){
+			document.querySelector("body").classList.remove(classList[i]);
+		}
+	}
+	document.querySelector("body").classList.add(theme.class);
+	// Set theme for dynamic elements
+	currentTheme = theme;
+	board.refreshTheme();
+	template.refreshTheme();
+}
+
 
 first_load();
 
@@ -768,7 +846,7 @@ function Template(context, canvas_width, canvas_height, board) {
 	this.isDrawn = false;
 	this.terminusRequired = true;
 	this.shape = "template";
-	this.lineColour = "#9E3316";
+	this.lineColour = currentTheme.colours[7];
 	this.snapping = false;
 
 	this.drawBox = function(position, tile){
@@ -1116,6 +1194,13 @@ function Template(context, canvas_width, canvas_height, board) {
 
 		// return (minx <= a.x && a.x <= maxx && miny <= a.y && a.y <= maxy)
 		return (minx <= a.x + 1e-10 && a.x - 1e-10 <= maxx && miny <= a.y + 1e-10 && a.y - 1e-10 <= maxy)
+	}
+
+	this.refreshTheme = function(){
+		this.lineColour = currentTheme.colours[7];
+		if(this.isDrawn){
+			this.draw();
+		}
 	}
 
 	this.clear = function(){
@@ -1469,7 +1554,7 @@ function Tile(x, y, height, width, contextGrid, contextTile){
 	this.isHit = false;
 	this.tile_corners = [{"x":x,"y":y},{"x":x+width,"y":y},{"x":x+width,"y":y+height},{"x":x,"y":y+height}]
 	this.currentFill = null;
-	this.gridColor = "#2C363F"
+	this.gridColor = currentTheme.colours[6]
 
 	this.drawTile = function(){
 		contextGrid.beginPath();
@@ -1546,12 +1631,17 @@ function Tile(x, y, height, width, contextGrid, contextTile){
 		return s > 0 && t > 0 && (s + t) < 2 * A * sign;
 	}
 
+	this.refreshTheme = function(){
+		this.gridColor = currentTheme.colours[6];
+		this.drawTile();
+	}
+
 }
 
 function Unit(tile, shape, context){
 	this.radius=12;
-	this.hitColour="#3B6182";
-	this.regColour="#3B6182";
+	this.hitColour=currentTheme.colours[2];
+	this.colour=currentTheme.colours[2];
 	this.shape=shape;
 
 	this.draw = function(){
@@ -1570,7 +1660,7 @@ function Unit(tile, shape, context){
 	this.drawCircle = function(center){
 		context.beginPath();
 		context.arc(center.x, center.y, this.radius, 0, 2*Math.PI);
-		context.fillStyle = (tile.isHit)?this.hitColour:this.regColour;
+		context.fillStyle = (tile.isHit)?this.hitColour:this.colour;
 		context.fill();
 	}
 
@@ -1589,7 +1679,7 @@ function Unit(tile, shape, context){
 		for(var i = 0; i<verts.length; i++){
 			context.lineTo(verts[i].x, verts[i].y);
 		}
-		context.fillStyle = (tile.isHit)?this.hitColour:this.regColour;
+		context.fillStyle = (tile.isHit)?this.hitColour:this.colour;
 		context.fill();
 	}
 
@@ -1610,6 +1700,12 @@ function Unit(tile, shape, context){
 
 	this.setShape = function(polyCount){
 		this.shape = polyCount;
+	}
+
+	this.refreshTheme = function(){
+		this.hitColour = currentTheme.colours[2];
+		this.colour = currentTheme.colours[2];
+		this.draw();
 	}
 
 	this.clear = function(){

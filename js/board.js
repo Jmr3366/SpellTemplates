@@ -8,6 +8,7 @@ function Board(contextGrid, contextTiles) {
 	this.tile_height = parseInt(settings.tile_size) || 30;
 	this.height;
 	this.width;
+	this.hit_tile_colour = currentTheme.colours[8];
 
 	this.drawBoard = function(base_x, base_y, width, height){
 		var remaining_width = width;
@@ -93,6 +94,7 @@ function Board(contextGrid, contextTiles) {
 	}
 
 	this.colourHits = function(fillstyle){
+		fillstyle = fillstyle || this.hit_tile_colour;
 		for(i = 0; i < this.tile_set.length; i++){
 			for (var j = 0; j < this.tile_set[i].length; j++) {
 				if(this.tile_set[i][j].isHit){
@@ -128,6 +130,23 @@ function Board(contextGrid, contextTiles) {
 			}
 		}
 		return unitArray
+	}
+
+	this.refreshTheme = function(){
+		// Redraw Units
+		var ul = this.unitList();
+		for (var i = ul.length - 1; i >= 0; i--) {
+			ul[i].unit.refreshTheme()
+		}
+		// Redraw Hits
+		this.hit_tile_colour = currentTheme.colours[8];
+		this.colourHits();
+		// Redraw Tiles
+		for (var i = this.tile_set.length - 1; i >= 0; i--) {
+			for (var j = this.tile_set[i].length - 1; j >= 0; j--) {
+				this.tile_set[i][j].refreshTheme();
+			}
+		}
 	}
 
 	this.clearUnits = function(){

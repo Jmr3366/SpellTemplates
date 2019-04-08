@@ -70,7 +70,7 @@ function paintTemplate(){
 	if(template.originLocked){template.drawOrigin();}
 	template.draw();
 	template.calculateHit(board);
-	board.colourHits("#E55934");
+	board.colourHits();
 }
 
 function placeUnit(pos){
@@ -583,6 +583,65 @@ function secretCode(keycode){
 	} else {
 		return false;
 	}
+}
+
+/* THEMES
+	0: BG
+	1: Text on BG
+	2: Highlight (toolbar, buttons, units)
+	3: HighlightMod (depressed buttons, borders)
+	4: Canvas BG
+	5: Text on Highlight (Greyscale only)
+	6: Grid Lines
+	7: Template Lines
+	8: Hit Tiles
+*/
+themes = {
+	theme1: {
+		name: "Default",
+		class: "theme1",
+		colours:[
+			"#835C3B",
+			"#47311f",
+			"#3B6182",
+			"#2a465e",
+			"#d2b48c",
+			"#fff",
+			"#000",
+			"#9E3316",
+			"#E55934",
+		]
+	},
+	theme2: {
+		name: "B+W",
+		class: "theme2",
+		colours:[
+			"#222",
+			"#000",
+			"#444",
+			"#888",
+			"#999",
+			"#fff",
+			"#333",
+			"#eee",
+			"#cfcfcf",
+		]
+	}
+}
+currentTheme = themes.theme1;
+function setTheme(theme){
+	// Clear other theme styles
+	classList = document.querySelector("body").classList;
+	for (var i = classList.length - 1; i >= 0; i--) {
+		if(classList[i].startsWith("theme")){
+			document.querySelector("body").classList.remove(classList[i]);
+		}
+	}
+	document.querySelector("body").classList.add(theme.class);
+	// Set theme for dynamic elements
+	currentTheme = theme;
+	board.refreshTheme();
+	template.refreshTheme();
 }
 
 

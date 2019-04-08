@@ -1,7 +1,7 @@
 function Unit(tile, shape, context){
 	this.radius=12;
-	this.hitColour="#3B6182";
-	this.regColour="#3B6182";
+	this.hitColour=currentTheme.colours[2];
+	this.colour=currentTheme.colours[2];
 	this.shape=shape;
 
 	this.draw = function(){
@@ -20,7 +20,7 @@ function Unit(tile, shape, context){
 	this.drawCircle = function(center){
 		context.beginPath();
 		context.arc(center.x, center.y, this.radius, 0, 2*Math.PI);
-		context.fillStyle = (tile.isHit)?this.hitColour:this.regColour;
+		context.fillStyle = (tile.isHit)?this.hitColour:this.colour;
 		context.fill();
 	}
 
@@ -39,7 +39,7 @@ function Unit(tile, shape, context){
 		for(var i = 0; i<verts.length; i++){
 			context.lineTo(verts[i].x, verts[i].y);
 		}
-		context.fillStyle = (tile.isHit)?this.hitColour:this.regColour;
+		context.fillStyle = (tile.isHit)?this.hitColour:this.colour;
 		context.fill();
 	}
 
@@ -60,6 +60,12 @@ function Unit(tile, shape, context){
 
 	this.setShape = function(polyCount){
 		this.shape = polyCount;
+	}
+
+	this.refreshTheme = function(){
+		this.hitColour = currentTheme.colours[2];
+		this.colour = currentTheme.colours[2];
+		this.draw();
 	}
 
 	this.clear = function(){

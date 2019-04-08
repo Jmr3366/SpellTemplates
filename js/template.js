@@ -8,7 +8,7 @@ function Template(context, canvas_width, canvas_height, board) {
 	this.isDrawn = false;
 	this.terminusRequired = true;
 	this.shape = "template";
-	this.lineColour = "#9E3316";
+	this.lineColour = currentTheme.colours[7];
 	this.snapping = false;
 
 	this.drawBox = function(position, tile){
@@ -356,6 +356,13 @@ function Template(context, canvas_width, canvas_height, board) {
 
 		// return (minx <= a.x && a.x <= maxx && miny <= a.y && a.y <= maxy)
 		return (minx <= a.x + 1e-10 && a.x - 1e-10 <= maxx && miny <= a.y + 1e-10 && a.y - 1e-10 <= maxy)
+	}
+
+	this.refreshTheme = function(){
+		this.lineColour = currentTheme.colours[7];
+		if(this.isDrawn){
+			this.draw();
+		}
 	}
 
 	this.clear = function(){

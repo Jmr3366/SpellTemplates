@@ -1,11 +1,13 @@
 body {
-	background: #835C3B;
+	/*BG COLOR - THEME 1*/
+	background: #835C3B!important;
 	overflow: hidden;
 	font-family: "arial";
 	text-align: center;
 }
 
 body h1 {
+	/*TEXT ON BG COLOR - THEME 2*/
 	color: #47311f;
 }
 
@@ -61,6 +63,7 @@ body h1 {
 	min-width: 300px;
 	width: 22vw;
 	transition: 0.3s;
+	/* Dark Highlight - Theme 4*/
 	border-left: #2a465e solid; 
 }
 
@@ -70,8 +73,10 @@ body h1 {
 	border-radius: 10px;
 	float: left;
 	margin: 10px;
+	/* Highlight - Theme 3*/
 	background-color: #3B6182;
 	border: none;
+	/* Text - Theme 6 */
 	color: white;
 	font-weight: bold;
 	font-size: 30px;
@@ -116,6 +121,7 @@ body h1 {
 	appearance: none;
 	width: 25px; /* Set a specific slider handle width */
 	height: 25px; /* Slider handle height */
+	/* Highlight - Theme 3*/
 	background: #3B6182; /* Blue background */
 	cursor: pointer; /* Cursor on hover */
 }
@@ -123,6 +129,7 @@ body h1 {
 #settingsDiv .slider::-moz-range-thumb {
 	width: 25px; /* Set a specific slider handle width */
 	height: 25px; /* Slider handle height */
+	/* Highlight - Theme 3*/
 	background: #3B6182; /* Blue background */
 	cursor: pointer; /* Cursor on hover */
 }
@@ -163,6 +170,7 @@ body h1 {
 }
 
 .checkbox-cell input:checked ~ .checkmark {
+	/* Highlight - Theme 3*/
 	background-color: #3B6182;
 }
 
@@ -223,7 +231,9 @@ body h1 {
 
 #settingsDiv button {
 	font-size: 18px;
+	/* Text - Theme 6 */
 	color: white;
+	/* Highlight - Theme 3*/
 	background: #3B6182;
 	border: none;
 }
@@ -260,6 +270,7 @@ body h1 {
 
 #canvasDiv {
 	position:relative;
+	/* Canvas BG - Theme 5*/
 	background: tan;
 	width: 80vw;
 	min-width: 160px;
@@ -281,7 +292,8 @@ body h1 {
 
 #toolbarBtnDiv {
 	/*overflow: hidden;*/
-	background-color: #3B6182;
+	/* Highlight - Theme 3*/
+	background-color: #3B6182!important;
 	margin: 0px auto;
 	width: 100vw;
 	max-width: 600px;
@@ -295,6 +307,7 @@ body h1 {
 }
 
 #toolbarBtnDiv div{
+	/* Dark Highlight - Theme 4*/
 	border-right: 2px #2a465e solid;
 	height: 100%;
 	display: flex;
@@ -305,7 +318,6 @@ body h1 {
 	flex-shrink: 1;
 	flex-basis: auto;
 }
-
 #toolbarBtnDiv img {
 	display: inline-block;
 	height: 100%;
@@ -335,6 +347,7 @@ body h1 {
 }
 
 #toolbarBtnDiv .highlight {
+	/* Dark Highlight - Theme 4*/
 	background: #2a465e;
 }
 
@@ -346,17 +359,67 @@ body h1 {
 	text-decoration: none;
 	background: none;
 	border: none;
+	/* Text - Theme 6 */
 	color: white;
 	font-weight: bold;
 	margin: 4px;
 	flex-grow: 1;
 	flex-shrink: 1;
 	flex-basis: auto;
-/*	background: #2a465e;*/
 }
 
 canvas {
 	position: absolute;
 	top: 20px;
 	left: 20px;
+}
+
+/* THEMES */
+body.theme2 {
+	/* BG - Theme 0*/
+	background: #222!important;
+}
+body.theme2 h1 {
+	/* Text on BG - Theme 1*/
+	color: #000;
+}
+body.theme2 #settingsDiv.active {
+	/* Dark Highlight - Theme 3*/
+	border-color: #666;
+}
+body.theme2 #settingsDiv #settingsCloseButton {
+	/* Highlight - Theme 2*/
+	background-color: #444;
+}
+body.theme2 #settingsDiv .slider::-webkit-slider-thumb{
+	/* Highlight - Theme 2*/
+	background: #aaa;
+}
+body.theme2 #settingsDiv .slider::-moz-range-thumb{
+	/* Highlight - Theme 2*/
+	background: #444;
+}
+body.theme2 #settingsDiv .checkbox-cell input:checked ~ .checkmark {
+	/* Highlight - Theme 2*/
+	background-color: #444;
+}
+body.theme2 #settingsDiv button {
+	/* Highlight - Theme 2 */
+	background: #444;
+}
+body.theme2 #toolbarBtnDiv {
+	/* Highlight - Theme 2*/
+	background-color: #555!important;
+}
+body.theme2 #toolbarBtnDiv div{
+	/* Dark Highlight - Theme 3 */
+	border-color: #666;
+}
+body.theme2 #toolbarBtnDiv .highlight {
+	/* Dark Highlight - Theme 3 */
+	background: #666;
+}
+body.theme2 #canvasDiv {
+	/* Canvas BG - Theme 4 */
+	background: #999!important;
 }
