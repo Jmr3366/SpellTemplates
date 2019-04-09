@@ -1335,13 +1335,16 @@ function ConeTemplate(context, canvas_width, canvas_height, board) {
 		//add cross line running at opposite slope through terminus for same length
 		this.isDrawn = true;
 		var verts = this.getVerts();
+		context.lineWidth=2;
+		context.strokeStyle = this.lineColour;
 		context.beginPath();
 		context.moveTo(verts[0].x, verts[0].y);
 		context.lineTo(verts[1].x, verts[1].y);
 		context.lineTo(verts[2].x, verts[2].y);
 		context.lineTo(verts[0].x, verts[0].y);
-		context.lineWidth=2;
-		context.strokeStyle = this.lineColour;
+		context.stroke();
+		context.beginPath();
+		context.arc(this.origin.x, this.origin.y, 3 ,0,2*Math.PI);
 		context.stroke();
 	}
 
@@ -1381,14 +1384,17 @@ function LineTemplate(context, canvas_width, canvas_height, board) {
 	this.draw = function(){
 		this.isDrawn = true;
 		var verts = this.getVerts();
+		context.lineWidth=2;
+		context.strokeStyle = this.lineColour;
 		context.beginPath();
 		context.moveTo(verts[1].x, verts[1].y);
 		context.lineTo(verts[2].x, verts[2].y);
 		context.lineTo(verts[3].x, verts[3].y);
 		context.lineTo(verts[4].x, verts[4].y);
 		context.lineTo(verts[1].x, verts[1].y);
-		context.lineWidth=2;
-		context.strokeStyle = this.lineColour;
+		context.stroke();
+		context.beginPath();
+		context.arc(this.origin.x, this.origin.y, 3 ,0,2*Math.PI);
 		context.stroke();
 	}
 
@@ -1416,10 +1422,13 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 	this.draw = function(){
 		this.isDrawn = true;
 		var verts = this.getVerts();
-		context.beginPath();
-		context.arc(verts[0].x, verts[0].y, Math.abs(verts[0].x-verts[1].x),0,2*Math.PI);
 		context.lineWidth=2;
 		context.strokeStyle = this.lineColour;
+		context.beginPath();
+		context.arc(verts[0].x, verts[0].y, Math.abs(verts[0].x-verts[1].x),0,2*Math.PI);
+		context.stroke();
+		context.beginPath();
+		context.arc(this.origin.x, this.origin.y, 3 ,0,2*Math.PI);
 		context.stroke();
 	}
 
