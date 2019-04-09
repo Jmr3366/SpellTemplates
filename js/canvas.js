@@ -228,6 +228,7 @@ function init_canvases() {
 	}
 
 	board = new Board(contextGrid, contextTiles);
+	if(template && template.originTileLock){template.lockOriginTile(template.originTileLock)}
 	board.drawBoard(Math.floor(((bw-1)%board.tile_width)/2), 0, bw, bh);
 	init_units(unitList);
 	if(template && template.origin){
