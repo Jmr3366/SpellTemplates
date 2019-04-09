@@ -109,11 +109,14 @@ function Board(contextGrid, contextTiles) {
 	}
 
 	this.refresh = function(position){
+		contextGrid.clearRect(this.origin.x-2, this.origin.y-2, this.origin.x + this.width + 2, this.origin.y + this.height + 2);
+		contextTiles.clearRect(this.origin.x-2, this.origin.y-2, this.origin.x + this.width + 2, this.origin.y + this.height + 2);
 		for(i = 0; i < this.tile_set.length; i++){
 			for (var j = 0; j < this.tile_set[i].length; j++) {
 				this.tile_set[i][j].drawTile();
 			}
 		}
+		this.colourHits();
 	}
 
 	this.unitList = function(){
@@ -285,8 +288,12 @@ function mouseup_func(evt) {
 
 function dblclick_func(evt) {
 	evt.preventDefault();
-	if(unitPlacementMode){return;}
 	var mousePos = getMousePos(canvasGrid, evt);
+	if(unitPlacementMode){
+		if(template.originTileLock){template.unlockOriginTile()}
+		else{template.lockOriginTile(board.getTileByCoord(mousePos.x, mousePos.y))}
+		return;
+	}
 	if(template.originLocked){
 		template.unlockOrigin();
 		//Move origin and draw new template
@@ -517,11 +524,13 @@ function set_template_cone(){
 	var originLock = template.originLocked;
 	var terminus = template.terminus;
 	var isDrawn = template.isDrawn;
+	var originTileLock = template.originTileLock;
 	template = new ConeTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
 	template.setOrigin(origin);
 	template.setVector(terminus, board.tile_width*templateSize);
 	template.originLocked = originLock;
 	template.isDrawn = isDrawn;
+	template.originTileLock = originTileLock;
 	if(settings.hit_threshold){template.minHitFactor = settings.hit_threshold/100;}
 	if(template.isDrawn){paintTemplate();}
 }
@@ -538,11 +547,13 @@ function set_template_line(){
 	var originLock = template.originLocked;
 	var terminus = template.terminus;
 	var isDrawn = template.isDrawn;
+	var originTileLock = template.originTileLock;
 	template = new LineTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
 	template.setOrigin(origin);
 	template.setVector(terminus, board.tile_width*templateSize);
 	template.originLocked = originLock;
 	template.isDrawn = isDrawn;
+	template.originTileLock = originTileLock;
 	if(settings.hit_threshold){template.minHitFactor = settings.hit_threshold/100;}
 	if(template.isDrawn){paintTemplate();}
 }
@@ -559,6 +570,7 @@ function set_template_circle(){
 	var originLock = template.originLocked;
 	var terminus = template.terminus;
 	var isDrawn = template.isDrawn;
+	var originTileLock = template.originTileLock;
 	template = new CircleTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
 	template.setOrigin(origin);
 	template.setTerminus(terminus);
@@ -566,6 +578,7 @@ function set_template_circle(){
 	template.setOrigin(origin);
 	template.originLocked = originLock;
 	template.isDrawn = isDrawn;
+	template.originTileLock = originTileLock;
 	if(settings.hit_threshold){template.minHitFactor = settings.hit_threshold/100;}
 	if(template.isDrawn){paintTemplate();}
 }
@@ -892,6 +905,7 @@ function Template(context, canvas_width, canvas_height, board) {
 	this.originTile = null;
 	this.terminus = {x:null, y:null};
 	this.originLocked = false;
+	this.originTileLock = null;
 	this.minHitFactor = 0.5;
 	this.isDrawn = false;
 	this.terminusRequired = true;
@@ -1000,6 +1014,9 @@ function Template(context, canvas_width, canvas_height, board) {
 
 	this.setOrigin = function(position, tile){
 		if(this.originLocked){return;}
+		if(this.originTileLock){
+			position = this.calculateTileLockPoint(position);
+		}
 		if(this.snapping){
 			position.x = Math.round((position.x - board.origin.x)/(board.tile_width/2))*(board.tile_width/2) + board.origin.x;
 			position.y = Math.round((position.y - board.origin.y)/(board.tile_width/2))*(board.tile_width/2) + board.origin.y;
@@ -1042,6 +1059,20 @@ function Template(context, canvas_width, canvas_height, board) {
 
 	this.unlockOrigin = function(){
 		this.originLocked = false;
+	}
+
+	this.lockOriginTile = function(tile){
+		this.originTileLock = tile;
+		this.originTileLock.highlight = true;
+		tile.drawTile();
+	}
+
+	this.unlockOriginTile = function(){
+		if(this.originTileLock){
+			this.originTileLock.highlight = false;
+		}
+		this.originTileLock = null;
+		board.refresh();
 	}
 
 	this.cropPoly = function(polyVerts, topleft, bottomright){
@@ -1244,6 +1275,32 @@ function Template(context, canvas_width, canvas_height, board) {
 
 		// return (minx <= a.x && a.x <= maxx && miny <= a.y && a.y <= maxy)
 		return (minx <= a.x + 1e-10 && a.x - 1e-10 <= maxx && miny <= a.y + 1e-10 && a.y - 1e-10 <= maxy)
+	}
+
+	this.calculateTileLockPoint = function(position) {
+		// Given a point, attach it to closest edge of lock tile if outside of it
+		if(!this.originTileLock){return position;}
+		clickedTile = board.getTileByCoord(position.x, position.y)
+		if(clickedTile && clickedTile.equals(this.originTileLock)){
+			// Point is inside lock tile, keep it
+			return position;
+		}
+		var corners = this.originTileLock.tile_corners;
+		corners[4] = corners[0]; //Loop
+		var center = {
+			x: Math.floor((corners[0].x+corners[2].x)/2),
+			y: Math.floor((corners[0].y+corners[2].y)/2),
+		}
+		var intersection;
+		var lineCounter = 0;
+		while(!intersection){
+			intersection = {x:0, y:0};
+			intersection = this.GetLineIntersection(center, position, corners[lineCounter], corners[lineCounter+1], intersection)
+			lineCounter++;
+			if(lineCounter>3){break;}
+		}
+		if(!intersection.x){return position;}
+		return intersection;
 	}
 
 	this.refreshTheme = function(){
@@ -1564,6 +1621,9 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 
 	this.setOrigin = function(position, tile){
 		if(this.originLocked){return;}
+		if(this.originTileLock){
+			position = this.calculateTileLockPoint(position);
+		}
 		if(this.snapping){
 			position.x = Math.round((position.x - board.origin.x)/(board.tile_width/2))*(board.tile_width/2) + board.origin.x;
 			position.y = Math.round((position.y - board.origin.y)/(board.tile_width/2))*(board.tile_width/2) + board.origin.y;
@@ -1605,6 +1665,7 @@ function Tile(x, y, height, width, contextGrid, contextTile){
 	this.tile_corners = [{"x":x,"y":y},{"x":x+width,"y":y},{"x":x+width,"y":y+height},{"x":x,"y":y+height}]
 	this.currentFill = null;
 	this.gridColor = currentTheme.colours[5]
+	this.highlight = false;
 
 	this.drawTile = function(){
 		contextGrid.beginPath();
@@ -1616,7 +1677,9 @@ function Tile(x, y, height, width, contextGrid, contextTile){
 		contextGrid.lineTo(0.5 + this.tile_corners[0].x, 0.5 + this.tile_corners[0].y);
 
 		contextGrid.strokeStyle = this.gridColor;
+		contextGrid.lineWidth = 1;
 		contextGrid.stroke();
+		if(this.highlight){this.drawHighlight();}
 	}
 
 	this.fillTile = function(fillStyle="red"){
@@ -1630,6 +1693,20 @@ function Tile(x, y, height, width, contextGrid, contextTile){
 	this.clearTile = function(){
 		this.currentFill = null;
 		contextTile.clearRect(x+1, y+1, width-1, height-1);
+	}
+
+	this.drawHighlight = function(){
+		contextGrid.beginPath();
+		//0.5 because it marks the center of the 1px wide line
+		contextGrid.moveTo(0.5 + this.tile_corners[0].x, 0.5 + this.tile_corners[0].y);
+		contextGrid.lineTo(0.5 + this.tile_corners[1].x, 0.5 + this.tile_corners[1].y);
+		contextGrid.lineTo(0.5 + this.tile_corners[2].x, 0.5 + this.tile_corners[2].y);
+		contextGrid.lineTo(0.5 + this.tile_corners[3].x, 0.5 + this.tile_corners[3].y);
+		contextGrid.lineTo(0.5 + this.tile_corners[0].x, 0.5 + this.tile_corners[0].y);
+
+		contextGrid.strokeStyle = this.gridColor;
+		contextGrid.lineWidth = 3;
+		contextGrid.stroke();
 	}
 
 	this.calculateHitCone = function(template){
@@ -1684,6 +1761,14 @@ function Tile(x, y, height, width, contextGrid, contextTile){
 	this.refreshTheme = function(){
 		this.gridColor = currentTheme.colours[5];
 		this.drawTile();
+	}
+
+	this.equals = function(tile){
+		for (var i = this.tile_corners.length - 1; i >= 0; i--) {
+			if(this.tile_corners[i].x!=tile.tile_corners[i].x){return false;}
+			if(this.tile_corners[i].y!=tile.tile_corners[i].y){return false;}
+		}
+		return true;
 	}
 
 }

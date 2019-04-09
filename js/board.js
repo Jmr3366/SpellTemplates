@@ -109,11 +109,14 @@ function Board(contextGrid, contextTiles) {
 	}
 
 	this.refresh = function(position){
+		contextGrid.clearRect(this.origin.x-2, this.origin.y-2, this.origin.x + this.width + 2, this.origin.y + this.height + 2);
+		contextTiles.clearRect(this.origin.x-2, this.origin.y-2, this.origin.x + this.width + 2, this.origin.y + this.height + 2);
 		for(i = 0; i < this.tile_set.length; i++){
 			for (var j = 0; j < this.tile_set[i].length; j++) {
 				this.tile_set[i][j].drawTile();
 			}
 		}
+		this.colourHits();
 	}
 
 	this.unitList = function(){

@@ -4,6 +4,7 @@ function Template(context, canvas_width, canvas_height, board) {
 	this.originTile = null;
 	this.terminus = {x:null, y:null};
 	this.originLocked = false;
+	this.originTileLock = null;
 	this.minHitFactor = 0.5;
 	this.isDrawn = false;
 	this.terminusRequired = true;
@@ -112,6 +113,9 @@ function Template(context, canvas_width, canvas_height, board) {
 
 	this.setOrigin = function(position, tile){
 		if(this.originLocked){return;}
+		if(this.originTileLock){
+			position = this.calculateTileLockPoint(position);
+		}
 		if(this.snapping){
 			position.x = Math.round((position.x - board.origin.x)/(board.tile_width/2))*(board.tile_width/2) + board.origin.x;
 			position.y = Math.round((position.y - board.origin.y)/(board.tile_width/2))*(board.tile_width/2) + board.origin.y;
@@ -154,6 +158,20 @@ function Template(context, canvas_width, canvas_height, board) {
 
 	this.unlockOrigin = function(){
 		this.originLocked = false;
+	}
+
+	this.lockOriginTile = function(tile){
+		this.originTileLock = tile;
+		this.originTileLock.highlight = true;
+		tile.drawTile();
+	}
+
+	this.unlockOriginTile = function(){
+		if(this.originTileLock){
+			this.originTileLock.highlight = false;
+		}
+		this.originTileLock = null;
+		board.refresh();
 	}
 
 	this.cropPoly = function(polyVerts, topleft, bottomright){
@@ -356,6 +374,32 @@ function Template(context, canvas_width, canvas_height, board) {
 
 		// return (minx <= a.x && a.x <= maxx && miny <= a.y && a.y <= maxy)
 		return (minx <= a.x + 1e-10 && a.x - 1e-10 <= maxx && miny <= a.y + 1e-10 && a.y - 1e-10 <= maxy)
+	}
+
+	this.calculateTileLockPoint = function(position) {
+		// Given a point, attach it to closest edge of lock tile if outside of it
+		if(!this.originTileLock){return position;}
+		clickedTile = board.getTileByCoord(position.x, position.y)
+		if(clickedTile && clickedTile.equals(this.originTileLock)){
+			// Point is inside lock tile, keep it
+			return position;
+		}
+		var corners = this.originTileLock.tile_corners;
+		corners[4] = corners[0]; //Loop
+		var center = {
+			x: Math.floor((corners[0].x+corners[2].x)/2),
+			y: Math.floor((corners[0].y+corners[2].y)/2),
+		}
+		var intersection;
+		var lineCounter = 0;
+		while(!intersection){
+			intersection = {x:0, y:0};
+			intersection = this.GetLineIntersection(center, position, corners[lineCounter], corners[lineCounter+1], intersection)
+			lineCounter++;
+			if(lineCounter>3){break;}
+		}
+		if(!intersection.x){return position;}
+		return intersection;
 	}
 
 	this.refreshTheme = function(){
@@ -676,6 +720,9 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 
 	this.setOrigin = function(position, tile){
 		if(this.originLocked){return;}
+		if(this.originTileLock){
+			position = this.calculateTileLockPoint(position);
+		}
 		if(this.snapping){
 			position.x = Math.round((position.x - board.origin.x)/(board.tile_width/2))*(board.tile_width/2) + board.origin.x;
 			position.y = Math.round((position.y - board.origin.y)/(board.tile_width/2))*(board.tile_width/2) + board.origin.y;

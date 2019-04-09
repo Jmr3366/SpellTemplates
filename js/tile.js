@@ -6,6 +6,7 @@ function Tile(x, y, height, width, contextGrid, contextTile){
 	this.tile_corners = [{"x":x,"y":y},{"x":x+width,"y":y},{"x":x+width,"y":y+height},{"x":x,"y":y+height}]
 	this.currentFill = null;
 	this.gridColor = currentTheme.colours[5]
+	this.highlight = false;
 
 	this.drawTile = function(){
 		contextGrid.beginPath();
@@ -17,7 +18,9 @@ function Tile(x, y, height, width, contextGrid, contextTile){
 		contextGrid.lineTo(0.5 + this.tile_corners[0].x, 0.5 + this.tile_corners[0].y);
 
 		contextGrid.strokeStyle = this.gridColor;
+		contextGrid.lineWidth = 1;
 		contextGrid.stroke();
+		if(this.highlight){this.drawHighlight();}
 	}
 
 	this.fillTile = function(fillStyle="red"){
@@ -31,6 +34,20 @@ function Tile(x, y, height, width, contextGrid, contextTile){
 	this.clearTile = function(){
 		this.currentFill = null;
 		contextTile.clearRect(x+1, y+1, width-1, height-1);
+	}
+
+	this.drawHighlight = function(){
+		contextGrid.beginPath();
+		//0.5 because it marks the center of the 1px wide line
+		contextGrid.moveTo(0.5 + this.tile_corners[0].x, 0.5 + this.tile_corners[0].y);
+		contextGrid.lineTo(0.5 + this.tile_corners[1].x, 0.5 + this.tile_corners[1].y);
+		contextGrid.lineTo(0.5 + this.tile_corners[2].x, 0.5 + this.tile_corners[2].y);
+		contextGrid.lineTo(0.5 + this.tile_corners[3].x, 0.5 + this.tile_corners[3].y);
+		contextGrid.lineTo(0.5 + this.tile_corners[0].x, 0.5 + this.tile_corners[0].y);
+
+		contextGrid.strokeStyle = this.gridColor;
+		contextGrid.lineWidth = 3;
+		contextGrid.stroke();
 	}
 
 	this.calculateHitCone = function(template){
@@ -85,6 +102,14 @@ function Tile(x, y, height, width, contextGrid, contextTile){
 	this.refreshTheme = function(){
 		this.gridColor = currentTheme.colours[5];
 		this.drawTile();
+	}
+
+	this.equals = function(tile){
+		for (var i = this.tile_corners.length - 1; i >= 0; i--) {
+			if(this.tile_corners[i].x!=tile.tile_corners[i].x){return false;}
+			if(this.tile_corners[i].y!=tile.tile_corners[i].y){return false;}
+		}
+		return true;
 	}
 
 }

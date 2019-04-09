@@ -123,8 +123,12 @@ function mouseup_func(evt) {
 
 function dblclick_func(evt) {
 	evt.preventDefault();
-	if(unitPlacementMode){return;}
 	var mousePos = getMousePos(canvasGrid, evt);
+	if(unitPlacementMode){
+		if(template.originTileLock){template.unlockOriginTile()}
+		else{template.lockOriginTile(board.getTileByCoord(mousePos.x, mousePos.y))}
+		return;
+	}
 	if(template.originLocked){
 		template.unlockOrigin();
 		//Move origin and draw new template
@@ -355,11 +359,13 @@ function set_template_cone(){
 	var originLock = template.originLocked;
 	var terminus = template.terminus;
 	var isDrawn = template.isDrawn;
+	var originTileLock = template.originTileLock;
 	template = new ConeTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
 	template.setOrigin(origin);
 	template.setVector(terminus, board.tile_width*templateSize);
 	template.originLocked = originLock;
 	template.isDrawn = isDrawn;
+	template.originTileLock = originTileLock;
 	if(settings.hit_threshold){template.minHitFactor = settings.hit_threshold/100;}
 	if(template.isDrawn){paintTemplate();}
 }
@@ -376,11 +382,13 @@ function set_template_line(){
 	var originLock = template.originLocked;
 	var terminus = template.terminus;
 	var isDrawn = template.isDrawn;
+	var originTileLock = template.originTileLock;
 	template = new LineTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
 	template.setOrigin(origin);
 	template.setVector(terminus, board.tile_width*templateSize);
 	template.originLocked = originLock;
 	template.isDrawn = isDrawn;
+	template.originTileLock = originTileLock;
 	if(settings.hit_threshold){template.minHitFactor = settings.hit_threshold/100;}
 	if(template.isDrawn){paintTemplate();}
 }
@@ -397,6 +405,7 @@ function set_template_circle(){
 	var originLock = template.originLocked;
 	var terminus = template.terminus;
 	var isDrawn = template.isDrawn;
+	var originTileLock = template.originTileLock;
 	template = new CircleTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
 	template.setOrigin(origin);
 	template.setTerminus(terminus);
@@ -404,6 +413,7 @@ function set_template_circle(){
 	template.setOrigin(origin);
 	template.originLocked = originLock;
 	template.isDrawn = isDrawn;
+	template.originTileLock = originTileLock;
 	if(settings.hit_threshold){template.minHitFactor = settings.hit_threshold/100;}
 	if(template.isDrawn){paintTemplate();}
 }
