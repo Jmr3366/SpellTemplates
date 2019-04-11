@@ -233,7 +233,7 @@ function clearAll(){
 
 function paintTemplate(){
 	clearAll();
-	if(template.originLocked){template.drawOrigin();}
+	if(template.originLocked){template.drawOriginLock();}
 	template.draw();
 	template.calculateHit(board);
 	board.colourHits();
@@ -302,7 +302,7 @@ function dblclick_func(evt) {
 		mousedown=false;
 	} else {
 		template.lockOrigin();
-		template.drawOrigin();
+		template.drawOriginLock();
 		if(!template.terminusRequired){
 			mousemove_func(evt);
 		}
@@ -1030,6 +1030,10 @@ function Template(context, canvas_width, canvas_height, board) {
 		context.beginPath();
 		context.arc(this.origin.x, this.origin.y, 3 ,0,2*Math.PI);
 		context.stroke();
+	}
+
+	this.drawOriginLock = function(){
+		this.drawPoint(this.origin, this.lineColour, 10);
 	}
 
 	this.setTerminus = function(position){

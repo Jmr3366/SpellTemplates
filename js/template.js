@@ -130,6 +130,10 @@ function Template(context, canvas_width, canvas_height, board) {
 		context.stroke();
 	}
 
+	this.drawOriginLock = function(){
+		this.drawPoint(this.origin, this.lineColour, 10);
+	}
+
 	this.setTerminus = function(position){
 		this.terminus = {x:position.x, y:position.y};
 	}
