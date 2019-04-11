@@ -185,6 +185,7 @@ var default_settings = {
 	tile_size: "30",
 	hit_threshold: "50",
 	template_snapping: false,
+	rounded_cone: false,
 	theme: "theme1"
 };
 var settings = default_settings;
@@ -411,6 +412,9 @@ function init_canvases() {
 		case "ConeTemplate":
 			set_template_cone();
 			break;
+		case "RoundedConeTemplate":
+			set_template_cone();
+			break;
 		case "CircleTemplate":
 			set_template_circle();
 			break;
@@ -518,7 +522,11 @@ function set_template_cone(){
 	set_menu_highlight("coneTemplateButton");
 
 	if(template == undefined){
-		template = new ConeTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+		if(settings.rounded_cone){
+			template = new RoundedConeTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+		} else {
+			template = new ConeTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+		}
 		return;
 	}
 	var origin = template.origin;
@@ -526,7 +534,11 @@ function set_template_cone(){
 	var terminus = template.terminus;
 	var isDrawn = template.isDrawn;
 	var originTileLock = template.originTileLock;
-	template = new ConeTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+	if(settings.rounded_cone){
+		template = new RoundedConeTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+	} else {
+		template = new ConeTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+	}
 	template.setOrigin(origin);
 	template.setVector(terminus, board.tile_width*templateSize);
 	template.originLocked = originLock;
@@ -640,6 +652,7 @@ function update_settings(){
 	settings_obj.tile_size = document.querySelector(".tile-size.slider").value;
 	settings_obj.hit_threshold = document.querySelector(".hit-threshold.slider").value;
 	settings_obj.template_snapping = document.querySelector(".template-snapping.input").checked;
+	settings_obj.rounded_cone = document.querySelector(".rounded-cone.input").checked;
 	settings_obj.theme = document.querySelector(".themeselector:checked").value;
 	// console.log("UPDATE",settings_obj);
 	settings = settings_obj;
@@ -650,6 +663,7 @@ function update_settings_menu() {
 	document.querySelector(".tile-size.slider").value = settings.tile_size;
 	document.querySelector(".hit-threshold.slider").value = settings.hit_threshold;
 	document.querySelector(".template-snapping.input").checked = settings.template_snapping;
+	document.querySelector(".rounded-cone.input").checked = settings.rounded_cone;
 	slider_update({target:document.querySelector(".tile-size.slider")});
 	slider_update({target:document.querySelector(".hit-threshold.slider")});
 	if(settings.theme){
@@ -933,7 +947,7 @@ function Template(context, canvas_width, canvas_height, board) {
 		context.stroke();
 	}
 
-	this.drawPoint = function(point, color=this.lineColour, radius=5){
+	this.drawPoint = function(point, color=this.lineColour, radius=1){
 		context.beginPath();
 		context.arc(point.x, point.y, radius, 0, 2*Math.PI);
 		context.lineWidth=2;
@@ -1667,7 +1681,89 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 	}
 }
 
-function Tile(x, y, height, width, contextGrid, contextTile){
+function RoundedConeTemplate(context, canvas_width, canvas_height, board) {
+	Template.call(this, context, canvas_width, canvas_height, board);
+	this.shape = "roundedcone";
+
+	this.getVerts = function(){
+		var delta_x = (this.terminus.x - this.origin.x);
+		var delta_y = (this.terminus.y - this.origin.y);
+		var radius = Math.sqrt(Math.pow(delta_x,2)+Math.pow(delta_y,2));
+
+		var vert_1 = {x:(this.terminus.x - delta_y/2), y:(this.terminus.y + delta_x/2)};
+		var vert_1_angle = (Math.PI*0.5)-Math.atan2((vert_1.x-this.origin.x),(vert_1.y-this.origin.y));
+		vert_1 = {x:this.origin.x+(radius*Math.cos(vert_1_angle)), y:this.origin.y+(radius*Math.sin(vert_1_angle))};
+		var vert_2 = {x:(this.terminus.x + delta_y/2), y:(this.terminus.y - delta_x/2)};
+		var vert_2_angle = (Math.PI*0.5)-Math.atan2((vert_2.x-this.origin.x),(vert_2.y-this.origin.y));
+		vert_2 = {x:this.origin.x+(radius*Math.cos(vert_2_angle)), y:this.origin.y+(radius*Math.sin(vert_2_angle))};
+
+		return [this.origin, vert_1, vert_2, this.terminus];
+	}
+
+	this.draw = function(){
+		//Draw line from origin to terminus
+		//add cross line running at opposite slope through terminus for same length
+		this.isDrawn = true;
+		var verts = this.getVerts();
+		context.lineWidth=2;
+		context.strokeStyle = this.lineColour;
+		context.beginPath();
+		context.moveTo(verts[1].x, verts[1].y);
+		context.lineTo(verts[0].x, verts[0].y);
+		context.lineTo(verts[2].x, verts[2].y);
+		context.stroke();
+		this.drawOrigin();
+		this.drawCurve(verts);
+	}
+
+	this.drawCurve = function(verts){
+		context.beginPath();
+		var radius = Math.sqrt(Math.pow(verts[0].x-verts[3].x,2)+Math.pow(verts[0].y-verts[3].y,2));
+		var angle = 0.46364761*2 // 2*inverse tan of 1/2
+		var start_rad = this.getCurveStart(verts, radius)
+		context.arc(verts[0].x, verts[0].y, radius, start_rad, start_rad+angle);
+		context.stroke();
+	}
+
+	this.getCurveStart = function(verts, radius){
+		var deltax = verts[2].x - verts[0].x;
+		var deltay = verts[2].y - verts[0].y;
+		var angle = Math.atan2(Math.abs(deltax), Math.abs(deltay));
+		// I dont fully understand why this works
+		if(deltax > 0 && deltay < 0){angle+=1.5*Math.PI;}
+		else if(deltax < 0 && deltay < 0){angle=1.5*Math.PI-angle;}
+		else if(deltax < 0 && deltay > 0){angle+=0.5*Math.PI;}
+		else{angle=0.5*Math.PI-angle;}
+		return angle;
+	}
+
+	this.calculateHit = function(){
+		var verts = this.getVerts();
+		// Add subverts along curve to increase accuracy
+		var poly = this.interpolate(verts);
+		poly = this.cropPoly(poly, board.origin, {x:board.origin.x+board.width, y:board.origin.y+board.height});
+		this.calculateHitPoly(poly);
+	}
+
+	this.interpolate = function(verts){
+		// Add points between vert 1 -> 3 -> 2 spaced at less than a 10th of a tile
+		var radius = Math.sqrt(Math.pow(verts[0].x-verts[3].x,2)+Math.pow(verts[0].y-verts[3].y,2));
+		var points = [verts[0], verts[2]];
+		var max_section_length = Math.max(Math.floor(board.tile_width/3),1);
+		// 2PI / (Circumference/Max Section Length) = step size in radians
+		var angle_step = (Math.PI*2)/((Math.PI*2*radius)/max_section_length);
+		var start_rad = this.getCurveStart(verts, radius)
+		var curr_angle = start_rad + angle_step;
+		while(curr_angle < start_rad+(2*0.46364761)){
+			var point = {x:this.origin.x+(radius*Math.cos(curr_angle)), y:this.origin.y+(radius*Math.sin(curr_angle))}
+			points.push(point);
+			curr_angle += angle_step;
+		}
+		points.push(verts[1]);
+		return points;
+	}
+
+}function Tile(x, y, height, width, contextGrid, contextTile){
 	this.is_hex = false;
 	this.entity;
 	this.has_caster = false;

@@ -20,6 +20,7 @@ var default_settings = {
 	tile_size: "30",
 	hit_threshold: "50",
 	template_snapping: false,
+	rounded_cone: false,
 	theme: "theme1"
 };
 var settings = default_settings;
@@ -246,6 +247,9 @@ function init_canvases() {
 		case "ConeTemplate":
 			set_template_cone();
 			break;
+		case "RoundedConeTemplate":
+			set_template_cone();
+			break;
 		case "CircleTemplate":
 			set_template_circle();
 			break;
@@ -353,7 +357,11 @@ function set_template_cone(){
 	set_menu_highlight("coneTemplateButton");
 
 	if(template == undefined){
-		template = new ConeTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+		if(settings.rounded_cone){
+			template = new RoundedConeTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+		} else {
+			template = new ConeTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+		}
 		return;
 	}
 	var origin = template.origin;
@@ -361,7 +369,11 @@ function set_template_cone(){
 	var terminus = template.terminus;
 	var isDrawn = template.isDrawn;
 	var originTileLock = template.originTileLock;
-	template = new ConeTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+	if(settings.rounded_cone){
+		template = new RoundedConeTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+	} else {
+		template = new ConeTemplate(contextTemplate, canvasTemplate.width, canvasTemplate.height, board);
+	}
 	template.setOrigin(origin);
 	template.setVector(terminus, board.tile_width*templateSize);
 	template.originLocked = originLock;
@@ -475,6 +487,7 @@ function update_settings(){
 	settings_obj.tile_size = document.querySelector(".tile-size.slider").value;
 	settings_obj.hit_threshold = document.querySelector(".hit-threshold.slider").value;
 	settings_obj.template_snapping = document.querySelector(".template-snapping.input").checked;
+	settings_obj.rounded_cone = document.querySelector(".rounded-cone.input").checked;
 	settings_obj.theme = document.querySelector(".themeselector:checked").value;
 	// console.log("UPDATE",settings_obj);
 	settings = settings_obj;
@@ -485,6 +498,7 @@ function update_settings_menu() {
 	document.querySelector(".tile-size.slider").value = settings.tile_size;
 	document.querySelector(".hit-threshold.slider").value = settings.hit_threshold;
 	document.querySelector(".template-snapping.input").checked = settings.template_snapping;
+	document.querySelector(".rounded-cone.input").checked = settings.rounded_cone;
 	slider_update({target:document.querySelector(".tile-size.slider")});
 	slider_update({target:document.querySelector(".hit-threshold.slider")});
 	if(settings.theme){
