@@ -125,7 +125,9 @@ function Template(context, canvas_width, canvas_height, board) {
 	}
 
 	this.drawOrigin = function(){
-		this.drawPoint(this.origin, this.lineColour, 10);
+		context.beginPath();
+		context.arc(this.origin.x, this.origin.y, 3 ,0,2*Math.PI);
+		context.stroke();
 	}
 
 	this.setTerminus = function(position){
@@ -442,9 +444,7 @@ function ConeTemplate(context, canvas_width, canvas_height, board) {
 		context.lineTo(verts[2].x, verts[2].y);
 		context.lineTo(verts[0].x, verts[0].y);
 		context.stroke();
-		context.beginPath();
-		context.arc(this.origin.x, this.origin.y, 3 ,0,2*Math.PI);
-		context.stroke();
+		this.drawOrigin();
 	}
 
 	this.calculateHit = function(){
@@ -492,9 +492,7 @@ function LineTemplate(context, canvas_width, canvas_height, board) {
 		context.lineTo(verts[4].x, verts[4].y);
 		context.lineTo(verts[1].x, verts[1].y);
 		context.stroke();
-		context.beginPath();
-		context.arc(this.origin.x, this.origin.y, 3 ,0,2*Math.PI);
-		context.stroke();
+		this.drawOrigin();
 	}
 
 	this.calculateHit = function(){
@@ -526,9 +524,7 @@ function CircleTemplate(context, canvas_width, canvas_height, board) {
 		context.beginPath();
 		context.arc(verts[0].x, verts[0].y, Math.abs(verts[0].x-verts[1].x),0,2*Math.PI);
 		context.stroke();
-		context.beginPath();
-		context.arc(this.origin.x, this.origin.y, 3 ,0,2*Math.PI);
-		context.stroke();
+		this.drawOrigin();
 	}
 
 	this.calculateHit = function(){
