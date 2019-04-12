@@ -18,7 +18,7 @@
  *
  */
 
-const version = "0.8.2";
+const version = "0.8.3";
 const cacheName = `spelltemplates-${version}`;
 self.addEventListener('install', e => {
   e.waitUntil(

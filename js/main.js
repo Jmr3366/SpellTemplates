@@ -643,12 +643,14 @@ function set_menu_highlight(btnId){
 
 function open_settings_menu(){
 	document.getElementById("settingsDiv").classList.add("active");
+	document.getElementById("settingsOverlay").classList.add("active");
 	ga('send', 'event', 'settings', 'open_settings');
 }
 
 function close_settings_menu(){
 	write_settings_cookie();
 	document.getElementById("settingsDiv").classList.remove("active");
+	document.getElementById("settingsOverlay").classList.remove("active");
 	ga('send', 'event', 'settings', 'close_settings');
 }
 
@@ -905,6 +907,7 @@ document.getElementById("lineTemplateButton").addEventListener('click', set_temp
 document.getElementById("circleTemplateButton").addEventListener('click', set_template_circle, {passive:true});
 document.getElementById("placeUnitsButton").addEventListener('click', toggle_place_units, {passive:true});
 document.getElementById("settingsButton").addEventListener('click', open_settings_menu, {passive:true});
+document.getElementById("settingsOverlay").addEventListener('click', close_settings_menu, {passive:true});
 document.getElementById("settingsCloseButton").addEventListener('click', close_settings_menu, {passive:true});
 var sliders = document.getElementsByClassName("slider");
 for(var i = 0; i<sliders.length;i++){
