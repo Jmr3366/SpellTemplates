@@ -455,6 +455,11 @@ function first_load() {
 		case "cone":
 			set_template_cone();
 			break;
+		case "roundedcone":
+			settings.rounded_cone=true;
+			update_settings_menu();
+			set_template_cone();
+			break;
 		case "circle":
 			set_template_circle();
 			break;
@@ -1730,9 +1735,9 @@ function RoundedConeTemplate(context, canvas_width, canvas_height, board) {
 		var deltay = verts[2].y - verts[0].y;
 		var angle = Math.atan2(Math.abs(deltax), Math.abs(deltay));
 		// I dont fully understand why this works
-		if(deltax > 0 && deltay < 0){angle+=1.5*Math.PI;}
-		else if(deltax < 0 && deltay < 0){angle=1.5*Math.PI-angle;}
-		else if(deltax < 0 && deltay > 0){angle+=0.5*Math.PI;}
+		if(deltax > 0 && deltay <= 0){angle+=1.5*Math.PI;}
+		else if(deltax <= 0 && deltay <= 0){angle=1.5*Math.PI-angle;}
+		else if(deltax <= 0 && deltay > 0){angle+=0.5*Math.PI;}
 		else{angle=0.5*Math.PI-angle;}
 		return angle;
 	}

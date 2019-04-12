@@ -290,6 +290,11 @@ function first_load() {
 		case "cone":
 			set_template_cone();
 			break;
+		case "roundedcone":
+			settings.rounded_cone=true;
+			update_settings_menu();
+			set_template_cone();
+			break;
 		case "circle":
 			set_template_circle();
 			break;
